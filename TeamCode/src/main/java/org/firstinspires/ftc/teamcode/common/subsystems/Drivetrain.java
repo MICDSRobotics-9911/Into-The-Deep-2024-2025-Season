@@ -65,8 +65,8 @@ public class Drivetrain extends WSubsystem {
     }
 
     public void getPosition() {
-        for (int i = 0; i < 4; i++)
-            wheelPos[i] = motors[i].getCurrentPosition();
+        /*for (int i = 0; i < 4; i++)
+            wheelPos[i] = motors[i].getCurrentPosition();*/
     }
 
 
@@ -109,10 +109,8 @@ public class Drivetrain extends WSubsystem {
     public String toString() {
         return String.format(
                 Locale.US,
-                "FLPower: %.2f\nFRPower: %.2f\nBLPower: %.2f\nBRPower: %.2f\n" +
-                        "FLPos: %.2f\nFRPos: %.2f\nBLPos: %.2f\nBRPos: %.2f\n",
-                wheelPowers[0], wheelPowers[1], wheelPowers[2], wheelPowers[3],
-                wheelPos[0], wheelPos[1], wheelPos[2], wheelPos[3]
+                "FLPower: %.2f\nFRPower: %.2f\nBLPower: %.2f\nBRPower: %.2f\n",
+                wheelPowers[0], wheelPowers[1], wheelPowers[2], wheelPowers[3]
         );
     }
 }

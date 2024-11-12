@@ -1,12 +1,12 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.common.hardware.Globals;
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
 
-import java.util.Objects;
-
+@TeleOp(name="TeleOpTest")
 public class TeleOpTest extends OpMode {
     private RobotHardware robot;
     private double loopTime = 0.0;
