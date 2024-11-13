@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.common.drive;
 
 import androidx.annotation.NonNull;
 
-import com.arcrobotics.ftclib.geometry.Vector2d;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -23,10 +21,6 @@ import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
 public class MecanumDrivetrain extends WSubsystem implements Drivetrain {
     private final RobotHardware robot = RobotHardware.getInstance();
 
-
-    // FL, FR, BL, BR
-    public CachingDcMotorEx[] motors;
-    private GoBildaPinpointDriver odo;
     public double[] wheelPowers;
     private Pose2D robotPose;
     @Override
@@ -75,8 +69,10 @@ public class MecanumDrivetrain extends WSubsystem implements Drivetrain {
     }
 
     public void setPower() {
-        for (int i = 0; i < 4; i++)
-            motors[i].setPower(wheelPowers[i]);
+        robot.frontLeft.setPower(wheelPowers[0]);
+        robot.frontRight.setPower(wheelPowers[1]);
+        robot.backLeft.setPower(wheelPowers[2]);
+        robot.backRight.setPower(wheelPowers[3]);
     }
 
     @Override
