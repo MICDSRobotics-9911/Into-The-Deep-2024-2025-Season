@@ -35,13 +35,37 @@ public class TeleOpTest extends OpMode {
      */
     @Override
     public void loop() {
-        robot.drivetrain.drive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+        drive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
         telemetry.addLine(robot.drivetrain.toString());
         double loop = System.nanoTime();
         loopTime = loop;
-        robot.periodic();
         telemetry.addLine(robot.drivetrain.toString());
         telemetry.addData("hz", 1000000000 / (loop - loopTime));
         telemetry.update();
+    }
+
+    public void drive(double x, double y, double turn) {
+        double theta = Math.atan2(y, x);
+        double power = Math.hypot(x, y);
+
+        double sin = Math.sin(theta - Math.PI / 4);
+        double cos = Math.cos(theta - Math.PI / 4);
+        double max = Math.max(Math.abs(sin), Math.abs(cos));
+
+        double leftFront = power * cos / max + turn;
+        double rightFront = power * sin / max - turn;
+        double leftBack = power * sin / max + turn;
+        double rightBack = power * cos / max - turn;
+
+        if ((power + Math.abs(turn)) > 1) {
+            leftFront /= power + Math.abs(turn);
+            rightFront /= power + Math.abs(turn);
+            leftBack /= power + Math.abs(turn);
+            rightBack /= power + Math.abs(turn);
+        }
+        robot.frontLeft.setPower(leftFront);
+        robot.frontRight.setPower(rightFront);
+        robot.backLeft.setPower(leftBack);
+        robot.backRight.setPower(rightBack);
     }
 }

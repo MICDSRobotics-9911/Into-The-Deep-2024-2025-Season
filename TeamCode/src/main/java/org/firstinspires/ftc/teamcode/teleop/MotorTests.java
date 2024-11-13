@@ -12,12 +12,11 @@ public class MotorTests extends OpMode {
 
     @Override
     public void init() {
-        Globals.IS_AUTO = false;
+        Globals.IS_AUTO = true;
         Globals.retract();
         Globals.IS_USING_IMU = false;
         robot = RobotHardware.getInstance();
         robot.init(hardwareMap, telemetry);
-        robot.drivetrain.read();
         telemetry.addLine("Robot Initialized");
         telemetry.update();
     }
@@ -58,7 +57,6 @@ public class MotorTests extends OpMode {
             robot.reset();
 
         robot.periodic();
-        robot.read();
         telemetry.addLine(robot.drivetrain.toString());
         telemetry.update();
     }

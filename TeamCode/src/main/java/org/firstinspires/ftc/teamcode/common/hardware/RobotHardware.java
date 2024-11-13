@@ -1,15 +1,17 @@
 package org.firstinspires.ftc.teamcode.common.hardware;
 
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.common.subsystems.Drivetrain;
+import org.firstinspires.ftc.teamcode.common.drive.MecanumDrivetrain;
 import org.firstinspires.ftc.teamcode.common.util.wrappers.WSubsystem;
+import org.firstinspires.ftc.teamcode.drivers.GoBildaPinpointDriver;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,10 +26,17 @@ public class RobotHardware {
     private Telemetry telemetry;
     public static RobotHardware instance = null;
     public boolean enabled;
-    public Drivetrain drivetrain;
+    public MecanumDrivetrain drivetrain;
     private ArrayList<WSubsystem> subsystems;
-    private IMU imu;
+
     public List<LynxModule> modules;
+    public LynxModule CONTROL_HUB;
+
+    private GoBildaPinpointDriver odo;
+    public CachingDcMotorEx frontLeft;
+    public CachingDcMotorEx frontRight;
+    public CachingDcMotorEx backLeft;
+    public CachingDcMotorEx backRight;
 
     public static RobotHardware getInstance() {
         if (instance == null) {
@@ -43,28 +52,42 @@ public class RobotHardware {
         this.telemetry = telemetry;
 
         // DRIVETRAIN
-        DcMotorEx frontLeft = hardwareMap.get(DcMotorEx.class, "front_left_drive");
-        DcMotorEx frontRight = hardwareMap.get(DcMotorEx.class, "front_right_drive");
-        DcMotorEx backLeft = hardwareMap.get(DcMotorEx.class, "back_left_drive");
-        DcMotorEx backRight = hardwareMap.get(DcMotorEx.class, "back_right_drive");
+        frontLeft = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "frontLeft"));
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // TODO: Test this
+        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        if (Globals.IS_USING_IMU) {
-            IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                    RevHubOrientationOnRobot.LogoFacingDirection.LEFT, RevHubOrientationOnRobot.UsbFacingDirection.UP));
-            imu = hardwareMap.get(IMU.class, "imu");
-            imu.initialize(parameters);
-            imu.resetYaw();
+        frontRight = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "frontRight"));
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // TODO: Test this
+        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        backLeft = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "backLeft"));
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // TODO: Test this
+        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        backRight = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "backRight"));
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // TODO: Test this
+        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        odo = hardwareMap.get(GoBildaPinpointDriver.class, "odo");
+        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+        // TODO: Test this
+        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        odo.resetPosAndIMU();
+
+        modules = hardwareMap.getAll(LynxModule.class);
+        for (LynxModule m : modules) {
+            m.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+            if (m.isParent() && LynxConstants.isEmbeddedSerialNumber(m.getSerialNumber())) CONTROL_HUB = m;
         }
 
-        this.subsystems = new ArrayList<WSubsystem>();
-
-        drivetrain = new Drivetrain(frontLeft, frontRight, backLeft, backRight, imu);
+        subsystems = new ArrayList<>();
+        drivetrain = new MecanumDrivetrain();
         addSubsystem(drivetrain);
 
-        if (!Globals.IS_AUTO) {
-            modules.get(0).setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-            modules.get(1).setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-        }
 
         //camera = hardwareMap.get(WebcamName.class, "Webcam 1");
 
@@ -78,9 +101,7 @@ public class RobotHardware {
     }
 
     public void write() {
-        for (WSubsystem subsystem : subsystems) {
-            subsystem.write();
-        }
+        drivetrain.write();
     }
 
     public void periodic() {

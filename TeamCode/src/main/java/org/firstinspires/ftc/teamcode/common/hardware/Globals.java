@@ -18,9 +18,19 @@ public class Globals {
         IS_INTAKING = false;
     }
 
+    public static void stopScoring() {
+        IS_SCORING = false;
+        IS_INTAKING = false;
+    }
+
     public static void startIntaking() {
         IS_SCORING = false;
         IS_INTAKING = true;
+    }
+
+    public static void stopIntaking() {
+        IS_SCORING = false;
+        IS_INTAKING = false;
     }
 
     public static void retract() {
