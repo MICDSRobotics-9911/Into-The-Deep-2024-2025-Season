@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.common.util;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 
 import java.util.Locale;
@@ -9,6 +11,11 @@ public class Pose extends Point {
 
     public double heading;
 
+
+    public Pose(Pose2D pose) {
+        super(pose.getX(DistanceUnit.INCH), pose.getY(DistanceUnit.INCH));
+        this.heading = AngleUnit.normalizeRadians(pose.getHeading(AngleUnit.RADIANS));
+    }
     public Pose(double x, double y, double heading) {
         super(x, y);
         this.heading = AngleUnit.normalizeRadians(heading);

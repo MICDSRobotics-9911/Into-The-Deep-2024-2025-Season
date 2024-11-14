@@ -16,7 +16,7 @@ public class MotorTests extends OpMode {
         Globals.retract();
         Globals.IS_USING_IMU = false;
         robot = RobotHardware.getInstance();
-        robot.init(hardwareMap, telemetry);
+        robot.init(hardwareMap);
         telemetry.addLine("Robot Initialized");
         telemetry.update();
     }

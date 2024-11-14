@@ -15,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.common.drive.MecanumDrivetrain;
 import org.firstinspires.ftc.teamcode.common.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.common.subsystems.OuttakeSubsystem;
+import org.firstinspires.ftc.teamcode.common.util.Pose;
 import org.firstinspires.ftc.teamcode.common.util.wrappers.WSubsystem;
 import org.firstinspires.ftc.teamcode.drivers.GoBildaPinpointDriver;
 
@@ -30,7 +31,6 @@ public class RobotHardware {
     private double voltage = 12.0;
     //public WebcamName camera;
     private HardwareMap hardwareMap;
-    private Telemetry telemetry;
     public static RobotHardware instance = null;
     public boolean enabled;
 
@@ -60,6 +60,8 @@ public class RobotHardware {
 
     public HashMap<Sensors.SensorType, Object> values;
 
+    private Pose robotPose;
+
     public static RobotHardware getInstance() {
         if (instance == null) {
             instance = new RobotHardware();
@@ -68,11 +70,10 @@ public class RobotHardware {
         return instance;
     }
 
-    public void init(final HardwareMap hardwareMap, final Telemetry telemetry) {
+    public void init(final HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
         this.values = new HashMap<>();
         // Add an if else detecting whether dashboard is running for telemetry
-        this.telemetry = telemetry;
 
         values.put(Sensors.SensorType.EXTENSION_ENCODER, 0.0);
         values.put(Sensors.SensorType.PINPOINT, new Pose2D(
@@ -124,7 +125,9 @@ public class RobotHardware {
         // Read all hardware devices here
         // 0 is a placeholder until i plug in the slide motor encoders
         values.put(Sensors.SensorType.EXTENSION_ENCODER, 0);
-        values.put(Sensors.SensorType.PINPOINT, odo.getPosition());
+        Pose tmp = new Pose(odo.getPosition());
+        values.put(Sensors.SensorType.PINPOINT, tmp);
+        robotPose = tmp;
     }
 
     public void write() {
@@ -152,6 +155,14 @@ public class RobotHardware {
 
     public void kill() {
         instance = null;
+    }
+
+    public void setPose(Pose pose) {
+        robotPose = pose;
+    }
+
+    public Pose getPose() {
+        return robotPose;
     }
 
 }

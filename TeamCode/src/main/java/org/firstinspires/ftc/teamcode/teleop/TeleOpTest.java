@@ -21,7 +21,7 @@ public class TeleOpTest extends OpMode {
         Globals.retract();
         Globals.IS_USING_IMU = false;
         robot = RobotHardware.getInstance();
-        robot.init(hardwareMap, telemetry);
+        robot.init(hardwareMap);
         robot.drivetrain.read();
         telemetry.addLine("Robot Initialized");
         telemetry.update();

@@ -35,7 +35,7 @@ public class CommandTeleOp extends CommandOpMode {
         gamepadEx = new GamepadEx(gamepad1);
         gamepadEx2 = new GamepadEx(gamepad2);
 
-        robot.init(hardwareMap, telemetry);
+        robot.init(hardwareMap);
 
         robot.read();
         while (opModeInInit()) {
