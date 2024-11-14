@@ -54,7 +54,7 @@ public class MotorTests extends OpMode {
         else if (gamepad1.b)
             robot.drivetrain.wheelPowers[3] = power;
         else
-            robot.reset();
+            robot.drivetrain.reset();
 
         robot.write();
         telemetry.addLine(robot.drivetrain.toString());
