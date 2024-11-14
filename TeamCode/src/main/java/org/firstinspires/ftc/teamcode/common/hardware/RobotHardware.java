@@ -31,7 +31,7 @@ public class RobotHardware {
     public List<LynxModule> modules;
     public LynxModule CONTROL_HUB;
 
-    private GoBildaPinpointDriver odo;
+    //private GoBildaPinpointDriver odo;
     public CachingDcMotorEx frontLeft;
     public CachingDcMotorEx frontRight;
     public CachingDcMotorEx backLeft;
@@ -59,7 +59,7 @@ public class RobotHardware {
         frontRight = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "frontRight"));
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // TODO: Test this
-        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         backLeft = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "backLeft"));
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -69,18 +69,19 @@ public class RobotHardware {
         backRight = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "backRight"));
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // TODO: Test this
-        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        odo = hardwareMap.get(GoBildaPinpointDriver.class, "odo");
+        /*odo = hardwareMap.get(GoBildaPinpointDriver.class, "odo");
         odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
         // TODO: Test this
         odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
-        odo.resetPosAndIMU();
+        odo.resetPosAndIMU();*/
 
         modules = hardwareMap.getAll(LynxModule.class);
         for (LynxModule m : modules) {
             m.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-            if (m.isParent() && LynxConstants.isEmbeddedSerialNumber(m.getSerialNumber())) CONTROL_HUB = m;
+            if (m.isParent() && LynxConstants.isEmbeddedSerialNumber(m.getSerialNumber()))
+                CONTROL_HUB = m;
         }
 
         subsystems = new ArrayList<>();
@@ -94,9 +95,7 @@ public class RobotHardware {
     }
 
     public void read() {
-        for (WSubsystem subsystem : subsystems) {
-            subsystem.read();
-        }
+
     }
 
     public void write() {
@@ -104,9 +103,6 @@ public class RobotHardware {
     }
 
     public void periodic() {
-        for (WSubsystem subsystem : subsystems) {
-            subsystem.periodic();
-        }
         clearBulkCache();
     }
 
@@ -119,6 +115,7 @@ public class RobotHardware {
     public void clearBulkCache() {
         modules.get(0).clearBulkCache();
         modules.get(1).clearBulkCache();
+        //CONTROL_HUB.clearBulkCache();
     }
 
     public void addSubsystem(WSubsystem... subsystems) {

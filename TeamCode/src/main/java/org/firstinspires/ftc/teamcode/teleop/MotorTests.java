@@ -56,7 +56,7 @@ public class MotorTests extends OpMode {
         else
             robot.reset();
 
-        robot.periodic();
+        robot.write();
         telemetry.addLine(robot.drivetrain.toString());
         telemetry.update();
     }
