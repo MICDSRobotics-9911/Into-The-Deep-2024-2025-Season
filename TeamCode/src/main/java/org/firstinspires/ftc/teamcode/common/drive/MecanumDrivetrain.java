@@ -23,6 +23,11 @@ public class MecanumDrivetrain extends WSubsystem implements Drivetrain {
 
     public double[] wheelPowers;
     private Pose2D robotPose;
+
+    public MecanumDrivetrain() {
+        wheelPowers = new double[4];
+        robotPose = new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.DEGREES, 0);
+    }
     @Override
     public void set(Pose pose) {
         set(pose, 0);
@@ -82,8 +87,8 @@ public class MecanumDrivetrain extends WSubsystem implements Drivetrain {
 
     @Override
     public void read() {
-        odo.update();
-        robotPose = odo.getPosition();
+        //odo.update();
+        //robotPose = odo.getPosition();
     }
 
     @Override
