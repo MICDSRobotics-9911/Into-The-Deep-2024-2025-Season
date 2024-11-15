@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.common.subsystems;
 
-import org.firstinspires.ftc.teamcode.common.gamespecific.ClawSide;
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.common.util.wrappers.WSubsystem;
 import org.jetbrains.annotations.NotNull;
@@ -29,14 +28,12 @@ public class IntakeSubsystem extends WSubsystem {
     public IntakeSubsystem() {
         this.robot = RobotHardware.getInstance();
 
-        updateState(ClawState.CLOSED, ClawSide.BOTH);
+        updateState(ClawState.CLOSED);
     }
 
-    public void updateState(@NotNull ClawState state, @NotNull ClawSide side) {
-        double position = getClawStatePosition(state, side);
-        if (side == ClawSide.BOTH) {
-            this.claw = state;
-        }
+    public void updateState(@NotNull ClawState state) {
+        double position = getClawStatePosition(state);
+        this.claw = state;
     }
 
     public void updateState(@NotNull PivotState state) {
@@ -70,12 +67,12 @@ public class IntakeSubsystem extends WSubsystem {
         updateState(PivotState.STORED);
     }
 
-    private double getClawStatePosition(ClawState state, ClawSide side) {
+    private double getClawStatePosition(ClawState state) {
         // TODO: Tune this
         return 0.5;
     }
 
-    public ClawState getClawState(ClawSide side) {
+    public ClawState getClawState() {
         return robot.intake.claw == IntakeSubsystem.ClawState.CLOSED
                 ? ClawState.CLOSED : ClawState.OPEN;
     }
