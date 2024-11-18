@@ -42,7 +42,7 @@ public class MecanumDrivetrain extends WSubsystem implements Drivetrain {
         if (!Globals.IS_AUTO) {
             strafeSpeed = scaleInput(strafeSpeed);
             forwardSpeed = scaleInput(forwardSpeed);
-            turnSpeed = scaleInput(turnSpeed);
+            //turnSpeed = scaleInput(turnSpeed);
         }
 
         Vector2D input = new Vector2D(strafeSpeed, forwardSpeed).rotate(-gyroAngle);

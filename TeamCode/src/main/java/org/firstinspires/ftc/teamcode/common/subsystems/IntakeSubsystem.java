@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.common.subsystems;
 
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
+import org.firstinspires.ftc.teamcode.common.util.ClawState;
 import org.firstinspires.ftc.teamcode.common.util.wrappers.WSubsystem;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,44 +13,31 @@ public class IntakeSubsystem extends WSubsystem {
 
     public ClawState claw = ClawState.CLOSED;
 
-    public enum ClawState {
-        CLOSED,
-        INTERMEDIATE,
-        OPEN,
-        AUTO
-    }
-
     public enum PivotState {
-        FLAT,
-        STORED,
-        SCORING
+        EXTEND,
+        RETRACT
     }
 
     public IntakeSubsystem() {
         this.robot = RobotHardware.getInstance();
-
-        updateState(ClawState.CLOSED);
+        updateState(ClawState.OPEN);
     }
 
     public void updateState(@NotNull ClawState state) {
-        double position = getClawStatePosition(state);
+        double clawPosition = getClawStatePosition(state);
+        robot.intakeClaw.setPosition(clawPosition);
         this.claw = state;
     }
 
     public void updateState(@NotNull PivotState state) {
+        double pivotPosition = getPivotStatePosition(state);
+        robot.linkageServo.setPosition(pivotPosition);
         this.pivotState = state;
     }
 
 
     @Override
     public void periodic() {
-        if (pivotState == PivotState.SCORING) {
-            // Scoring code
-        } else if (pivotState == PivotState.FLAT) {
-            // flat
-        } else if (pivotState == PivotState.STORED) {
-            // set target position
-        }
     }
 
     @Override
@@ -64,16 +52,37 @@ public class IntakeSubsystem extends WSubsystem {
 
     @Override
     public void reset() {
-        updateState(PivotState.STORED);
+        updateState(PivotState.RETRACT);
+    }
+
+    private double getPivotStatePosition(PivotState state) {
+        switch (state) {
+            case RETRACT:
+                return 0;
+            case EXTEND:
+                return 1;
+            default:
+                return 0;
+        }
     }
 
     private double getClawStatePosition(ClawState state) {
-        // TODO: Tune this
-        return 0.5;
+        switch (state) {
+            case OPEN:
+                return 1;
+            case CLOSED:
+                return 0;
+            default:
+                return 0;
+        }
     }
 
     public ClawState getClawState() {
-        return robot.intake.claw == IntakeSubsystem.ClawState.CLOSED
+        return robot.intake.claw == ClawState.CLOSED
                 ? ClawState.CLOSED : ClawState.OPEN;
+    }
+    public PivotState getPivotState() {
+        return robot.intake.pivotState == PivotState.RETRACT
+                ? PivotState.RETRACT : PivotState.EXTEND;
     }
 }

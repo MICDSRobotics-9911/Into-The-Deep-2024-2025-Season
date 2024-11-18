@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.common.util;
 
+import com.acmerobotics.roadrunner.Pose2d;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
@@ -16,6 +18,7 @@ public class Pose extends Point {
         super(pose.getX(DistanceUnit.INCH), pose.getY(DistanceUnit.INCH));
         this.heading = AngleUnit.normalizeRadians(pose.getHeading(AngleUnit.RADIANS));
     }
+
     public Pose(double x, double y, double heading) {
         super(x, y);
         this.heading = AngleUnit.normalizeRadians(heading);
@@ -68,6 +71,8 @@ public class Pose extends Point {
     public Vector2D toVec2D() {
         return new Vector2D(x, y);
     }
+
+    public Pose2d toRRPose() { return new Pose2d(x, y, heading); }
 
     @Override
     public String toString() {

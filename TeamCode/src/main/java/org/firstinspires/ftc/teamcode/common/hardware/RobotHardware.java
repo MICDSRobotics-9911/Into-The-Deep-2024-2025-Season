@@ -15,6 +15,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.common.drive.MecanumDrivetrain;
 import org.firstinspires.ftc.teamcode.common.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.common.subsystems.OuttakeSubsystem;
+import org.firstinspires.ftc.teamcode.common.util.LinkedMotors;
+import org.firstinspires.ftc.teamcode.common.util.LinkedServos;
 import org.firstinspires.ftc.teamcode.common.util.Pose;
 import org.firstinspires.ftc.teamcode.drivers.GoBildaPinpointDriver;
 
@@ -47,17 +49,21 @@ public class RobotHardware {
 
     public CachingServo linkageServoRight;
     public CachingServo linkageServoLeft;
+    public LinkedServos linkageServo;
 
     public CachingServo intakeClaw;
-    public CachingServo intakePivotLeft;
-    public CachingServo intakePivotRight;
+    public CachingServo intakeArmLeft;
+    public CachingServo intakeArmRight;
+    public LinkedServos intakeArm;
 
     public CachingDcMotorEx extensionLeft;
     public CachingDcMotorEx extensionRight;
+    public LinkedMotors extension;
 
     public CachingServo outtakeClaw;
-    public CachingServo outtakePivotLeft;
-    public CachingServo outtakePivotRight;
+    public CachingServo outtakeArmLeft;
+    public CachingServo outtakeArmRight;
+    public LinkedServos outtakeArm;
 
     public HashMap<Sensors.SensorType, Object> values;
 
@@ -97,11 +103,13 @@ public class RobotHardware {
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Extension
-        // extensionRight = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionRight"));
-        // extensionLeft = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionLeft"));
-        // outtakePivotRight = new CachingServo(hardwareMap.get(Servo.class, "outtakePivotRight"));
-        // outtakePivotLeft = new CachingServo(hardwareMap.get(Servo.class, "outtakePivotLeft"));
-        // outtakeClaw = new CachingServo(hardwareMap.get(Servo.class, "outtakeClaw"));
+        extensionRight = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionRight"));
+        extensionLeft = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionLeft"));
+        extension = new LinkedMotors(extensionRight, extensionLeft);
+        outtakeArmRight = new CachingServo(hardwareMap.get(Servo.class, "outtakePivotRight"));
+        outtakeArmLeft = new CachingServo(hardwareMap.get(Servo.class, "outtakePivotLeft"));
+        outtakeArm = new LinkedServos(outtakeArmRight, outtakeArmLeft);
+        outtakeClaw = new CachingServo(hardwareMap.get(Servo.class, "outtakeClaw"));
 
         // Pinpoint
         odo = hardwareMap.get(GoBildaPinpointDriver.class, "odo");
@@ -113,13 +121,15 @@ public class RobotHardware {
         odo.resetPosAndIMU();
 
         // INTAKE
-        // intakeClaw = new CachingServo(hardwareMap.get(Servo.class, "intakeClaw"));
-        // intakePivotLeft = new CachingServo(hardwareMap.get(Servo.class, "intakePivotLeft"));
-        // intakePivotRight = new CachingServo(hardwareMap.get(Servo.class, "intakePivotRight"));
+        intakeClaw = new CachingServo(hardwareMap.get(Servo.class, "intakeClaw"));
+        intakeArmLeft = new CachingServo(hardwareMap.get(Servo.class, "intakePivotLeft"));
+        intakeArmRight = new CachingServo(hardwareMap.get(Servo.class, "intakePivotRight"));
+        intakeArm = new LinkedServos(intakeArmLeft, intakeArmRight);
 
         // EXTENDO
-        // linkageServoLeft = new CachingServo(hardwareMap.get(Servo.class, "linkageServoLeft"));
-        // linkageServoRight = new CachingServo(hardwareMap.get(Servo.class, "linkageServoRight"));'
+        linkageServoLeft = new CachingServo(hardwareMap.get(Servo.class, "linkageServoLeft"));
+        linkageServoRight = new CachingServo(hardwareMap.get(Servo.class, "linkageServoRight"));
+        linkageServo = new LinkedServos(linkageServoLeft, linkageServoRight);
 
         modules = hardwareMap.getAll(LynxModule.class);
         for (LynxModule m : modules) {

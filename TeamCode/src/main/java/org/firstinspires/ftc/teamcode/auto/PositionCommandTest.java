@@ -35,8 +35,6 @@ public class PositionCommandTest extends LinearOpMode {
 
         robot.init(hardwareMap);
 
-        robot.intake.updateState(IntakeSubsystem.ClawState.CLOSED);
-
         robot.setPose(new Pose());
 
         // for the heading to be 0, have the robot be facing the red submersible side,
