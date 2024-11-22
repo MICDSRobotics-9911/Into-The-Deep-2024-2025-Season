@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.tests;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.common.commandbased.drivecommands.PositionCommand;
 import org.firstinspires.ftc.teamcode.common.hardware.Globals;
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
-import org.firstinspires.ftc.teamcode.common.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.common.util.Pose;
 
 @Config
@@ -54,7 +53,6 @@ public class PositionCommandTest extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested()) {
             CommandScheduler.getInstance().run();
-            robot.clearBulkCache();
             robot.read();
             robot.periodic();
             robot.write();

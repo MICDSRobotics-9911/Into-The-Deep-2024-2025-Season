@@ -12,6 +12,22 @@ import org.jetbrains.annotations.NotNull;
 @Config
 public class OuttakeSubsystem extends WSubsystem {
 
+    public enum SlideState {
+        HIGH_BASKET,
+        LOW_BASKET,
+        SPECIMEN_INTAKE,
+        SPECIMEN_OUTTAKE,
+        RESET
+    }
+
+    public enum PivotState {
+        SCORING,
+        INTAKING,
+        INCREMENT,
+        DECREMENT,
+        RESET,
+    }
+
     private final RobotHardware robot = RobotHardware.getInstance();
     private PIDFController controller;
     private double pid;
@@ -20,28 +36,48 @@ public class OuttakeSubsystem extends WSubsystem {
     public static double f = 0;
     public boolean usePIDF = true;
 
-    public ClawState claw = ClawState.CLOSED;
-
+    public ClawState claw = ClawState.OPEN;
+    public SlideState slide = SlideState.RESET;
+    private double pivotTarget = 0;
     private int target = 0;
 
     public OuttakeSubsystem() {
         updateState(ClawState.OPEN);
+        updateState(SlideState.RESET);
+        updateState(PivotState.RESET);
         pid = 0;
         controller = new PIDFController(p, i, d, f);
+        controller.reset();
     }
     @Override
     public void periodic() {
+        int motorPos = 0;
+        if (usePIDF)
+            motorPos = robot.extension.getCurrentPosition();
+
         pid = controller.calculate(
-                (Double) robot.values.get(Sensors.SensorType.EXTENSION_ENCODER), target);
+                motorPos, target);
         if (usePIDF) {
             robot.extension.setPower(pid);
         }
+        pivotTarget = robot.outtakeArm.getPosition();
     }
 
     public void updateState(@NotNull ClawState state) {
         double clawPosition = getClawStatePosition(state);
         robot.outtakeClaw.setPosition(clawPosition);
         this.claw = state;
+    }
+
+    public void updateState(@NotNull SlideState state) {
+        int slidePosition = getSlideStatePosition(state);
+        setTargetPosition(slidePosition);
+        this.slide = state;
+    }
+
+    public void updateState(@NotNull PivotState state) {
+        double pivotPosition = getPivotStatePosition(state);
+        robot.outtakeArm.setPosition(pivotPosition);
     }
 
     @Override
@@ -70,9 +106,45 @@ public class OuttakeSubsystem extends WSubsystem {
         }
     }
 
+    private int getSlideStatePosition(SlideState state) {
+        switch (state) {
+            case HIGH_BASKET:
+                return 1000;
+            case LOW_BASKET:
+                return 500;
+            case SPECIMEN_INTAKE:
+                return 100;
+            case SPECIMEN_OUTTAKE:
+                return 300;
+            case RESET:
+            default:
+                return 0;
+        }
+    }
+
+    private double getPivotStatePosition(PivotState state) {
+        switch (state) {
+            case SCORING:
+                return 0.8;
+            case INTAKING:
+                return 0;
+            case INCREMENT:
+                return pivotTarget + 0.1;
+            case DECREMENT:
+                return pivotTarget - 0.1;
+            case RESET:
+            default:
+                return 0;
+        }
+    }
+
     public ClawState getClawState() {
         return robot.outtake.claw == ClawState.CLOSED
                 ? ClawState.CLOSED : ClawState.OPEN;
+    }
+
+    public SlideState getSlideState() {
+        return robot.outtake.slide;
     }
 
     public void setTargetPosition(int position) {
@@ -82,6 +154,5 @@ public class OuttakeSubsystem extends WSubsystem {
     public double getPID() {
         return pid;
     }
-
 
 }

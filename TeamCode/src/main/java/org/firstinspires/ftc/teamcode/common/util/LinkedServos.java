@@ -12,12 +12,21 @@ public class LinkedServos {
     private ArrayList<CachingServo> servos;
 
     public LinkedServos(CachingServo... servos) {
+        this.servos = new ArrayList<CachingServo>();
         this.servos.addAll(Arrays.asList(servos));
     }
 
     public void setPosition(double position) {
         for (CachingServo servo : servos)
             servo.setPosition(position);
+    }
+
+    public double getPosition() {
+        double sum = 0;
+        for (CachingServo servo : servos) {
+            sum += servo.getPosition();
+        }
+        return sum / servos.size();
     }
 
     public ArrayList<CachingServo> getServos() {

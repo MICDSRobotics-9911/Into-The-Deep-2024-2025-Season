@@ -8,6 +8,7 @@ import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
 public class LinkedMotors {
     private ArrayList<CachingDcMotorEx> motors;
     public LinkedMotors(CachingDcMotorEx... motors) {
+        this.motors = new ArrayList<CachingDcMotorEx>();
         this.motors.addAll(Arrays.asList(motors));
     }
 
@@ -17,11 +18,11 @@ public class LinkedMotors {
         }
     }
 
-    public double getCurrentPosition() {
+    public int getCurrentPosition() {
         double sum = 0;
         for (CachingDcMotorEx motor : motors)
             sum += motor.getCurrentPosition();
-        return sum / motors.size();
+        return (int) Math.round(sum / motors.size());
     }
 
     public ArrayList<CachingDcMotorEx> getMotors() {

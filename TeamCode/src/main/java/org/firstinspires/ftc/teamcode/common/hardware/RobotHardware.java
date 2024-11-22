@@ -102,16 +102,18 @@ public class RobotHardware {
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        // Extension
+        // EXTENSION
         extensionRight = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionRight"));
-        extensionLeft = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionLeft"));
-        extension = new LinkedMotors(extensionRight, extensionLeft);
+        //extensionLeft = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionLeft"));
+        extension = new LinkedMotors(extensionRight);
+
+        // OUTTAKE
         outtakeArmRight = new CachingServo(hardwareMap.get(Servo.class, "outtakePivotRight"));
         outtakeArmLeft = new CachingServo(hardwareMap.get(Servo.class, "outtakePivotLeft"));
         outtakeArm = new LinkedServos(outtakeArmRight, outtakeArmLeft);
         outtakeClaw = new CachingServo(hardwareMap.get(Servo.class, "outtakeClaw"));
 
-        // Pinpoint
+        // LOCALIZATION
         odo = hardwareMap.get(GoBildaPinpointDriver.class, "odo");
         odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
         // X Pod Offset: 24.07432
@@ -121,7 +123,7 @@ public class RobotHardware {
         odo.resetPosAndIMU();
 
         // INTAKE
-        intakeClaw = new CachingServo(hardwareMap.get(Servo.class, "intakeClaw"));
+        /*intakeClaw = new CachingServo(hardwareMap.get(Servo.class, "intakeClaw"));
         intakeArmLeft = new CachingServo(hardwareMap.get(Servo.class, "intakePivotLeft"));
         intakeArmRight = new CachingServo(hardwareMap.get(Servo.class, "intakePivotRight"));
         intakeArm = new LinkedServos(intakeArmLeft, intakeArmRight);
@@ -129,7 +131,7 @@ public class RobotHardware {
         // EXTENDO
         linkageServoLeft = new CachingServo(hardwareMap.get(Servo.class, "linkageServoLeft"));
         linkageServoRight = new CachingServo(hardwareMap.get(Servo.class, "linkageServoRight"));
-        linkageServo = new LinkedServos(linkageServoLeft, linkageServoRight);
+        linkageServo = new LinkedServos(linkageServoLeft, linkageServoRight);*/
 
         modules = hardwareMap.getAll(LynxModule.class);
         for (LynxModule m : modules) {

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import static org.firstinspires.ftc.teamcode.common.subsystems.OuttakeSubsystem.SlideState;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
@@ -8,8 +10,10 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.common.commandbased.IntakeClawToggleCommand;
+import org.firstinspires.ftc.teamcode.common.commandbased.LinkageToggleCommand;
+import org.firstinspires.ftc.teamcode.common.commandbased.OuttakeArmCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.OuttakeClawToggleCommand;
+import org.firstinspires.ftc.teamcode.common.commandbased.SlideCommand;
 import org.firstinspires.ftc.teamcode.common.hardware.Globals;
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.common.subsystems.IntakeSubsystem;
@@ -17,7 +21,7 @@ import org.firstinspires.ftc.teamcode.common.subsystems.OuttakeSubsystem;
 import org.firstinspires.ftc.teamcode.common.util.Pose;
 
 @TeleOp(name="Solo TeleOp\uD83D\uDC80")
-public class CommandTeleOp extends CommandOpMode {
+public class SoloTeleOp extends CommandOpMode {
 
     private final RobotHardware robot = RobotHardware.getInstance();
     private IntakeSubsystem intake;
@@ -46,11 +50,28 @@ public class CommandTeleOp extends CommandOpMode {
 
         gamepadEx = new GamepadEx(gamepad1);
         gamepadEx2 = new GamepadEx(gamepad2);
-        gamepadEx.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                        .whenPressed(new IntakeClawToggleCommand(robot));
+        /*gamepadEx.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                        .whenPressed(new IntakeClawToggleCommand(robot));*/
         gamepadEx.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                         .whenPressed(new OuttakeClawToggleCommand(robot));
-
+        gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+                        .whenPressed(new SlideCommand(SlideState.SPECIMEN_OUTTAKE));
+        gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+                        .whenPressed(new SlideCommand(SlideState.RESET));
+        gamepadEx.getGamepadButton(GamepadKeys.Button.A)
+                        .whenPressed(new SlideCommand(SlideState.SPECIMEN_INTAKE));
+        /*gamepadEx.getGamepadButton(GamepadKeys.Button.X)
+                        .whenPressed(new LinkageToggleCommand(robot));*/
+        gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
+                        .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.INCREMENT));
+        gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+                        .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.DECREMENT));
+        gamepadEx.getGamepadButton(GamepadKeys.Button.B)
+                        .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.INTAKING));
+        gamepadEx.getGamepadButton(GamepadKeys.Button.Y)
+                        .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.SCORING));
+        gamepadEx.getGamepadButton(GamepadKeys.Button.START)
+                        .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.RESET));
         robot.init(hardwareMap);
 
         robot.read();
@@ -67,22 +88,6 @@ public class CommandTeleOp extends CommandOpMode {
         robot.periodic();
         robot.write();
 
-        if (gamepad1.dpad_right) {
-            robot.linkageServo.setPosition(1);
-        }
-        if (gamepad1.dpad_left) {
-            robot.linkageServo.setPosition(0);
-        }
-        if (gamepad1.dpad_up) {
-            // TODO: Tune this
-            robot.outtake.usePIDF = true;
-            outtake.setTargetPosition(1000);
-            robot.extension.setPower(outtake.getPID());
-        } else if (gamepad1.dpad_down) {
-            robot.outtake.usePIDF = true;
-            outtake.setTargetPosition(0);
-            robot.extension.setPower(outtake.getPID());
-        }
         if (gamepad1.right_trigger > 0) {
             robot.outtake.usePIDF = false;
             robot.extension.setPower(gamepad1.right_trigger);
@@ -91,14 +96,6 @@ public class CommandTeleOp extends CommandOpMode {
             robot.outtake.usePIDF = false;
             robot.extension.setPower(-gamepad1.left_trigger);
         }
-
-        if (gamepad1.x) {
-
-        }
-        if (gamepad1.y) {
-
-        }
-
 
 
 
