@@ -103,24 +103,27 @@ public class RobotHardware {
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // EXTENSION
-        extensionRight = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionRight"));
-        //extensionLeft = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionLeft"));
-        extension = new LinkedMotors(extensionRight);
+        //extensionRight = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionRight"));
+        extensionLeft = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionLeft"));
+        extensionLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        extension = new LinkedMotors(extensionLeft);
 
         // OUTTAKE
-        outtakeArmRight = new CachingServo(hardwareMap.get(Servo.class, "outtakePivotRight"));
-        outtakeArmLeft = new CachingServo(hardwareMap.get(Servo.class, "outtakePivotLeft"));
-        outtakeArm = new LinkedServos(outtakeArmRight, outtakeArmLeft);
+        //outtakeArmRight = new CachingServo(hardwareMap.get(Servo.class, "outtakeArmRight"));
+        outtakeArmLeft = new CachingServo(hardwareMap.get(Servo.class, "outtakeArmLeft"));
+        outtakeArm = new LinkedServos(outtakeArmLeft);
         outtakeClaw = new CachingServo(hardwareMap.get(Servo.class, "outtakeClaw"));
 
         // LOCALIZATION
-        odo = hardwareMap.get(GoBildaPinpointDriver.class, "odo");
-        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-        // X Pod Offset: 24.07432
-        // Y Pod Offset: 62.37545
-        odo.setOffsets(24.07432, 62.37545);
-        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
-        odo.resetPosAndIMU();
+        if (Globals.IS_AUTO) {
+            odo = hardwareMap.get(GoBildaPinpointDriver.class, "odo");
+            odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+            // X Pod Offset: 24.07432
+            // Y Pod Offset: 62.37545
+            odo.setOffsets(24.07432, 62.37545);
+            odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+            odo.resetPosAndIMU();
+        }
 
         // INTAKE
         /*intakeClaw = new CachingServo(hardwareMap.get(Servo.class, "intakeClaw"));
@@ -142,7 +145,7 @@ public class RobotHardware {
 
         // Subsystems
         drivetrain = new MecanumDrivetrain();
-        intake = new IntakeSubsystem();
+        //intake = new IntakeSubsystem();
         outtake = new OuttakeSubsystem();
 
 
@@ -155,27 +158,29 @@ public class RobotHardware {
         // Read all hardware devices here
         // 0 is a placeholder until i plug in the slide motor encoders
         values.put(Sensors.SensorType.EXTENSION_ENCODER, 0);
-        Pose tmp = new Pose(odo.getPosition());
-        values.put(Sensors.SensorType.PINPOINT, tmp);
-        robotPose = tmp;
+        if (Globals.IS_AUTO) {
+            Pose tmp = new Pose(odo.getPosition());
+            values.put(Sensors.SensorType.PINPOINT, tmp);
+            robotPose = tmp;
+        }
     }
 
     public void write() {
         outtake.write();
-        intake.write();
+        //intake.write();
         drivetrain.write();
     }
 
     public void periodic() {
-        intake.periodic();
+        //intake.periodic();
         outtake.periodic();
         drivetrain.periodic();
         clearBulkCache();
     }
 
     public void clearBulkCache() {
-        modules.get(0).clearBulkCache();
-        modules.get(1).clearBulkCache();
+        //modules.get(0).clearBulkCache();
+        //modules.get(1).clearBulkCache();
         //CONTROL_HUB.clearBulkCache();
     }
 

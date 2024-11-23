@@ -54,12 +54,14 @@ public class SoloTeleOp extends CommandOpMode {
                         .whenPressed(new IntakeClawToggleCommand(robot));*/
         gamepadEx.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                         .whenPressed(new OuttakeClawToggleCommand(robot));
-        gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+        gamepadEx2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(new OuttakeClawToggleCommand(robot));
+        /*gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_UP)
                         .whenPressed(new SlideCommand(SlideState.SPECIMEN_OUTTAKE));
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
                         .whenPressed(new SlideCommand(SlideState.RESET));
         gamepadEx.getGamepadButton(GamepadKeys.Button.A)
-                        .whenPressed(new SlideCommand(SlideState.SPECIMEN_INTAKE));
+                        .whenPressed(new SlideCommand(SlideState.SPECIMEN_INTAKE));*/
         /*gamepadEx.getGamepadButton(GamepadKeys.Button.X)
                         .whenPressed(new LinkageToggleCommand(robot));*/
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
@@ -72,6 +74,16 @@ public class SoloTeleOp extends CommandOpMode {
                         .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.SCORING));
         gamepadEx.getGamepadButton(GamepadKeys.Button.START)
                         .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.RESET));
+        gamepadEx2.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
+                .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.INCREMENT));
+        gamepadEx2.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+                .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.DECREMENT));
+        gamepadEx2.getGamepadButton(GamepadKeys.Button.B)
+                .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.INTAKING));
+        gamepadEx2.getGamepadButton(GamepadKeys.Button.Y)
+                .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.SCORING));
+        gamepadEx2.getGamepadButton(GamepadKeys.Button.START)
+                .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.RESET));
         robot.init(hardwareMap);
 
         robot.read();
@@ -88,13 +100,20 @@ public class SoloTeleOp extends CommandOpMode {
         robot.periodic();
         robot.write();
 
-        if (gamepad1.right_trigger > 0) {
+        /*if (gamepad1.right_trigger > 0) {
             robot.outtake.usePIDF = false;
             robot.extension.setPower(gamepad1.right_trigger);
         }
         if (gamepad1.left_trigger > 0) {
             robot.outtake.usePIDF = false;
             robot.extension.setPower(-gamepad1.left_trigger);
+        }*/
+        if (gamepad1.dpad_up || gamepad2.dpad_up) {
+            robot.extension.setPower(1);
+        } else if (gamepad1.dpad_down || gamepad2.dpad_down) {
+            robot.extension.setPower(-0.5);
+        } else {
+            robot.extension.setPower(0);
         }
 
 

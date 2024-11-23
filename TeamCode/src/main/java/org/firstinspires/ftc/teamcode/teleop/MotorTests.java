@@ -12,7 +12,7 @@ public class MotorTests extends OpMode {
 
     @Override
     public void init() {
-        Globals.IS_AUTO = true;
+        //Globals.IS_AUTO = true;
         Globals.retract();
         Globals.IS_USING_IMU = false;
         robot = RobotHardware.getInstance();

@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -37,7 +38,7 @@ public class PositionCommandTest extends LinearOpMode {
         robot.setPose(new Pose());
 
         // for the heading to be 0, have the robot be facing the red submersible side,
-        Pose testPose = new Pose(-30, -34, 0);
+        Pose testPose = new Pose(60, 0, 0);
 
         while (opModeInInit()) {
             telemetry.addLine("ready");
@@ -47,9 +48,12 @@ public class PositionCommandTest extends LinearOpMode {
 
         CommandScheduler.getInstance().schedule(
                 new SequentialCommandGroup(
+                        new WaitCommand(20000),
                         new PositionCommand(testPose)
                 )
         );
+
+        waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
             CommandScheduler.getInstance().run();
@@ -62,11 +66,11 @@ public class PositionCommandTest extends LinearOpMode {
             telemetry.addData("yError: ", robot.getPose().y - testPose.y);
             telemetry.addData("hError: ", robot.getPose().heading - testPose.heading);
             telemetry.update();
-            if (!testPose.equals(new Pose())) {
+            /*if (!testPose.equals(new Pose())) {
                 testPose = new Pose();
             } else {
                 testPose = new Pose(-30, -34, 0);
-            }
+            }*/
         }
 
         robot.kill();

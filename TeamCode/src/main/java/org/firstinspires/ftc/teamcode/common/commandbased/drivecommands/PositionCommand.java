@@ -17,14 +17,14 @@ public class PositionCommand extends CommandBase {
     private Drivetrain drivetrain;
     public Pose targetPose;
 
-    public static double xP = 0.0;
-    public static double xD = 0.0;
+    public static double xP = 2;
+    public static double xD = 0.001;
 
-    public static double yP = 0.0;
-    public static double yD = 0.0;
+    public static double yP = 2;
+    public static double yD = 0.001;
 
-    public static double hP = 0.0;
-    public static double hD = 0.0;
+    public static double hP = 4;
+    public static double hD = 0.01;
 
     public static PIDFController xController = new PIDFController(xP, 0.0, xD, 0.0);
     public static PIDFController yController = new PIDFController(yP, 0.0, yD, 0);

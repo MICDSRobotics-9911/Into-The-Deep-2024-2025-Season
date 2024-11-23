@@ -18,7 +18,7 @@ public class OuttakeTests extends LinearOpMode {
     private LinkedServos outtakeArm;
     public static double leftArmPos = 0;
     public static double rightArmPos = 0;
-    double clawPos = 0;
+    public static double clawPos = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -38,10 +38,10 @@ public class OuttakeTests extends LinearOpMode {
                 outtakeArmLeft.setPosition(leftArmPos);
             }
             if (gamepad1.b) {
-                outtakeArmRight.setPosition(rightArmPos);
+                outtakeArmLeft.setPosition(0);
             }
-            telemetry.addData("right_arm_postion: ", outtakeArmRight.getPosition());
             telemetry.addData("left_arm_position: ", outtakeArmLeft.getPosition());
+            telemetry.update();
         }
     }
 }

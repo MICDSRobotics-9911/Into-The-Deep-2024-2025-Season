@@ -98,7 +98,7 @@ public class OuttakeSubsystem extends WSubsystem {
     private double getClawStatePosition(ClawState state) {
         switch (state) {
             case OPEN:
-                return 1;
+                return 0.7;
             case CLOSED:
                 return 0;
             default:
@@ -125,9 +125,9 @@ public class OuttakeSubsystem extends WSubsystem {
     private double getPivotStatePosition(PivotState state) {
         switch (state) {
             case SCORING:
-                return 0.8;
-            case INTAKING:
                 return 0;
+            case INTAKING:
+                return 0.8;
             case INCREMENT:
                 return pivotTarget + 0.1;
             case DECREMENT:
