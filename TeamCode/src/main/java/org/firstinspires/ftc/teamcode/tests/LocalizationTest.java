@@ -73,6 +73,7 @@ public class LocalizationTest extends CommandOpMode {
         TelemetryPacket packet = new TelemetryPacket();
         packet.fieldOverlay().setStroke("#3F51B5");
         Drawing.drawRobot(packet.fieldOverlay(), robot.getPose());
+        FtcDashboard.getInstance().sendTelemetryPacket(packet);
         telemetry.addLine(robot.drivetrain.toString());
         double loop = System.nanoTime();
         telemetry.addData("hz ", 1000000000 / (loop - loopTime));

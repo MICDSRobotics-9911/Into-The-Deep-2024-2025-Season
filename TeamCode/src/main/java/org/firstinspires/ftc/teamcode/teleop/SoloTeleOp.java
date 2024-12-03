@@ -120,8 +120,8 @@ public class SoloTeleOp extends CommandOpMode {
 
         robot.drivetrain.set(
                 new Pose(
-                        gamepad1.left_stick_x,
                         -gamepad1.left_stick_y,
+                        gamepad1.left_stick_x,
                         gamepad1.right_stick_x
                         // MathUtils.joystickScalar(-gamepad1.left_trigger + gamepad1.right_trigger, 0.01)
                 ), 0

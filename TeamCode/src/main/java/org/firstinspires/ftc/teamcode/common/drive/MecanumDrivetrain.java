@@ -22,11 +22,9 @@ public class MecanumDrivetrain extends WSubsystem implements Drivetrain {
     private final RobotHardware robot = RobotHardware.getInstance();
 
     public double[] wheelPowers;
-    private Pose robotPose;
 
     public MecanumDrivetrain() {
         wheelPowers = new double[4];
-        robotPose = robot.getPose();
     }
     @Override
     public void set(Pose pose) {
@@ -37,13 +35,13 @@ public class MecanumDrivetrain extends WSubsystem implements Drivetrain {
         return (0.5 * Math.tan(1.12 * input));
     }
 
-    public void set(double strafeSpeed, double forwardSpeed,
+    public void set(double forwardSpeed,double strafeSpeed,
                     double turnSpeed, double gyroAngle) {
-        strafeSpeed *= 1.1;
         if (!Globals.IS_AUTO) {
             strafeSpeed = scaleInput(strafeSpeed);
             forwardSpeed = scaleInput(forwardSpeed);
             //turnSpeed = scaleInput(turnSpeed);
+            strafeSpeed *= 1.1;
         }
 
         Vector2D input = new Vector2D(strafeSpeed, forwardSpeed).rotate(-gyroAngle);
@@ -82,7 +80,7 @@ public class MecanumDrivetrain extends WSubsystem implements Drivetrain {
     }
 
     public void set(Pose pose, double angle) {
-        set(pose.x, pose.y, pose.heading, angle);
+        set(pose.y, pose.x, pose.heading, angle);
     }
 
     public void setPower() {
@@ -94,14 +92,12 @@ public class MecanumDrivetrain extends WSubsystem implements Drivetrain {
 
     @Override
     public void periodic() {
-        robotPose = robot.getPose();
-        if (Globals.IS_AUTO)
-            robot.odo.update();
     }
 
     @Override
     public void read() {
-
+        if (Globals.IS_AUTO)
+            robot.odo.update();
     }
 
     @Override
@@ -119,6 +115,7 @@ public class MecanumDrivetrain extends WSubsystem implements Drivetrain {
     @NonNull
     @Override
     public String toString() {
+        Pose robotPose = robot.getPose();
         return String.format(
                 Locale.US,
                 "FLPower: %.2f\nFRPower: %.2f\nBLPower: %.2f\nBRPower: %.2f\n" +

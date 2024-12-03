@@ -6,10 +6,12 @@ import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.common.drive.Drivetrain;
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.common.hardware.Sensors;
+import org.firstinspires.ftc.teamcode.common.util.MathUtils;
 import org.firstinspires.ftc.teamcode.common.util.Pose;
 
 import java.util.Objects;
@@ -76,10 +78,11 @@ public class PositionCommand extends CommandBase {
         return timer.milliseconds() > DEAD_MS || stable.milliseconds() > STABLE_MS;
     }
 
+
     public Pose getPower(Pose robotPose) {
-        if (targetPose.heading - robotPose.heading > Math.PI)
+        while (targetPose.heading - robotPose.heading > Math.PI)
             targetPose.heading -= 2 * Math.PI;
-        if (targetPose.heading - robotPose.heading < Math.PI)
+        while (targetPose.heading - robotPose.heading < Math.PI)
             targetPose.heading += 2 * Math.PI;
 
         double xPower = xController.calculate(robotPose.x, targetPose.x);
@@ -88,12 +91,20 @@ public class PositionCommand extends CommandBase {
 
         double x_rotated = xPower * Math.cos(-robotPose.heading) - yPower * Math.sin(-robotPose.heading);
         double y_rotated = yPower * Math.sin(-robotPose.heading) + yPower * Math.cos(-robotPose.heading);
+        x_rotated = xPower;
+        y_rotated = yPower;
 
         hPower = Range.clip(hPower, -1, 1);
         x_rotated = Range.clip(x_rotated, -1, 1);
         y_rotated = Range.clip(y_rotated, -1, 1);
 
-        return new Pose(y_rotated, x_rotated, 0);
+
+        // SQUID STUFF
+        /*hPower = MathUtils.signSqrt(hPower);
+        x_rotated = MathUtils.signSqrt(x_rotated);
+        y_rotated = MathUtils.signSqrt(y_rotated);*/
+
+        return new Pose(x_rotated, y_rotated, 0);
     }
 
     @Override

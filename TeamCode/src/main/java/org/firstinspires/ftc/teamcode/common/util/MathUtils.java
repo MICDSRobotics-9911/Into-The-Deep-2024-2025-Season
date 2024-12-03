@@ -12,4 +12,11 @@ public class MathUtils {
                         Math.pow(Math.abs(n), Math.log(l / a) / Math.log(l)) * Math.signum(n) :
                         n / a);
     }
+
+    public static double signSqrt(double num) {
+        int sign = 1;
+        if (num < 0)
+            sign = -1;
+        return sign * Math.sqrt(num);
+    }
 }

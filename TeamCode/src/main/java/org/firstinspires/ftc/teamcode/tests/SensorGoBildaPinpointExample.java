@@ -90,7 +90,7 @@ public class SensorGoBildaPinpointExample extends LinearOpMode {
         the tracking point the Y (strafe) odometry pod is. forward of center is a positive number,
         backwards is a negative number.
          */
-        odo.setOffsets(-84.0, -168.0); //these are tuned for 3110-0002-0001 Product Insight #1
+        odo.setOffsets(25.04879, -45.26356); //these are tuned for 3110-0002-0001 Product Insight #1
 
         /*
         Set the kind of pods used by your robot. If you're using goBILDA odometry pods, select either
@@ -118,7 +118,7 @@ public class SensorGoBildaPinpointExample extends LinearOpMode {
         This is recommended before you run your autonomous, as a bad initial calibration can cause
         an incorrect starting value for x, y, and heading.
          */
-        //odo.recalibrateIMU();
+        odo.recalibrateIMU();
         odo.resetPosAndIMU();
 
         telemetry.addData("Status", "Initialized");
@@ -187,6 +187,8 @@ public class SensorGoBildaPinpointExample extends LinearOpMode {
             Pose2D pos = odo.getPosition();
             String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(DistanceUnit.INCH), pos.getY(DistanceUnit.INCH), pos.getHeading(AngleUnit.DEGREES));
             telemetry.addData("Position", data);
+
+            telemetry.addData("robotPose: ", robot.getPose().toString());
 
             /*
             gets the current Velocity (x & y in mm/sec and heading in degrees/sec) and prints it.

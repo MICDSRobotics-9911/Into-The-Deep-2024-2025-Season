@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.common.hardware;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -118,10 +119,11 @@ public class RobotHardware {
         if (Globals.IS_AUTO) {
             odo = hardwareMap.get(GoBildaPinpointDriver.class, "odo");
             odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-            // X Pod Offset: 24.07432
-            // Y Pod Offset: 62.37545
-            odo.setOffsets(24.07432, 62.37545);
+            // X Pod Offset: 25.04879
+            // Y Pod Offset: -45.26356
+            odo.setOffsets(25.04879, -45.26356);
             odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.REVERSED);
+            odo.recalibrateIMU();
             odo.resetPosAndIMU();
         }
 
