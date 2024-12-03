@@ -41,7 +41,7 @@ public class RobotHardware {
     public List<LynxModule> modules;
     public LynxModule CONTROL_HUB;
 
-    private GoBildaPinpointDriver odo;
+    public GoBildaPinpointDriver odo;
     public CachingDcMotorEx frontLeft;
     public CachingDcMotorEx frontRight;
     public CachingDcMotorEx backLeft;
@@ -103,16 +103,16 @@ public class RobotHardware {
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // EXTENSION
-        //extensionRight = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionRight"));
+        /*extensionRight = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionRight"));
         extensionLeft = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionLeft"));
         extensionLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        extension = new LinkedMotors(extensionLeft);
+        extension = new LinkedMotors(extensionLeft, extensionRight);
 
         // OUTTAKE
         //outtakeArmRight = new CachingServo(hardwareMap.get(Servo.class, "outtakeArmRight"));
         outtakeArmLeft = new CachingServo(hardwareMap.get(Servo.class, "outtakeArmLeft"));
         outtakeArm = new LinkedServos(outtakeArmLeft);
-        outtakeClaw = new CachingServo(hardwareMap.get(Servo.class, "outtakeClaw"));
+        outtakeClaw = new CachingServo(hardwareMap.get(Servo.class, "outtakeClaw"));*/
 
         // LOCALIZATION
         if (Globals.IS_AUTO) {
@@ -121,7 +121,7 @@ public class RobotHardware {
             // X Pod Offset: 24.07432
             // Y Pod Offset: 62.37545
             odo.setOffsets(24.07432, 62.37545);
-            odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+            odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.REVERSED);
             odo.resetPosAndIMU();
         }
 

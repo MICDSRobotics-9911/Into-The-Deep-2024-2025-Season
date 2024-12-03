@@ -10,10 +10,15 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.common.commandbased.drivecommands.PositionCommand;
 import org.firstinspires.ftc.teamcode.common.hardware.Globals;
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.common.util.Pose;
+
+import java.util.Locale;
 
 @Config
 @Autonomous(name="P2P")
@@ -38,7 +43,7 @@ public class PositionCommandTest extends LinearOpMode {
         robot.setPose(new Pose());
 
         // for the heading to be 0, have the robot be facing the red submersible side,
-        Pose testPose = new Pose(60, 0, 0);
+        Pose testPose = new Pose(10, 30, 0);
 
         while (opModeInInit()) {
             telemetry.addLine("ready");
@@ -48,7 +53,6 @@ public class PositionCommandTest extends LinearOpMode {
 
         CommandScheduler.getInstance().schedule(
                 new SequentialCommandGroup(
-                        new WaitCommand(20000),
                         new PositionCommand(testPose)
                 )
         );
@@ -61,10 +65,12 @@ public class PositionCommandTest extends LinearOpMode {
             robot.periodic();
             robot.write();
             telemetry.addLine("targetPose: " + testPose);
-            telemetry.addLine("currentPose: " + robot.getPose());
             telemetry.addData("xError: ", robot.getPose().x - testPose.x);
             telemetry.addData("yError: ", robot.getPose().y - testPose.y);
             telemetry.addData("hError: ", robot.getPose().heading - testPose.heading);
+            Pose2D pos = robot.odo.getPosition();
+            String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(DistanceUnit.INCH), pos.getY(DistanceUnit.INCH), pos.getHeading(AngleUnit.DEGREES));
+            telemetry.addData("Position", data);
             telemetry.update();
             /*if (!testPose.equals(new Pose())) {
                 testPose = new Pose();

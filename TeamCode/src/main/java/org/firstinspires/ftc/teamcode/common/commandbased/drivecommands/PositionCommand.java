@@ -6,10 +6,13 @@ import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.common.drive.Drivetrain;
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.common.hardware.Sensors;
 import org.firstinspires.ftc.teamcode.common.util.Pose;
+
+import java.util.Objects;
 
 
 @Config
@@ -55,7 +58,7 @@ public class PositionCommand extends CommandBase {
         if (timer == null) timer = new ElapsedTime();
         if (stable == null) stable = new ElapsedTime();
 
-        Pose robotPose = (Pose) robot.values.get(Sensors.SensorType.PINPOINT);
+        Pose robotPose = robot.getPose();
 
         Pose powers = getPower(robotPose);
         drivetrain.set(powers);
@@ -63,7 +66,7 @@ public class PositionCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        Pose robotPose = (Pose) robot.values.get(Sensors.SensorType.PINPOINT);
+        Pose robotPose = robot.getPose();
         Pose delta = targetPose.subtract(robotPose);
         if (delta.toVec2D().magnitude() > ALLOWED_TRANSLATIONAL_ERROR
                 || Math.abs(delta.heading) > ALLOWED_HEADING_ERROR) {
@@ -74,9 +77,9 @@ public class PositionCommand extends CommandBase {
     }
 
     public Pose getPower(Pose robotPose) {
-        while (targetPose.heading - robotPose.heading > Math.PI)
+        if (targetPose.heading - robotPose.heading > Math.PI)
             targetPose.heading -= 2 * Math.PI;
-        while (targetPose.heading - robotPose.heading < Math.PI)
+        if (targetPose.heading - robotPose.heading < Math.PI)
             targetPose.heading += 2 * Math.PI;
 
         double xPower = xController.calculate(robotPose.x, targetPose.x);
@@ -90,7 +93,7 @@ public class PositionCommand extends CommandBase {
         x_rotated = Range.clip(x_rotated, -1, 1);
         y_rotated = Range.clip(y_rotated, -1, 1);
 
-        return new Pose(x_rotated, y_rotated, hPower);
+        return new Pose(y_rotated, x_rotated, 0);
     }
 
     @Override

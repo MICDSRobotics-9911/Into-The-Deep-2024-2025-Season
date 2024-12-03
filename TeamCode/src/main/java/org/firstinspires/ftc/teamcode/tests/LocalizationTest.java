@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.common.util.Drawing;
 import org.firstinspires.ftc.teamcode.common.util.Pose;
 
-@TeleOp(name="CommandTeleOp")
+@TeleOp(name="LocalizationTest")
 public class LocalizationTest extends CommandOpMode {
 
     private final RobotHardware robot = RobotHardware.getInstance();
@@ -27,7 +27,7 @@ public class LocalizationTest extends CommandOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         CommandScheduler.getInstance().reset();
 
-        Globals.IS_AUTO = false;
+        Globals.IS_AUTO = true;
         Globals.stopIntaking();
         Globals.stopScoring();
 

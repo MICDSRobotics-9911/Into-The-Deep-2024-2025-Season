@@ -16,9 +16,16 @@ public class Pose extends Point {
 
     public Pose(Pose2D pose) {
         super(pose.getX(DistanceUnit.INCH), pose.getY(DistanceUnit.INCH));
-        this.heading = AngleUnit.normalizeRadians(pose.getHeading(AngleUnit.RADIANS));
+        this.heading = pose.getHeading(AngleUnit.RADIANS);
     }
 
+    public Pose(double x, double y, double heading, AngleUnit unit) {
+        super(x, y);
+        if (unit == AngleUnit.DEGREES) {
+            heading = Math.PI / 180;
+        }
+        this.heading = AngleUnit.normalizeRadians(heading);
+    }
     public Pose(double x, double y, double heading) {
         super(x, y);
         this.heading = AngleUnit.normalizeRadians(heading);

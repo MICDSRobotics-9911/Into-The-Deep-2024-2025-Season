@@ -20,7 +20,7 @@ public class IntakeSubsystem extends WSubsystem {
 
     public IntakeSubsystem() {
         this.robot = RobotHardware.getInstance();
-        updateState(ClawState.OPEN);
+        //updateState(ClawState.OPEN);
     }
 
     public void updateState(@NotNull ClawState state) {
@@ -52,7 +52,7 @@ public class IntakeSubsystem extends WSubsystem {
 
     @Override
     public void reset() {
-        updateState(PivotState.RETRACT);
+        //updateState(PivotState.RETRACT);
     }
 
     private double getPivotStatePosition(PivotState state) {

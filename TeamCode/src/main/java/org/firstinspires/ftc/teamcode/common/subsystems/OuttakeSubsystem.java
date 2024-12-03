@@ -42,17 +42,17 @@ public class OuttakeSubsystem extends WSubsystem {
     private int target = 0;
 
     public OuttakeSubsystem() {
-        updateState(ClawState.OPEN);
+        /*updateState(ClawState.OPEN);
         updateState(SlideState.RESET);
         updateState(PivotState.RESET);
         pid = 0;
         controller = new PIDFController(p, i, d, f);
-        controller.reset();
+        controller.reset();*/
     }
     @Override
     public void periodic() {
         int motorPos = 0;
-        if (usePIDF)
+        /*if (usePIDF)
             motorPos = robot.extension.getCurrentPosition();
 
         pid = controller.calculate(
@@ -60,7 +60,7 @@ public class OuttakeSubsystem extends WSubsystem {
         if (usePIDF) {
             robot.extension.setPower(pid);
         }
-        pivotTarget = robot.outtakeArm.getPosition();
+        pivotTarget = robot.outtakeArm.getPosition();*/
     }
 
     public void updateState(@NotNull ClawState state) {
@@ -127,7 +127,7 @@ public class OuttakeSubsystem extends WSubsystem {
             case SCORING:
                 return 0;
             case INTAKING:
-                return 0.8;
+                return 0.6;
             case INCREMENT:
                 return pivotTarget + 0.1;
             case DECREMENT:

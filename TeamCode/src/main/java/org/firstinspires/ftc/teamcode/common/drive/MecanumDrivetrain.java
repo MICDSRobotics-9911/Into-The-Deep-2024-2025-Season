@@ -22,11 +22,11 @@ public class MecanumDrivetrain extends WSubsystem implements Drivetrain {
     private final RobotHardware robot = RobotHardware.getInstance();
 
     public double[] wheelPowers;
-    private Pose2D robotPose;
+    private Pose robotPose;
 
     public MecanumDrivetrain() {
         wheelPowers = new double[4];
-        robotPose = new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.DEGREES, 0);
+        robotPose = robot.getPose();
     }
     @Override
     public void set(Pose pose) {
@@ -39,6 +39,7 @@ public class MecanumDrivetrain extends WSubsystem implements Drivetrain {
 
     public void set(double strafeSpeed, double forwardSpeed,
                     double turnSpeed, double gyroAngle) {
+        strafeSpeed *= 1.1;
         if (!Globals.IS_AUTO) {
             strafeSpeed = scaleInput(strafeSpeed);
             forwardSpeed = scaleInput(forwardSpeed);
@@ -57,6 +58,7 @@ public class MecanumDrivetrain extends WSubsystem implements Drivetrain {
         wheelSpeeds[1] = forwardSpeed - strafeSpeed - turnSpeed;
         wheelSpeeds[2] = forwardSpeed - strafeSpeed + turnSpeed;
         wheelSpeeds[3] = forwardSpeed + strafeSpeed - turnSpeed;
+
 
         if (Globals.IS_AUTO) {
             // feedforward and voltage comp
@@ -92,13 +94,14 @@ public class MecanumDrivetrain extends WSubsystem implements Drivetrain {
 
     @Override
     public void periodic() {
-        // Nothing here
+        robotPose = robot.getPose();
+        if (Globals.IS_AUTO)
+            robot.odo.update();
     }
 
     @Override
     public void read() {
-        //odo.update();
-        //robotPose = odo.getPosition();
+
     }
 
     @Override
@@ -121,8 +124,8 @@ public class MecanumDrivetrain extends WSubsystem implements Drivetrain {
                 "FLPower: %.2f\nFRPower: %.2f\nBLPower: %.2f\nBRPower: %.2f\n" +
                         "x: %.3f\ny: %.3f\nheading: %.3f\n",
                 wheelPowers[0], wheelPowers[1], wheelPowers[2], wheelPowers[3],
-                robotPose.getX(DistanceUnit.INCH), robotPose.getY(DistanceUnit.INCH),
-                robotPose.getHeading(AngleUnit.DEGREES)
+                robotPose.getX(), robotPose.getY(),
+                robotPose.heading
         );
     }
 }
