@@ -1,6 +1,4 @@
 package org.firstinspires.ftc.teamcode.common.util;
-import com.acmerobotics.roadrunner.Vector2d;
-import com.acmerobotics.roadrunner.Pose2d;
 
 import com.acmerobotics.dashboard.canvas.Canvas;
 
@@ -8,15 +6,12 @@ public final class Drawing {
     private Drawing() {}
 
 
-    public static void drawRobot(Canvas c, Pose2d t) {
+    public static void drawRobot(Canvas c, Pose pose) {
         final double ROBOT_RADIUS = 9;
 
-        c.setStrokeWidth(1);
-        c.strokeCircle(t.position.x, t.position.y, ROBOT_RADIUS);
-
-        Vector2d halfv = t.heading.vec().times(0.5 * ROBOT_RADIUS);
-        Vector2d p1 = t.position.plus(halfv);
-        Vector2d p2 = p1.plus(halfv);
-        c.strokeLine(p1.x, p1.y, p2.x, p2.y);
+        c.setStroke("green");
+        c.strokeCircle(pose.x, pose.y, ROBOT_RADIUS);
+        c.strokeLine(pose.x, pose.y, pose.x + Math.cos(pose.heading) * ROBOT_RADIUS,
+                pose.y + Math.sin(pose.heading) * ROBOT_RADIUS);
     }
 }
