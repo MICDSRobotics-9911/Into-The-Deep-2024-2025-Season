@@ -163,14 +163,16 @@ public class SensorGoBildaPinpointExample extends LinearOpMode {
             of time each cycle takes and finds the frequency (number of updates per second) from
             that cycle time.
              */
+
             robot.drivetrain.set(
                     new Pose(
-                            gamepad1.left_stick_x,
                             -gamepad1.left_stick_y,
+                            gamepad1.left_stick_x,
                             gamepad1.right_stick_x
                             // MathUtils.joystickScalar(-gamepad1.left_trigger + gamepad1.right_trigger, 0.01)
                     ), 0
             );
+
             robot.write();
             robot.periodic();
             robot.read();
@@ -187,8 +189,6 @@ public class SensorGoBildaPinpointExample extends LinearOpMode {
             Pose2D pos = odo.getPosition();
             String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(DistanceUnit.INCH), pos.getY(DistanceUnit.INCH), pos.getHeading(AngleUnit.DEGREES));
             telemetry.addData("Position", data);
-
-            telemetry.addData("robotPose: ", robot.getPose().toString());
 
             /*
             gets the current Velocity (x & y in mm/sec and heading in degrees/sec) and prints it.

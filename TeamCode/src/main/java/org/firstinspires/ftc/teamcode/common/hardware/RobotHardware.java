@@ -68,7 +68,7 @@ public class RobotHardware {
 
     public HashMap<Sensors.SensorType, Object> values;
 
-    private Pose robotPose;
+    private Pose2D robotPose;
 
     public static RobotHardware getInstance() {
         if (instance == null) {
@@ -116,16 +116,14 @@ public class RobotHardware {
         outtakeClaw = new CachingServo(hardwareMap.get(Servo.class, "outtakeClaw"));*/
 
         // LOCALIZATION
-        if (Globals.IS_AUTO) {
-            odo = hardwareMap.get(GoBildaPinpointDriver.class, "odo");
-            odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-            // X Pod Offset: 25.04879
-            // Y Pod Offset: -45.26356
-            odo.setOffsets(25.04879, -45.26356);
-            odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.REVERSED);
-            odo.recalibrateIMU();
-            odo.resetPosAndIMU();
-        }
+        odo = hardwareMap.get(GoBildaPinpointDriver.class, "odo");
+        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+        // X Pod Offset: 25.04879
+        // Y Pod Offset: -45.26356
+        odo.setOffsets(25.04879, -45.26356);
+        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.REVERSED);
+        odo.recalibrateIMU();
+        odo.resetPosAndIMU();
 
         // INTAKE
         /*intakeClaw = new CachingServo(hardwareMap.get(Servo.class, "intakeClaw"));
@@ -161,9 +159,8 @@ public class RobotHardware {
         // 0 is a placeholder until i plug in the slide motor encoders
         values.put(Sensors.SensorType.EXTENSION_ENCODER, 0);
         if (Globals.IS_AUTO) {
-            Pose tmp = new Pose(odo.getPosition());
-            values.put(Sensors.SensorType.PINPOINT, tmp);
-            robotPose = tmp;
+            robotPose = odo.getPosition();
+            values.put(Sensors.SensorType.PINPOINT, robotPose);
         }
     }
 
@@ -181,8 +178,8 @@ public class RobotHardware {
     }
 
     public void clearBulkCache() {
-        //modules.get(0).clearBulkCache();
-        //modules.get(1).clearBulkCache();
+        modules.get(0).clearBulkCache();
+        modules.get(1).clearBulkCache();
         //CONTROL_HUB.clearBulkCache();
     }
 
@@ -194,11 +191,12 @@ public class RobotHardware {
         instance = null;
     }
 
-    public void setPose(Pose pose) {
+    public void setPose(Pose2D pose) {
+        odo.setPosition(pose);
         robotPose = pose;
     }
 
-    public Pose getPose() {
+    public Pose2D getPose() {
         return robotPose;
     }
 }

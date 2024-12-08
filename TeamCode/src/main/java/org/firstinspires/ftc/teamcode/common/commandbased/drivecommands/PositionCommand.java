@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.common.drive.Drivetrain;
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
@@ -60,7 +61,7 @@ public class PositionCommand extends CommandBase {
         if (timer == null) timer = new ElapsedTime();
         if (stable == null) stable = new ElapsedTime();
 
-        Pose robotPose = robot.getPose();
+        Pose2D robotPose = robot.odo.getPosition();
 
         Pose powers = getPower(robotPose);
         drivetrain.set(powers);
@@ -68,29 +69,36 @@ public class PositionCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        Pose robotPose = robot.getPose();
-        Pose delta = targetPose.subtract(robotPose);
-        if (delta.toVec2D().magnitude() > ALLOWED_TRANSLATIONAL_ERROR
-                || Math.abs(delta.heading) > ALLOWED_HEADING_ERROR) {
-            stable.reset();
-        }
+        return atPoint();
+    }
 
-        return timer.milliseconds() > DEAD_MS || stable.milliseconds() > STABLE_MS;
+    public static double xThreshold = 3;
+    public static double yThreshold = 3;
+    public static double turnThreshold = 1;
+    public boolean atPoint() {
+        return Math.abs(targetPose.x - robot.getPose().getX(DistanceUnit.INCH)) < xThreshold &&
+                Math.abs(targetPose.y - robot.getPose().getY(DistanceUnit.INCH)) < yThreshold &&
+                Math.abs(robot.getPose().getHeading(AngleUnit.RADIANS) - targetPose.heading) <
+                        Math.toRadians(turnThreshold);
     }
 
 
-    public Pose getPower(Pose robotPose) {
-        while (targetPose.heading - robotPose.heading > Math.PI)
-            targetPose.heading -= 2 * Math.PI;
-        while (targetPose.heading - robotPose.heading < Math.PI)
-            targetPose.heading += 2 * Math.PI;
+    public Pose getPower(Pose2D robotPose) {
+        double wrappedHeading = targetPose.heading;
+        double heading = robotPose.getHeading(AngleUnit.RADIANS);
+        double x = robotPose.getX(DistanceUnit.INCH);
+        double y = robotPose.getY(DistanceUnit.INCH);
+        while (wrappedHeading - heading > Math.PI)
+            wrappedHeading -= 2 * Math.PI;
+        while (wrappedHeading - heading < Math.PI)
+            wrappedHeading += 2 * Math.PI;
 
-        double xPower = xController.calculate(robotPose.x, targetPose.x);
-        double yPower = yController.calculate(robotPose.y, targetPose.y);
-        double hPower = -hController.calculate(robotPose.heading, targetPose.heading);
+        double xPower = xController.calculate(x, targetPose.x);
+        double yPower = yController.calculate(y, targetPose.y);
+        double hPower = -hController.calculate(wrappedHeading, targetPose.heading);
 
-        double x_rotated = xPower * Math.cos(-robotPose.heading) - yPower * Math.sin(-robotPose.heading);
-        double y_rotated = yPower * Math.sin(-robotPose.heading) + yPower * Math.cos(-robotPose.heading);
+        double x_rotated = xPower * Math.cos(-heading) - yPower * Math.sin(-heading);
+        double y_rotated = yPower * Math.sin(-heading) + yPower * Math.cos(-heading);
         x_rotated = xPower;
         y_rotated = yPower;
 
@@ -104,7 +112,7 @@ public class PositionCommand extends CommandBase {
         x_rotated = MathUtils.signSqrt(x_rotated);
         y_rotated = MathUtils.signSqrt(y_rotated);*/
 
-        return new Pose(x_rotated, y_rotated, 0);
+        return new Pose(x_rotated, 0, 0);
     }
 
     @Override

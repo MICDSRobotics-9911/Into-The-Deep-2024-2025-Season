@@ -8,6 +8,9 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.common.hardware.Globals;
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.common.util.Drawing;
@@ -21,10 +24,12 @@ public class LocalizationTest extends CommandOpMode {
     private GamepadEx gamepadEx2;
 
     private double loopTime = 0.0;
+    private FtcDashboard dashboard;
 
     @Override
     public void initialize() {
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        dashboard = FtcDashboard.getInstance();
+        telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
         CommandScheduler.getInstance().reset();
 
         Globals.IS_AUTO = true;
@@ -38,7 +43,7 @@ public class LocalizationTest extends CommandOpMode {
         robot.init(hardwareMap);
 
         robot.read();
-        robot.setPose(new Pose());
+        robot.setPose(new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.RADIANS, 0));
         while (opModeInInit()) {
             telemetry.addLine("Robot Initialized.");
             telemetry.update();
@@ -64,16 +69,16 @@ public class LocalizationTest extends CommandOpMode {
 
         robot.drivetrain.set(
                 new Pose(
-                        gamepad1.left_stick_x,
                         -gamepad1.left_stick_y,
+                        gamepad1.left_stick_x,
                         gamepad1.right_stick_x
                 ), 0
         );
 
         TelemetryPacket packet = new TelemetryPacket();
         packet.fieldOverlay().setStroke("#3F51B5");
-        Drawing.drawRobot(packet.fieldOverlay(), robot.getPose());
-        FtcDashboard.getInstance().sendTelemetryPacket(packet);
+        Drawing.drawRobot(packet.fieldOverlay(), robot.odo.getPosition());
+        dashboard.sendTelemetryPacket(packet);
         telemetry.addLine(robot.drivetrain.toString());
         double loop = System.nanoTime();
         telemetry.addData("hz ", 1000000000 / (loop - loopTime));

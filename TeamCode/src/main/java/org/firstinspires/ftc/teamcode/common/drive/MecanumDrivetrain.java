@@ -38,11 +38,14 @@ public class MecanumDrivetrain extends WSubsystem implements Drivetrain {
     public void set(double forwardSpeed,double strafeSpeed,
                     double turnSpeed, double gyroAngle) {
         if (!Globals.IS_AUTO) {
+            /*forwardSpeed = forwardSpeed * Math.cos(-gyroAngle) - strafeSpeed * Math.sin(-gyroAngle);
+            strafeSpeed = forwardSpeed * Math.sin(-gyroAngle) - strafeSpeed * Math.sin(-gyroAngle);*/
             strafeSpeed = scaleInput(strafeSpeed);
             forwardSpeed = scaleInput(forwardSpeed);
             //turnSpeed = scaleInput(turnSpeed);
             strafeSpeed *= 1.1;
         }
+
 
         Vector2D input = new Vector2D(strafeSpeed, forwardSpeed).rotate(-gyroAngle);
 
@@ -80,7 +83,7 @@ public class MecanumDrivetrain extends WSubsystem implements Drivetrain {
     }
 
     public void set(Pose pose, double angle) {
-        set(pose.y, pose.x, pose.heading, angle);
+        set(pose.x, pose.y, pose.heading, angle);
     }
 
     public void setPower() {
@@ -96,8 +99,7 @@ public class MecanumDrivetrain extends WSubsystem implements Drivetrain {
 
     @Override
     public void read() {
-        if (Globals.IS_AUTO)
-            robot.odo.update();
+        robot.odo.update();
     }
 
     @Override
@@ -115,14 +117,14 @@ public class MecanumDrivetrain extends WSubsystem implements Drivetrain {
     @NonNull
     @Override
     public String toString() {
-        Pose robotPose = robot.getPose();
+        Pose2D robotPose = robot.getPose();
         return String.format(
                 Locale.US,
                 "FLPower: %.2f\nFRPower: %.2f\nBLPower: %.2f\nBRPower: %.2f\n" +
                         "x: %.3f\ny: %.3f\nheading: %.3f\n",
                 wheelPowers[0], wheelPowers[1], wheelPowers[2], wheelPowers[3],
-                robotPose.getX(), robotPose.getY(),
-                robotPose.heading
+                robotPose.getX(DistanceUnit.INCH), robotPose.getY(DistanceUnit.INCH),
+                robotPose.getHeading(AngleUnit.RADIANS)
         );
     }
 }
