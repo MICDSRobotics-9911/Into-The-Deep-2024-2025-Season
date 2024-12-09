@@ -104,16 +104,16 @@ public class RobotHardware {
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // EXTENSION
-        /*extensionRight = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionRight"));
+        extensionRight = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionRight"));
         extensionLeft = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionLeft"));
         extensionLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         extension = new LinkedMotors(extensionLeft, extensionRight);
 
         // OUTTAKE
-        //outtakeArmRight = new CachingServo(hardwareMap.get(Servo.class, "outtakeArmRight"));
+        outtakeArmRight = new CachingServo(hardwareMap.get(Servo.class, "outtakeArmRight"));
         outtakeArmLeft = new CachingServo(hardwareMap.get(Servo.class, "outtakeArmLeft"));
         outtakeArm = new LinkedServos(outtakeArmLeft);
-        outtakeClaw = new CachingServo(hardwareMap.get(Servo.class, "outtakeClaw"));*/
+        outtakeClaw = new CachingServo(hardwareMap.get(Servo.class, "outtakeClaw"));
 
         // LOCALIZATION
         odo = hardwareMap.get(GoBildaPinpointDriver.class, "odo");
@@ -126,7 +126,7 @@ public class RobotHardware {
         odo.resetPosAndIMU();
 
         // INTAKE
-        /*intakeClaw = new CachingServo(hardwareMap.get(Servo.class, "intakeClaw"));
+        intakeClaw = new CachingServo(hardwareMap.get(Servo.class, "intakeClaw"));
         intakeArmLeft = new CachingServo(hardwareMap.get(Servo.class, "intakePivotLeft"));
         intakeArmRight = new CachingServo(hardwareMap.get(Servo.class, "intakePivotRight"));
         intakeArm = new LinkedServos(intakeArmLeft, intakeArmRight);
@@ -134,7 +134,7 @@ public class RobotHardware {
         // EXTENDO
         linkageServoLeft = new CachingServo(hardwareMap.get(Servo.class, "linkageServoLeft"));
         linkageServoRight = new CachingServo(hardwareMap.get(Servo.class, "linkageServoRight"));
-        linkageServo = new LinkedServos(linkageServoLeft, linkageServoRight);*/
+        linkageServo = new LinkedServos(linkageServoLeft, linkageServoRight);
 
         modules = hardwareMap.getAll(LynxModule.class);
         for (LynxModule m : modules) {
@@ -145,7 +145,7 @@ public class RobotHardware {
 
         // Subsystems
         drivetrain = new MecanumDrivetrain();
-        //intake = new IntakeSubsystem();
+        intake = new IntakeSubsystem();
         outtake = new OuttakeSubsystem();
 
 
@@ -156,22 +156,20 @@ public class RobotHardware {
 
     public void read() {
         // Read all hardware devices here
-        // 0 is a placeholder until i plug in the slide motor encoders
-        values.put(Sensors.SensorType.EXTENSION_ENCODER, 0);
-        if (Globals.IS_AUTO) {
-            robotPose = odo.getPosition();
-            values.put(Sensors.SensorType.PINPOINT, robotPose);
-        }
+        drivetrain.read();
+        intake.read();
+        outtake.read();
+        robotPose = odo.getPosition();
     }
 
     public void write() {
         outtake.write();
-        //intake.write();
+        intake.write();
         drivetrain.write();
     }
 
     public void periodic() {
-        //intake.periodic();
+        intake.periodic();
         outtake.periodic();
         drivetrain.periodic();
         clearBulkCache();

@@ -70,20 +70,19 @@ public class PositionCommandTest extends LinearOpMode {
             robot.periodic();
             robot.write();
             telemetry.addLine("targetPose: " + testPose);
-            /*telemetry.addData("xError: ", robot.getPose().x - testPose.x);
-            telemetry.addData("yError: ", robot.getPose().y - testPose.y);
-            telemetry.addData("hError: ", robot.getPose(). - testPose.heading);*/
+            telemetry.addData("xError: ", robot.getPose().getX(DistanceUnit.INCH) -
+                    testPose.x);
+            telemetry.addData("yError: ", robot.getPose().getY(DistanceUnit.INCH) -
+                    testPose.y);
+            telemetry.addData("hError: ", robot.getPose().
+                    getHeading(AngleUnit.DEGREES) - Math.toDegrees(testPose.heading));
             Pose2D pos = robot.odo.getPosition();
             String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}",
                     pos.getX(DistanceUnit.INCH), pos.getY(DistanceUnit.INCH),
                     pos.getHeading(AngleUnit.DEGREES));
             telemetry.addData("Position", data);
             telemetry.update();
-
-            TelemetryPacket packet = new TelemetryPacket();
-            packet.fieldOverlay().setStroke("#3F51B5");
-            Drawing.drawRobot(packet.fieldOverlay(), robot.odo.getPosition());
-            dashboard.sendTelemetryPacket(packet);
+            dashboard.sendTelemetryPacket(Drawing.drawRobot(robot.odo.getPosition()));
             /*if (!testPose.equals(new Pose())) {
                 testPose = new Pose();
             } else {

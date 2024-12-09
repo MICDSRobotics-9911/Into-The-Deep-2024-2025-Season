@@ -20,8 +20,6 @@ import org.firstinspires.ftc.teamcode.common.util.Pose;
 public class LocalizationTest extends CommandOpMode {
 
     private final RobotHardware robot = RobotHardware.getInstance();
-    private GamepadEx gamepadEx;
-    private GamepadEx gamepadEx2;
 
     private double loopTime = 0.0;
     private FtcDashboard dashboard;
@@ -36,16 +34,13 @@ public class LocalizationTest extends CommandOpMode {
         Globals.stopIntaking();
         Globals.stopScoring();
 
-
-        gamepadEx = new GamepadEx(gamepad1);
-        gamepadEx2 = new GamepadEx(gamepad2);
-
         robot.init(hardwareMap);
 
         robot.read();
         robot.setPose(new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.RADIANS, 0));
         while (opModeInInit()) {
             telemetry.addLine("Robot Initialized.");
+            dashboard.sendTelemetryPacket(new TelemetryPacket(true));
             telemetry.update();
         }
     }
@@ -57,16 +52,6 @@ public class LocalizationTest extends CommandOpMode {
         robot.periodic();
         robot.write();
 
-
-        // These controls turn the robot with the triggers
-        /*robot.drivetrain.set(
-                new Pose(
-                        gamepad1.left_stick_x,
-                        -gamepad1.left_stick_y,
-                        MathUtils.joystickScalar(-gamepad1.left_trigger + gamepad1.right_trigger, 0.01)
-                ), 0
-        );*/
-
         robot.drivetrain.set(
                 new Pose(
                         -gamepad1.left_stick_y,
@@ -75,10 +60,7 @@ public class LocalizationTest extends CommandOpMode {
                 ), 0
         );
 
-        TelemetryPacket packet = new TelemetryPacket();
-        packet.fieldOverlay().setStroke("#3F51B5");
-        Drawing.drawRobot(packet.fieldOverlay(), robot.odo.getPosition());
-        dashboard.sendTelemetryPacket(packet);
+        dashboard.sendTelemetryPacket(Drawing.drawRobot(robot.getPose()));
         telemetry.addLine(robot.drivetrain.toString());
         double loop = System.nanoTime();
         telemetry.addData("hz ", 1000000000 / (loop - loopTime));
