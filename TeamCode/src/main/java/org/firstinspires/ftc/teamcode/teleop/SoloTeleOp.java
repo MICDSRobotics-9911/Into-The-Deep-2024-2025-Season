@@ -97,8 +97,7 @@ public class SoloTeleOp extends CommandOpMode {
     }
 
 
-    public void initializeButtons() {
-        gamepadEx.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+    public void initializeButtons() {gamepadEx.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(new IntakeClawToggleCommand(robot));
         gamepadEx.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(new OuttakeClawToggleCommand(robot));

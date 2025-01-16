@@ -16,9 +16,10 @@ public class OuttakeTests extends LinearOpMode {
     private CachingServo outtakeArmLeft;
     private CachingServo outtakeArmRight;
     private LinkedServos outtakeArm;
-    public static double leftArmPos = 0;
-    public static double rightArmPos = 0;
-    public static double clawPos = 0;
+    public static double leftArmPos = 0.5;
+    public static double rightArmPos = 0.5;
+    public static double rightClawPos = 0.5;
+    public static double leftClawPos = 0.5;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -28,14 +29,15 @@ public class OuttakeTests extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
             if (gamepad1.dpad_up) {
-                outtakeClaw.setPosition(clawPos);
+                outtakeClaw.setPosition(rightClawPos);
             }
             if (gamepad1.dpad_down) {
-                outtakeClaw.setPosition(0);
+                outtakeClaw.setPosition(leftClawPos);
             }
             telemetry.addData("claw_position: ", outtakeClaw.getPosition());
             if (gamepad1.a) {
                 outtakeArmLeft.setPosition(leftArmPos);
+                outtakeArmRight.setPosition(rightArmPos);
             }
             if (gamepad1.b) {
                 outtakeArmLeft.setPosition(0);

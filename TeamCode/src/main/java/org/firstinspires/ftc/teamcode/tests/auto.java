@@ -20,7 +20,7 @@ public class auto extends LinearOpMode {
         robot.setPose(new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.RADIANS, 0));
         waitForStart();
         while (opModeIsActive()) {
-            robot.drivetrain.set(0, 1, 0, 0);
+            robot.drivetrain.set(1, 0, 0, 0);
             robot.periodic();
             robot.write();
             robot.read();
