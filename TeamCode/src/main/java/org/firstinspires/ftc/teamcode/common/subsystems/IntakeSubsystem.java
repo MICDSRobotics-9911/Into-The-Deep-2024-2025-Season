@@ -20,7 +20,6 @@ public class IntakeSubsystem extends WSubsystem {
 
     public IntakeSubsystem() {
         this.robot = RobotHardware.getInstance();
-        //updateState(ClawState.OPEN);
     }
 
     public void updateState(@NotNull ClawState state) {
@@ -31,7 +30,8 @@ public class IntakeSubsystem extends WSubsystem {
 
     public void updateState(@NotNull PivotState state) {
         double pivotPosition = getPivotStatePosition(state);
-        robot.linkageServo.setPosition(pivotPosition);
+        robot.linkageServoLeft.setPosition(pivotPosition);
+        robot.linkageServoRight.setPosition(pivotPosition);
         this.pivotState = state;
     }
 
@@ -52,7 +52,7 @@ public class IntakeSubsystem extends WSubsystem {
 
     @Override
     public void reset() {
-        //updateState(PivotState.RETRACT);
+        updateState(PivotState.RETRACT);
     }
 
     private double getPivotStatePosition(PivotState state) {
@@ -69,9 +69,9 @@ public class IntakeSubsystem extends WSubsystem {
     private double getClawStatePosition(ClawState state) {
         switch (state) {
             case OPEN:
-                return 1;
+                return 0.9;
             case CLOSED:
-                return 0;
+                return 0.3;
             default:
                 return 0;
         }

@@ -11,6 +11,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.common.commandbased.IntakeClawToggleCommand;
+import org.firstinspires.ftc.teamcode.common.commandbased.LinkageCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.LinkageToggleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.OuttakeArmCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.OuttakeClawToggleCommand;
@@ -68,17 +69,21 @@ public class SoloTeleOp extends CommandOpMode {
         robot.periodic();
         robot.write();
 
-        if (gamepad1.right_trigger > 0) {
-            robot.outtake.usePIDF = false;
-            robot.extension.setPower(0.6);
-        } else if (gamepad1.left_trigger > 0) {
-            robot.outtake.usePIDF = false;
-            robot.extension.setPower(-0.6);
-        } else {
-            robot.outtake.setTargetPosition(robot.extension.getCurrentPosition());
-            robot.outtake.usePIDF = true;
+        if (gamepad1.b) {
+            robot.linkageServoRight.setPosition(0);
+            robot.linkageServoLeft.setPosition(0);
         }
 
+        if (gamepad1.dpad_up) {
+            robot.extensionLeft.setPower(0.7);
+            robot.extensionRight.setPower(0.7);
+        } else if (gamepad1.dpad_up) {
+            robot.extensionLeft.setPower(-0.3);
+            robot.extensionRight.setPower(-0.3);
+        } else {
+            robot.extensionLeft.setPower(0);
+            robot.extensionRight.setPower(0);
+        }
 
 
         robot.drivetrain.set(
@@ -97,23 +102,25 @@ public class SoloTeleOp extends CommandOpMode {
     }
 
 
-    public void initializeButtons() {gamepadEx.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+    public void initializeButtons() {
+        gamepadEx.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(new IntakeClawToggleCommand(robot));
         gamepadEx.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(new OuttakeClawToggleCommand(robot));
-        gamepadEx2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenPressed(new OuttakeClawToggleCommand(robot));
-        gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+        /*gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_UP)
                 .whenPressed(new SlideCommand(SlideState.SPECIMEN_OUTTAKE));
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
-                .whenPressed(new SlideCommand(SlideState.RESET));
+                .whenPressed(new SlideCommand(SlideState.RESET));*/
         gamepadEx.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(new SlideCommand(SlideState.SPECIMEN_INTAKE));
         gamepadEx.getGamepadButton(GamepadKeys.Button.X)
-                .whenPressed(new LinkageToggleCommand(robot));
-        gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
+                .whenPressed(new LinkageCommand(IntakeSubsystem.PivotState.RETRACT));
+        gamepadEx.getGamepadButton(GamepadKeys.Button.B)
+                .whenPressed(new LinkageCommand(IntakeSubsystem.PivotState.EXTEND));
+        //gamepadEx.getGamepadButton(GamepadKeys.Button.)
+        gamepadEx2.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
                 .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.INCREMENT));
-        gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+        gamepadEx2.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
                 .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.DECREMENT));
         gamepadEx.getGamepadButton(GamepadKeys.Button.B)
                 .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.INTAKING));

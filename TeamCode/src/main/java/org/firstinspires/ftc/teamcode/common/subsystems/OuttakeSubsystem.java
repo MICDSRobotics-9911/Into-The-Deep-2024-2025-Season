@@ -77,7 +77,8 @@ public class OuttakeSubsystem extends WSubsystem {
 
     public void updateState(@NotNull PivotState state) {
         double pivotPosition = getPivotStatePosition(state);
-        robot.outtakeArm.setPosition(pivotPosition);
+        robot.outtakeArmLeft.setPosition(pivotPosition);
+        robot.outtakeArmRight.setPosition(pivotPosition);
     }
 
     @Override
@@ -98,9 +99,9 @@ public class OuttakeSubsystem extends WSubsystem {
     private double getClawStatePosition(ClawState state) {
         switch (state) {
             case OPEN:
-                return 0.7;
+                return 0.9;
             case CLOSED:
-                return 0;
+                return 0.3;
             default:
                 return 0;
         }
@@ -125,9 +126,9 @@ public class OuttakeSubsystem extends WSubsystem {
     private double getPivotStatePosition(PivotState state) {
         switch (state) {
             case SCORING:
-                return 0;
+                return 1;
             case INTAKING:
-                return 0.6;
+                return 0;
             case INCREMENT:
                 return pivotTarget + 0.1;
             case DECREMENT:

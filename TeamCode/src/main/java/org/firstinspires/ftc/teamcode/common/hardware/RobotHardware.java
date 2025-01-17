@@ -69,6 +69,7 @@ public class RobotHardware {
     public HashMap<Sensors.SensorType, Object> values;
 
     private Pose2D robotPose;
+    public CachingServo intakeCoaxial;
 
     public static RobotHardware getInstance() {
         if (instance == null) {
@@ -106,12 +107,12 @@ public class RobotHardware {
         // EXTENSION
         extensionRight = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionRight"));
         extensionLeft = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionLeft"));
-        extensionLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        extension = new LinkedMotors(extensionLeft, extensionRight);
 
         // OUTTAKE
         outtakeArmRight = new CachingServo(hardwareMap.get(Servo.class, "outtakeArmRight"));
         outtakeArmLeft = new CachingServo(hardwareMap.get(Servo.class, "outtakeArmLeft"));
+        outtakeArmRight.setDirection(Servo.Direction.FORWARD);
+        outtakeArmLeft.setDirection(Servo.Direction.REVERSE);
         outtakeArm = new LinkedServos(outtakeArmLeft);
         outtakeClaw = new CachingServo(hardwareMap.get(Servo.class, "outtakeClaw"));
 
@@ -127,8 +128,9 @@ public class RobotHardware {
 
         // INTAKE
         intakeClaw = new CachingServo(hardwareMap.get(Servo.class, "intakeClaw"));
-        intakeArmLeft = new CachingServo(hardwareMap.get(Servo.class, "intakePivotLeft"));
-        intakeArmRight = new CachingServo(hardwareMap.get(Servo.class, "intakePivotRight"));
+        intakeArmLeft = new CachingServo(hardwareMap.get(Servo.class, "intakeArmLeft"));
+        intakeArmRight = new CachingServo(hardwareMap.get(Servo.class, "intakeArmRight"));
+        intakeCoaxial = new CachingServo(hardwareMap.get(Servo.class, "intakeCoaxial"));
         intakeArm = new LinkedServos(intakeArmLeft, intakeArmRight);
 
         // EXTENDO

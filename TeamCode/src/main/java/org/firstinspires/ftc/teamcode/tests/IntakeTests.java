@@ -23,11 +23,13 @@ public class IntakeTests extends LinearOpMode {
     public static double rightClawPos = 0.5;
     public static double leftClawPos = 0.5;
     public static double linkagePos = 0.5;
+    private CachingServo intakeCoaxial;
 
     @Override
     public void runOpMode() throws InterruptedException {
         intakeArmLeft = new CachingServo(hardwareMap.get(Servo.class, "intakeArmLeft"));
         intakeArmRight = new CachingServo(hardwareMap.get(Servo.class, "intakeArmRight"));
+        intakeCoaxial = new CachingServo(hardwareMap.get(Servo.class, "intakeCoaxial"));
         intakeClaw = new CachingServo(hardwareMap.get(Servo.class, "intakeClaw"));
         turretClaw = new CachingServo(hardwareMap.get(Servo.class, "turretClaw"));
         linkageServoLeft = new CachingServo(hardwareMap.get(Servo.class, "linkageServoLeft"));
@@ -35,14 +37,18 @@ public class IntakeTests extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
             if (gamepad1.dpad_right) {
-                linkageServoLeft.setPosition(linkagePos);
-                linkageServoRight.setPosition(linkagePos);
+                linkageServoLeft.setPosition(0);
+                linkageServoRight.setPosition(0);
+            }
+            if (gamepad1.dpad_left) {
+                linkageServoLeft.setPosition(0.5);
+                linkageServoRight.setPosition(0.5);
             }
             if (gamepad1.dpad_up) {
-                intakeClaw.setPosition(rightClawPos);
+                intakeClaw.setPosition(0.9);
             }
             if (gamepad1.dpad_down) {
-                intakeClaw.setPosition(leftClawPos);
+                intakeClaw.setPosition(0.3);
             }
             telemetry.addData("claw_position: ", intakeClaw.getPosition());
             if (gamepad1.a) {
