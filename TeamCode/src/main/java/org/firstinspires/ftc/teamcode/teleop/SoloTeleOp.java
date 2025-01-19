@@ -77,7 +77,7 @@ public class SoloTeleOp extends CommandOpMode {
         if (gamepad1.dpad_up) {
             robot.extensionLeft.setPower(0.7);
             robot.extensionRight.setPower(0.7);
-        } else if (gamepad1.dpad_up) {
+        } else if (gamepad1.dpad_down) {
             robot.extensionLeft.setPower(-0.3);
             robot.extensionRight.setPower(-0.3);
         } else {

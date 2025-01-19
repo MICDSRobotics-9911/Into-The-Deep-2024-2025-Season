@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.common.hardware;
 
+import static com.qualcomm.robotcore.hardware.Servo.Direction.REVERSE;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -106,7 +108,11 @@ public class RobotHardware {
 
         // EXTENSION
         extensionRight = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionRight"));
+        extensionRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extensionLeft = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionLeft"));
+        extensionRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        extensionRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        extensionLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // OUTTAKE
         outtakeArmRight = new CachingServo(hardwareMap.get(Servo.class, "outtakeArmRight"));
@@ -130,6 +136,7 @@ public class RobotHardware {
         intakeClaw = new CachingServo(hardwareMap.get(Servo.class, "intakeClaw"));
         intakeArmLeft = new CachingServo(hardwareMap.get(Servo.class, "intakeArmLeft"));
         intakeArmRight = new CachingServo(hardwareMap.get(Servo.class, "intakeArmRight"));
+        intakeArmRight.setDirection(Servo.Direction.REVERSE);
         intakeCoaxial = new CachingServo(hardwareMap.get(Servo.class, "intakeCoaxial"));
         intakeArm = new LinkedServos(intakeArmLeft, intakeArmRight);
 

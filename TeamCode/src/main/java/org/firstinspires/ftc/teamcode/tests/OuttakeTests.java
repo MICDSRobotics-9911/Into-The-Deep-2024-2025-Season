@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.tests;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -20,25 +22,40 @@ public class OuttakeTests extends LinearOpMode {
     private CachingServo outtakeArmRight;
     private CachingDcMotorEx extensionRight;
     private CachingDcMotorEx extensionLeft;
-    private LinkedServos outtakeArm;
-    public static double leftArmPos = 0.5;
-    public static double rightArmPos = 0.5;
-    public static double rightClawPos = 0.5;
-    public static double leftClawPos = 0.5;
+    public static double slideTarget = 500;
+    public static double p = 0;
+    public static double d = 0;
+    public static double f = 0.0005;
+    private PIDFController controller;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
+        controller = new PIDFController(p, 0, d, 0);
         extensionRight = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionRight"));
+        extensionRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        extensionRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extensionLeft = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionLeft"));
+        extensionRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        extensionLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         outtakeArmLeft = new CachingServo(hardwareMap.get(Servo.class, "outtakeArmLeft"));
         outtakeArmRight = new CachingServo(hardwareMap.get(Servo.class, "outtakeArmRight"));
+        outtakeArmRight.setDirection(Servo.Direction.FORWARD);
+        outtakeArmLeft.setDirection(Servo.Direction.REVERSE);
         outtakeClaw = new CachingServo(hardwareMap.get(Servo.class, "outtakeClaw"));
         waitForStart();
         while (opModeIsActive()) {
-            if (gamepad1.dpad_up) {
+            controller.setPIDF(p, 0, d, 0);
+            controller.setTolerance(10);
+            double power = controller.calculate(extensionRight.getCurrentPosition(), slideTarget) +
+                    f * extensionRight.getCurrentPosition();
+            extensionRight.setPower(power);
+            extensionLeft.setPower(power);
+
+            if (gamepad1.left_stick_button) {
                 outtakeClaw.setPosition(0.9);
             }
-            if (gamepad1.dpad_down) {
+            if (gamepad1.right_stick_button) {
                 outtakeClaw.setPosition(0.3);
             }
             telemetry.addData("claw_position: ", outtakeClaw.getPosition());
@@ -50,17 +67,8 @@ public class OuttakeTests extends LinearOpMode {
                 outtakeArmLeft.setPosition(0);
                 outtakeArmRight.setPosition(0);
             }
-            if (gamepad2.dpad_up) {
-                extensionLeft.setPower(1);
-                extensionRight.setPower(1);
-            } else if (gamepad2.dpad_down) {
-                extensionLeft.setPower(-1);
-                extensionRight.setPower(-1);
-            } else {
-                extensionLeft.setPower(0);
-                extensionRight.setPower(0);
-            }
             telemetry.addData("left_arm_position: ", outtakeArmLeft.getPosition());
+            telemetry.addData("slide pos: ", extensionRight.getCurrentPosition());
             telemetry.update();
         }
     }

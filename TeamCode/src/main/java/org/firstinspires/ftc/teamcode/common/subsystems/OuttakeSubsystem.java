@@ -59,8 +59,8 @@ public class OuttakeSubsystem extends WSubsystem {
                 motorPos, target);
         if (usePIDF) {
             robot.extension.setPower(pid);
-        }
-        pivotTarget = robot.outtakeArm.getPosition();*/
+        }*/
+        pivotTarget = robot.outtakeArm.getPosition();
     }
 
     public void updateState(@NotNull ClawState state) {
