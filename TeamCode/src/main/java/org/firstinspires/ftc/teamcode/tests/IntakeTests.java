@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.tests;
 
+import static com.qualcomm.robotcore.hardware.Servo.Direction.FORWARD;
 import static com.qualcomm.robotcore.hardware.Servo.Direction.REVERSE;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -26,8 +27,11 @@ public class IntakeTests extends LinearOpMode {
     public static double leftClawPos = 0.5;
     public static double linkagePos = 0.5;
     private CachingServo intakeCoaxial;
-    public static double turretPos = 0.5;
-    public static double coaxialPos = 0.5;
+    public static double turretPos = 0.46;
+    public static double coaxialPos = 0.9;
+    public static double extensionPos = 0.32;
+    public static double retractionPos = 0;
+    public static double armPos = 0.8;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -35,21 +39,22 @@ public class IntakeTests extends LinearOpMode {
         intakeArmRight = new CachingServo(hardwareMap.get(Servo.class, "intakeArmRight"));
         intakeArmRight.setDirection(REVERSE);
         intakeCoaxial = new CachingServo(hardwareMap.get(Servo.class, "intakeCoaxial"));
-        intakeCoaxial.setDirection(REVERSE);
+        intakeCoaxial.setDirection(FORWARD);
         intakeClaw = new CachingServo(hardwareMap.get(Servo.class, "intakeClaw"));
         turretClaw = new CachingServo(hardwareMap.get(Servo.class, "turretClaw"));
         linkageServoLeft = new CachingServo(hardwareMap.get(Servo.class, "linkageServoLeft"));
+        linkageServoLeft.setDirection(REVERSE);
         linkageServoRight = new CachingServo(hardwareMap.get(Servo.class, "linkageServoRight"));
         waitForStart();
         while (opModeIsActive()) {
             // TODO: DO IT LATER BUT YOU HAVE TO COMPLETELY RESET THESE BOUNDS ON THE SERVO
             if (gamepad1.dpad_right) {
-                linkageServoLeft.setPosition(0);
-                linkageServoRight.setPosition(0);
+                linkageServoLeft.setPosition(retractionPos);
+                linkageServoRight.setPosition(retractionPos);
             }
             if (gamepad1.dpad_left) {
-                linkageServoLeft.setPosition(0.5);
-                linkageServoRight.setPosition(0.5);
+                linkageServoLeft.setPosition(extensionPos);
+                linkageServoRight.setPosition(extensionPos);
             }
             if (gamepad1.dpad_up) {
                 intakeClaw.setPosition(0.9);
@@ -63,8 +68,8 @@ public class IntakeTests extends LinearOpMode {
                 intakeArmRight.setPosition(1);
             }
             if (gamepad1.b) {
-                intakeArmLeft.setPosition(0.9);
-                intakeArmRight.setPosition(0.9);
+                intakeArmLeft.setPosition(armPos);
+                intakeArmRight.setPosition(armPos);
             }
             if (gamepad1.x) {
                 turretClaw.setPosition(turretPos);
