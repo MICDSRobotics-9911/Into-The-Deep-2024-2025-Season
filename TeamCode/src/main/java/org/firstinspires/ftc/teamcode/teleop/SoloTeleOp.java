@@ -113,30 +113,10 @@ public class SoloTeleOp extends CommandOpMode {
                 .whenPressed(new SlideCommand(SlideState.RESET));*/
         gamepadEx.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(new SlideCommand(SlideState.SPECIMEN_INTAKE));
-        gamepadEx.getGamepadButton(GamepadKeys.Button.X)
+        gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
                 .whenPressed(new LinkageCommand(IntakeSubsystem.PivotState.RETRACT));
-        gamepadEx.getGamepadButton(GamepadKeys.Button.B)
+        gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
                 .whenPressed(new LinkageCommand(IntakeSubsystem.PivotState.EXTEND));
         //gamepadEx.getGamepadButton(GamepadKeys.Button.)
-        gamepadEx2.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.INCREMENT));
-        gamepadEx2.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
-                .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.DECREMENT));
-        gamepadEx.getGamepadButton(GamepadKeys.Button.B)
-                .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.INTAKING));
-        gamepadEx.getGamepadButton(GamepadKeys.Button.Y)
-                .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.SCORING));
-        gamepadEx.getGamepadButton(GamepadKeys.Button.START)
-                .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.RESET));
-        gamepadEx2.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.INCREMENT));
-        gamepadEx2.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
-                .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.DECREMENT));
-        gamepadEx2.getGamepadButton(GamepadKeys.Button.B)
-                .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.INTAKING));
-        gamepadEx2.getGamepadButton(GamepadKeys.Button.Y)
-                .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.SCORING));
-        gamepadEx2.getGamepadButton(GamepadKeys.Button.START)
-                .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.RESET));
     }
 }

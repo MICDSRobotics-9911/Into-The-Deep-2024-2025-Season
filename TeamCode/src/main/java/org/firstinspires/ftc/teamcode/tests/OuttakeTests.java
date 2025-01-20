@@ -25,7 +25,7 @@ public class OuttakeTests extends LinearOpMode {
     public static double slideTarget = 500;
     public static double p = 0;
     public static double d = 0;
-    public static double f = 0.0005;
+    public static double f = 0;
     private PIDFController controller;
 
 
@@ -68,6 +68,7 @@ public class OuttakeTests extends LinearOpMode {
                 outtakeArmRight.setPosition(0);
             }
             telemetry.addData("left_arm_position: ", outtakeArmLeft.getPosition());
+            telemetry.addData("SlideError: ", slideTarget - extensionRight.getCurrentPosition());
             telemetry.addData("slide pos: ", extensionRight.getCurrentPosition());
             telemetry.update();
         }

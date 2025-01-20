@@ -20,6 +20,7 @@ public class IntakeSubsystem extends WSubsystem {
 
     public IntakeSubsystem() {
         this.robot = RobotHardware.getInstance();
+        reset();
     }
 
     public void updateState(@NotNull ClawState state) {
@@ -27,6 +28,7 @@ public class IntakeSubsystem extends WSubsystem {
         robot.intakeClaw.setPosition(clawPosition);
         this.claw = state;
     }
+
 
     public void updateState(@NotNull PivotState state) {
         double pivotPosition = getPivotStatePosition(state);
@@ -60,7 +62,7 @@ public class IntakeSubsystem extends WSubsystem {
             case RETRACT:
                 return 0;
             case EXTEND:
-                return 1;
+                return 0.32;
             default:
                 return 0;
         }
@@ -71,9 +73,9 @@ public class IntakeSubsystem extends WSubsystem {
             case OPEN:
                 return 0.9;
             case CLOSED:
-                return 0.3;
+                return 0.75;
             default:
-                return 0;
+                return 0.9;
         }
     }
 

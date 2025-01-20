@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.common.hardware;
 
+import static com.qualcomm.robotcore.hardware.Servo.Direction.FORWARD;
 import static com.qualcomm.robotcore.hardware.Servo.Direction.REVERSE;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -55,6 +56,7 @@ public class RobotHardware {
     public LinkedServos linkageServo;
 
     public CachingServo intakeClaw;
+    public CachingServo turretClaw;
     public CachingServo intakeArmLeft;
     public CachingServo intakeArmRight;
     public LinkedServos intakeArm;
@@ -108,18 +110,16 @@ public class RobotHardware {
 
         // EXTENSION
         extensionRight = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionRight"));
+        extensionRight.setDirection(DcMotorSimple.Direction.REVERSE);
         extensionRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extensionLeft = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionLeft"));
-        extensionRight.setDirection(DcMotorSimple.Direction.REVERSE);
         extensionRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        extensionLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // OUTTAKE
         outtakeArmRight = new CachingServo(hardwareMap.get(Servo.class, "outtakeArmRight"));
         outtakeArmLeft = new CachingServo(hardwareMap.get(Servo.class, "outtakeArmLeft"));
         outtakeArmRight.setDirection(Servo.Direction.FORWARD);
         outtakeArmLeft.setDirection(Servo.Direction.REVERSE);
-        outtakeArm = new LinkedServos(outtakeArmLeft);
         outtakeClaw = new CachingServo(hardwareMap.get(Servo.class, "outtakeClaw"));
 
         // LOCALIZATION
@@ -136,14 +136,16 @@ public class RobotHardware {
         intakeClaw = new CachingServo(hardwareMap.get(Servo.class, "intakeClaw"));
         intakeArmLeft = new CachingServo(hardwareMap.get(Servo.class, "intakeArmLeft"));
         intakeArmRight = new CachingServo(hardwareMap.get(Servo.class, "intakeArmRight"));
+        intakeArmRight.setDirection(REVERSE);
         intakeArmRight.setDirection(Servo.Direction.REVERSE);
         intakeCoaxial = new CachingServo(hardwareMap.get(Servo.class, "intakeCoaxial"));
-        intakeArm = new LinkedServos(intakeArmLeft, intakeArmRight);
+        intakeCoaxial.setDirection(FORWARD);
+        turretClaw = new CachingServo(hardwareMap.get(Servo.class, "turretClaw"));
 
         // EXTENDO
         linkageServoLeft = new CachingServo(hardwareMap.get(Servo.class, "linkageServoLeft"));
         linkageServoRight = new CachingServo(hardwareMap.get(Servo.class, "linkageServoRight"));
-        linkageServo = new LinkedServos(linkageServoLeft, linkageServoRight);
+        linkageServoLeft.setDirection(REVERSE);
 
         modules = hardwareMap.getAll(LynxModule.class);
         for (LynxModule m : modules) {
