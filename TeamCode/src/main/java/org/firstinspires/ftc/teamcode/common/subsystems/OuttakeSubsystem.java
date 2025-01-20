@@ -32,35 +32,27 @@ public class OuttakeSubsystem extends WSubsystem {
     private PIDFController controller;
     private double pid;
 
-    public static double p = 0, i = 0, d = 0;
-    public static double f = 0;
+    public static double p = 0.033;
+    public static double d = 0.0003;
     public boolean usePIDF = true;
 
     public ClawState claw = ClawState.OPEN;
     public SlideState slide = SlideState.RESET;
     private double pivotTarget = 0;
-    private int target = 0;
+    public int slideTarget = 0;
+    private int motorTicks = 0;
 
     public OuttakeSubsystem() {
-        /*updateState(ClawState.OPEN);
+        updateState(ClawState.OPEN);
         updateState(SlideState.RESET);
         updateState(PivotState.RESET);
         pid = 0;
-        controller = new PIDFController(p, i, d, f);
-        controller.reset();*/
+        controller = new PIDFController(p, 0, d, 0);
+        controller.reset();
     }
     @Override
     public void periodic() {
-        int motorPos = 0;
-        /*if (usePIDF)
-            motorPos = robot.extension.getCurrentPosition();
-
-        pid = controller.calculate(
-                motorPos, target);
-        if (usePIDF) {
-            robot.extension.setPower(pid);
-        }*/
-        pivotTarget = robot.outtakeArm.getPosition();
+        pivotTarget = robot.outtakeArmRight.getPosition();
     }
 
     public void updateState(@NotNull ClawState state) {
@@ -83,12 +75,17 @@ public class OuttakeSubsystem extends WSubsystem {
 
     @Override
     public void read() {
-
+        motorTicks = robot.extensionRight.getCurrentPosition();
     }
 
     @Override
     public void write() {
-
+        pid = controller.calculate(motorTicks, slideTarget);
+        if (usePIDF && Math.abs(slideTarget - motorTicks) > 3) {
+            robot.extensionRight.setPower(pid);
+        } else {
+            robot.extensionRight.setPower(0);
+        }
     }
 
     @Override
@@ -108,15 +105,15 @@ public class OuttakeSubsystem extends WSubsystem {
     }
 
     private int getSlideStatePosition(SlideState state) {
+        // 3440 is the top
         switch (state) {
             case HIGH_BASKET:
-                return 1000;
+                return 3000;
             case LOW_BASKET:
                 return 500;
-            case SPECIMEN_INTAKE:
-                return 100;
             case SPECIMEN_OUTTAKE:
-                return 300;
+                return 1500;
+            case SPECIMEN_INTAKE:
             case RESET:
             default:
                 return 0;
@@ -149,7 +146,7 @@ public class OuttakeSubsystem extends WSubsystem {
     }
 
     public void setTargetPosition(int position) {
-        this.target = position;
+        this.slideTarget = position;
     }
 
     public double getPID() {

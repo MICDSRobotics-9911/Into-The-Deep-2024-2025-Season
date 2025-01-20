@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.common.util.LinkedServos;
+import org.firstinspires.ftc.teamcode.common.util.MathUtils;
 
 import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
 import dev.frozenmilk.dairy.cachinghardware.CachingServo;
@@ -23,8 +24,8 @@ public class OuttakeTests extends LinearOpMode {
     private CachingDcMotorEx extensionRight;
     private CachingDcMotorEx extensionLeft;
     public static double slideTarget = 500;
-    public static double p = 0;
-    public static double d = 0;
+    public static double p = 0.033;
+    public static double d = 0.0003;
     public static double f = 0;
     private PIDFController controller;
 
@@ -46,7 +47,6 @@ public class OuttakeTests extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
             controller.setPIDF(p, 0, d, 0);
-            controller.setTolerance(10);
             double power = controller.calculate(extensionRight.getCurrentPosition(), slideTarget) +
                     f * extensionRight.getCurrentPosition();
             extensionRight.setPower(power);

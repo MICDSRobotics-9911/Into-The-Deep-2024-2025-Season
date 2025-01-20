@@ -74,7 +74,7 @@ public class SoloTeleOp extends CommandOpMode {
             robot.linkageServoLeft.setPosition(0);
         }
 
-        if (gamepad1.dpad_up) {
+        /*if (gamepad1.dpad_up) {
             robot.extensionLeft.setPower(0.7);
             robot.extensionRight.setPower(0.7);
         } else if (gamepad1.dpad_down) {
@@ -83,7 +83,7 @@ public class SoloTeleOp extends CommandOpMode {
         } else {
             robot.extensionLeft.setPower(0);
             robot.extensionRight.setPower(0);
-        }
+        }*/
 
 
         robot.drivetrain.set(
@@ -97,6 +97,9 @@ public class SoloTeleOp extends CommandOpMode {
 
         double loop = System.nanoTime();
         telemetry.addData("hz ", 1000000000 / (loop - loopTime));
+        telemetry.addData("SlideError: ", robot.outtake.slideTarget -
+                robot.extensionRight.getCurrentPosition());
+        telemetry.addData("Ticks: ", robot.extensionRight.getCurrentPosition());
         loopTime = loop;
         telemetry.update();
     }
@@ -107,12 +110,12 @@ public class SoloTeleOp extends CommandOpMode {
                 .whenPressed(new IntakeClawToggleCommand(robot));
         gamepadEx.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(new OuttakeClawToggleCommand(robot));
-        /*gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_UP)
-                .whenPressed(new SlideCommand(SlideState.SPECIMEN_OUTTAKE));
+        gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+                .whenPressed(new SlideCommand(SlideState.HIGH_BASKET));
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
-                .whenPressed(new SlideCommand(SlideState.RESET));*/
-        gamepadEx.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(new SlideCommand(SlideState.SPECIMEN_INTAKE));
+                .whenPressed(new SlideCommand(SlideState.SPECIMEN_OUTTAKE));
+        gamepadEx.getGamepadButton(GamepadKeys.Button.X)
+                .whenPressed(new SlideCommand(SlideState.RESET));
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
                 .whenPressed(new LinkageCommand(IntakeSubsystem.PivotState.RETRACT));
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
