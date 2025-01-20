@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.common.util.LinkedServos;
 import org.firstinspires.ftc.teamcode.common.util.MathUtils;
 
@@ -70,6 +71,7 @@ public class OuttakeTests extends LinearOpMode {
             telemetry.addData("left_arm_position: ", outtakeArmLeft.getPosition());
             telemetry.addData("SlideError: ", slideTarget - extensionRight.getCurrentPosition());
             telemetry.addData("slide pos: ", extensionRight.getCurrentPosition());
+            telemetry.addData("Current Draw: ", extensionRight.getCurrent(CurrentUnit.AMPS) + extensionLeft.getCurrent(CurrentUnit.AMPS));
             telemetry.update();
         }
     }
