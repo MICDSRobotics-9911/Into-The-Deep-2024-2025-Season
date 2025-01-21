@@ -31,6 +31,8 @@ public class PositionCommandTest extends LinearOpMode {
     private double loopTime = 0.0;
     private final ElapsedTime timer = new ElapsedTime();
     private double endTime = 0;
+    public static Pose testPose = new Pose(0, 0, Math.toRadians(90));
+    private Pose otherPose;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -46,7 +48,6 @@ public class PositionCommandTest extends LinearOpMode {
         robot.setPose(new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.RADIANS, 0));
 
         // for the heading to be 0, have the robot be facing the red submersible side,
-        Pose testPose = new Pose(15, 0, 0);
 
         while (opModeInInit()) {
             telemetry.addLine("ready");
@@ -56,15 +57,16 @@ public class PositionCommandTest extends LinearOpMode {
         }
 
 
-        CommandScheduler.getInstance().schedule(
-                new SequentialCommandGroup(
-                        new PositionCommand(testPose)
-                )
-        );
 
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
+            CommandScheduler.getInstance().schedule(
+                    new SequentialCommandGroup(
+                            new PositionCommand(testPose),
+                            new PositionCommand(new Pose())
+                    )
+            );
             CommandScheduler.getInstance().run();
             robot.read();
             robot.periodic();
@@ -83,11 +85,6 @@ public class PositionCommandTest extends LinearOpMode {
             telemetry.addData("Position", data);
             telemetry.update();
             dashboard.sendTelemetryPacket(Drawing.drawRobot(robot.odo.getPosition()));
-            /*if (!testPose.equals(new Pose())) {
-                testPose = new Pose();
-            } else {
-                testPose = new Pose(-30, -34, 0);
-            }*/
         }
 
         robot.kill();

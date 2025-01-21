@@ -7,11 +7,27 @@ import org.jetbrains.annotations.NotNull;
 
 public class IntakeSubsystem extends WSubsystem {
 
+    // for intaking
+    // armPos: 0.78
+    // coaxialPos: 0.14
+    // turretClaw: 0.3
+
     private final RobotHardware robot;
 
     private PivotState pivotState;
 
     public ClawState claw = ClawState.CLOSED;
+
+    public enum CoaxialState {
+        INTAKE,
+        TRANSFER
+    }
+
+    public enum ArmState {
+        INTAKE,
+        TRANSFER1,
+        TRANSFER2
+    }
 
     public enum PivotState {
         EXTEND,
@@ -55,6 +71,30 @@ public class IntakeSubsystem extends WSubsystem {
     @Override
     public void reset() {
         updateState(PivotState.RETRACT);
+    }
+
+    public double getCoaxialStatePosition(CoaxialState state) {
+        switch (state) {
+            case INTAKE:
+                return 0;
+            case TRANSFER:
+                return 0.9;
+            default:
+                return 1;
+        }
+    }
+
+    private double getArmStatePosition(ArmState state) {
+        switch (state) {
+            case INTAKE:
+                return 0.8;
+            case TRANSFER1:
+                return 0.7;
+            case TRANSFER2:
+                return 0.93;
+            default:
+                return 1;
+        }
     }
 
     private double getPivotStatePosition(PivotState state) {
