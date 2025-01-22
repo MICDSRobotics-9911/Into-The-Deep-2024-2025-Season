@@ -114,6 +114,8 @@ public class SoloTeleOp extends CommandOpMode {
                         .whenPressed(new ScoreSpecimenCommand());
         gamepadEx.getGamepadButton(GamepadKeys.Button.Y)
                 .whenPressed(new SlideCommand(SlideState.SPECIMEN_INTAKE));
+        //gamepadEx.getGamepadButton(GamepadKeys.Button.A)
+        //                .whenPressed(new )
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
                         .whenPressed(new OuttakeArmToggleCommand(robot));
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)

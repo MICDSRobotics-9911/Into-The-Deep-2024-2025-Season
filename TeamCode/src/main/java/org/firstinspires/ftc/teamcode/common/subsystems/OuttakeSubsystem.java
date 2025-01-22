@@ -47,6 +47,7 @@ public class OuttakeSubsystem extends WSubsystem {
     private int motorTicks = 0;
     public static int specimenOuttake = 1500;
     public static int specimenIntake = 500;
+    public static int tolerance = 5;
 
     public OuttakeSubsystem() {
         updateState(ClawState.OPEN);
@@ -88,7 +89,7 @@ public class OuttakeSubsystem extends WSubsystem {
     @Override
     public void write() {
         pid = controller.calculate(motorTicks, slideTarget);
-        if (usePIDF && Math.abs(slideTarget - motorTicks) > 3) {
+        if (usePIDF && Math.abs(slideTarget - motorTicks) > tolerance) {
             robot.extensionRight.setPower(pid);
         } else {
             robot.extensionRight.setPower(0);

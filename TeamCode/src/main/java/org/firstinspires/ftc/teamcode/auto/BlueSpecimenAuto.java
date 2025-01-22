@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.common.commandbased.OuttakeClawCommand;
+import org.firstinspires.ftc.teamcode.common.commandbased.ScoreSpecimenCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.SlideCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.drivecommands.*;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -35,8 +36,10 @@ public class BlueSpecimenAuto extends LinearOpMode {
     private double loopTime = 0.0;
     private final ElapsedTime timer = new ElapsedTime();
     private double endTime = 0;
-    public static Pose firstPose = new Pose(0, 0, 0);
-    public static Pose secondPose = new Pose(0, 0, 0);
+    public static Pose firstPose = new Pose(5, -31, 0);
+    public static Pose secondPose = new Pose(0, -31, 0);
+    public static Pose thirdPose = new Pose(15, 20, Math.toRadians(180));
+    public static Pose fourthPose = new Pose(20, 25, Math.toRadians(180));
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -60,19 +63,21 @@ public class BlueSpecimenAuto extends LinearOpMode {
             dashboard.sendTelemetryPacket(packet);
         }
 
-
+        CommandScheduler.getInstance().schedule(
+                new SequentialCommandGroup(
+                        new PositionCommand(firstPose),
+                        new PositionCommand(secondPose),
+                        new OuttakeClawCommand(ClawState.CLOSED),
+                        new SlideCommand(OuttakeSubsystem.SlideState.SPECIMEN_OUTTAKE)
+                                .alongWith(new PositionCommand(thirdPose)),
+                        new PositionCommand(fourthPose),
+                        new ScoreSpecimenCommand()
+                )
+        );
 
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
-            CommandScheduler.getInstance().schedule(
-                    new SequentialCommandGroup(
-                            new PositionCommand(firstPose),
-                            new OuttakeClawCommand(ClawState.CLOSED),
-                            new SlideCommand(OuttakeSubsystem.SlideState.SPECIMEN_OUTTAKE),
-                            new PositionCommand(secondPose)
-                    )
-            );
             CommandScheduler.getInstance().run();
             robot.read();
             robot.periodic();

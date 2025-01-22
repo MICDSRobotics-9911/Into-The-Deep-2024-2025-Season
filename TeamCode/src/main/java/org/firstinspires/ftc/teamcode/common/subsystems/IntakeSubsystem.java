@@ -17,16 +17,29 @@ public class IntakeSubsystem extends WSubsystem {
     private PivotState pivotState;
 
     public ClawState claw = ClawState.CLOSED;
+    public ArmState arm = ArmState.RESET;
+    public CoaxialState coaxial = CoaxialState.INTAKE;
+    public TurretState turret = TurretState.INTAKE;
+
+    private double turretPos = 0.3;
 
     public enum CoaxialState {
         INTAKE,
         TRANSFER
     }
 
+    public enum TurretState {
+        INTAKE,
+        TRANSFER,
+        INCREMENT,
+        DECREMENT
+    }
+
     public enum ArmState {
         INTAKE,
         TRANSFER1,
-        TRANSFER2
+        TRANSFER2,
+        RESET
     }
 
     public enum PivotState {
@@ -53,9 +66,29 @@ public class IntakeSubsystem extends WSubsystem {
         this.pivotState = state;
     }
 
+    public void updateState(@NotNull ArmState state) {
+        double armPos = getArmStatePosition(state);
+        robot.intakeArmLeft.setPosition(armPos);
+        robot.intakeArmRight.setPosition(armPos);
+        this.arm = state;
+    }
+
+    public void updateState(@NotNull CoaxialState state) {
+        double coaxialPos = getCoaxialStatePosition(state);
+        robot.intakeCoaxial.setPosition(coaxialPos);
+        coaxial = state;
+    }
+
+    public void updateState(@NotNull TurretState state) {
+        double turretPos = getTurretStatePosition(state);
+        robot.turretClaw.setPosition(turretPos);
+        turret = state;
+    }
+
 
     @Override
     public void periodic() {
+        turretPos = robot.turretClaw.getPosition();
     }
 
     @Override
@@ -70,13 +103,16 @@ public class IntakeSubsystem extends WSubsystem {
 
     @Override
     public void reset() {
+        updateState(ArmState.RESET);
         updateState(PivotState.RETRACT);
+        updateState(ClawState.OPEN);
+        updateState(CoaxialState.INTAKE);
     }
 
-    public double getCoaxialStatePosition(CoaxialState state) {
+    private double getCoaxialStatePosition(CoaxialState state) {
         switch (state) {
             case INTAKE:
-                return 0;
+                return 0.2;
             case TRANSFER:
                 return 0.9;
             default:
@@ -87,13 +123,14 @@ public class IntakeSubsystem extends WSubsystem {
     private double getArmStatePosition(ArmState state) {
         switch (state) {
             case INTAKE:
-                return 0.8;
+                return 0.78;
             case TRANSFER1:
                 return 0.7;
             case TRANSFER2:
                 return 0.93;
+            case RESET:
             default:
-                return 1;
+                return 0.8;
         }
     }
 
@@ -116,6 +153,21 @@ public class IntakeSubsystem extends WSubsystem {
                 return 0.75;
             default:
                 return 0.9;
+        }
+    }
+
+    private double getTurretStatePosition(TurretState state) {
+        switch (state) {
+            case INTAKE:
+                return 0.3;
+            case TRANSFER:
+                return 0.3;
+            case INCREMENT:
+                return turretPos + 0.1;
+            case DECREMENT:
+                return turretPos - 0.1;
+            default:
+                return 0.3;
         }
     }
 

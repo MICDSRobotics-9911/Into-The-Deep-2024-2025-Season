@@ -36,8 +36,8 @@ public class PositionCommand extends CommandBase {
     public static PIDFController yController = new PIDFController(yP, 0.0, yD, 0);
     public static PIDFController hController = new PIDFController(hP, 0.0, hD, 0);
 
-    public static double ALLOWED_TRANSLATIONAL_ERROR = 1;
-    public static double ALLOWED_HEADING_ERROR = 0.02;
+    public static double ALLOWED_TRANSLATIONAL_ERROR = 3;
+    public static double ALLOWED_HEADING_ERROR = 1;
 
     private RobotHardware robot = RobotHardware.getInstance();
 
@@ -65,6 +65,7 @@ public class PositionCommand extends CommandBase {
         if (stable == null) stable = new ElapsedTime();
 
         Pose2D robotPose = robot.odo.getPosition();
+        System.out.println(targetPose);
 
         Pose powers = getPower(robotPose);
         drivetrain.set(powers);
@@ -72,17 +73,22 @@ public class PositionCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return atPoint();
+        if (!atPoint()) {
+            stable.reset();
+        }
+
+        return timer.milliseconds() > DEAD_MS || stable.milliseconds() > STABLE_MS;
     }
 
     double xThreshold = ALLOWED_TRANSLATIONAL_ERROR;
     double yThreshold = ALLOWED_TRANSLATIONAL_ERROR;
-    double turnThreshold = ALLOWED_HEADING_ERROR;
+    double turnThreshold = Math.toRadians(ALLOWED_HEADING_ERROR);
+
     public boolean atPoint() {
         return Math.abs(targetPose.x - robot.getPose().getX(DistanceUnit.INCH)) < xThreshold &&
                 Math.abs(targetPose.y - robot.getPose().getY(DistanceUnit.INCH)) < yThreshold &&
                 Math.abs(robot.getPose().getHeading(AngleUnit.RADIANS) - targetPose.heading) <
-                        Math.toRadians(turnThreshold);
+                        turnThreshold;
     }
 
 
