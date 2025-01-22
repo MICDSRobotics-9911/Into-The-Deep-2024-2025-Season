@@ -10,11 +10,12 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.common.commandbased.IntakeClawToggleCommand;
-import org.firstinspires.ftc.teamcode.common.commandbased.LinkageCommand;
-import org.firstinspires.ftc.teamcode.common.commandbased.LinkageToggleCommand;
+import org.firstinspires.ftc.teamcode.common.commandbased.ScoreSpecimenCommand;
+import org.firstinspires.ftc.teamcode.common.commandbased.togglecommands.IntakeClawToggleCommand;
+import org.firstinspires.ftc.teamcode.common.commandbased.togglecommands.LinkageToggleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.OuttakeArmCommand;
-import org.firstinspires.ftc.teamcode.common.commandbased.OuttakeClawToggleCommand;
+import org.firstinspires.ftc.teamcode.common.commandbased.togglecommands.OuttakeClawToggleCommand;
+import org.firstinspires.ftc.teamcode.common.commandbased.togglecommands.OuttakeArmToggleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.SlideCommand;
 import org.firstinspires.ftc.teamcode.common.hardware.Globals;
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
@@ -69,11 +70,6 @@ public class SoloTeleOp extends CommandOpMode {
         robot.periodic();
         robot.write();
 
-        if (gamepad1.b) {
-            robot.linkageServoRight.setPosition(0);
-            robot.linkageServoLeft.setPosition(0);
-        }
-
         /*if (gamepad1.dpad_up) {
             robot.extensionLeft.setPower(0.7);
             robot.extensionRight.setPower(0.7);
@@ -115,11 +111,20 @@ public class SoloTeleOp extends CommandOpMode {
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
                 .whenPressed(new SlideCommand(SlideState.SPECIMEN_OUTTAKE));
         gamepadEx.getGamepadButton(GamepadKeys.Button.X)
-                .whenPressed(new SlideCommand(SlideState.RESET));
+                        .whenPressed(new ScoreSpecimenCommand());
+        gamepadEx.getGamepadButton(GamepadKeys.Button.Y)
+                .whenPressed(new SlideCommand(SlideState.SPECIMEN_INTAKE));
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
-                .whenPressed(new LinkageCommand(IntakeSubsystem.PivotState.RETRACT));
+                        .whenPressed(new OuttakeArmToggleCommand(robot));
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                .whenPressed(new LinkageCommand(IntakeSubsystem.PivotState.EXTEND));
-        //gamepadEx.getGamepadButton(GamepadKeys.Button.)
+                .whenPressed(new LinkageToggleCommand(robot));
+        gamepadEx2.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
+                .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.INCREMENT));
+        gamepadEx2.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+                .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.DECREMENT));
+        gamepadEx2.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+                .whenPressed(new SlideCommand(SlideState.INCREMENT));
+        gamepadEx2.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+                .whenPressed(new SlideCommand(SlideState.DECREMENT));
     }
 }

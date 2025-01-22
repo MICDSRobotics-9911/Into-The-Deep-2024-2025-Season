@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode.common.commandbased;
+package org.firstinspires.ftc.teamcode.common.commandbased.togglecommands;
 
 import com.arcrobotics.ftclib.command.ConditionalCommand;
 
+import org.firstinspires.ftc.teamcode.common.commandbased.LinkageCommand;
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.common.subsystems.IntakeSubsystem;
 
