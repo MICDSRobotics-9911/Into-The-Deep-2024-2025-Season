@@ -50,8 +50,18 @@ public class OuttakeTests extends LinearOpMode {
             controller.setPIDF(p, 0, d, 0);
             double power = controller.calculate(extensionRight.getCurrentPosition(), slideTarget) +
                     f * extensionRight.getCurrentPosition();
-            extensionRight.setPower(power);
-            extensionLeft.setPower(power);
+            if (gamepad1.dpad_up) {
+                extensionRight.setPower(1);
+                extensionLeft.setPower(1);
+            } else if (gamepad1.dpad_down) {
+                extensionRight.setPower(-0.4);
+                extensionLeft.setPower(-0.4);
+            } else {
+                extensionRight.setPower(0);
+                extensionLeft.setPower(0);
+            }
+            /*extensionRight.setPower(power);
+            extensionLeft.setPower(power);*/
 
             if (gamepad1.left_stick_button) {
                 outtakeClaw.setPosition(0.9);
@@ -70,6 +80,10 @@ public class OuttakeTests extends LinearOpMode {
             }
             telemetry.addData("left_arm_position: ", outtakeArmLeft.getPosition());
             telemetry.addData("SlideError: ", slideTarget - extensionRight.getCurrentPosition());
+            telemetry.addData("CurrentRight: ", extensionRight.getCurrent(CurrentUnit.AMPS));
+            telemetry.addData("CurrentLeft: ", extensionLeft.getCurrent(CurrentUnit.AMPS));
+            telemetry.addData("LeftPower: ", extensionLeft.getPower());
+            telemetry.addData("RightPower: ", extensionRight.getPower());
             telemetry.addData("slide pos: ", extensionRight.getCurrentPosition());
             telemetry.addData("Current Draw: ", extensionRight.getCurrent(CurrentUnit.AMPS) + extensionLeft.getCurrent(CurrentUnit.AMPS));
             telemetry.update();

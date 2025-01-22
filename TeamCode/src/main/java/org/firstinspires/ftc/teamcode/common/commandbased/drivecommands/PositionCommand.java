@@ -23,13 +23,13 @@ public class PositionCommand extends CommandBase {
     private Drivetrain drivetrain;
     public Pose targetPose;
 
-    public static double xP = 2;
-    public static double xD = 0.001;
+    public static double xP = 0.15;
+    public static double xD = 0.01;
 
-    public static double yP = 2;
-    public static double yD = 0.001;
+    public static double yP = 0.15;
+    public static double yD = 0.01;
 
-    public static double hP = 4;
+    public static double hP = 2.5;
     public static double hD = 0.01;
 
     public static PIDFController xController = new PIDFController(xP, 0.0, xD, 0.0);
@@ -58,6 +58,9 @@ public class PositionCommand extends CommandBase {
 
     @Override
     public void execute() {
+        xController.setPIDF(xP, 0, xD, 0);
+        yController.setPIDF(yP, 0, yD, 0);
+        hController.setPIDF(hP, 0, hD, 0);
         if (timer == null) timer = new ElapsedTime();
         if (stable == null) stable = new ElapsedTime();
 
@@ -72,9 +75,9 @@ public class PositionCommand extends CommandBase {
         return atPoint();
     }
 
-    public static double xThreshold = 3;
-    public static double yThreshold = 3;
-    public static double turnThreshold = 1;
+    double xThreshold = ALLOWED_TRANSLATIONAL_ERROR;
+    double yThreshold = ALLOWED_TRANSLATIONAL_ERROR;
+    double turnThreshold = ALLOWED_HEADING_ERROR;
     public boolean atPoint() {
         return Math.abs(targetPose.x - robot.getPose().getX(DistanceUnit.INCH)) < xThreshold &&
                 Math.abs(targetPose.y - robot.getPose().getY(DistanceUnit.INCH)) < yThreshold &&
@@ -84,27 +87,24 @@ public class PositionCommand extends CommandBase {
 
 
     public Pose getPower(Pose2D robotPose) {
-        double wrappedHeading = targetPose.heading;
         double heading = robotPose.getHeading(AngleUnit.RADIANS);
         double x = robotPose.getX(DistanceUnit.INCH);
         double y = robotPose.getY(DistanceUnit.INCH);
-        while (wrappedHeading - heading > Math.PI)
-            wrappedHeading -= 2 * Math.PI;
-        while (wrappedHeading - heading < Math.PI)
-            wrappedHeading += 2 * Math.PI;
+        /*while (targetPose.heading - heading > Math.PI)
+            targetPose.heading -= 2 * Math.PI;
+        while (targetPose.heading - heading < -Math.PI)
+            targetPose.heading += 2 * Math.PI;*/
 
         double xPower = xController.calculate(x, targetPose.x);
-        double yPower = yController.calculate(y, targetPose.y);
-        double hPower = -hController.calculate(wrappedHeading, targetPose.heading);
+        double yPower = -yController.calculate(y, targetPose.y);
+        double hPower = -hController.calculate(heading, targetPose.heading);
 
-        double x_rotated = xPower * Math.cos(-heading) - yPower * Math.sin(-heading);
-        double y_rotated = yPower * Math.sin(-heading) + yPower * Math.cos(-heading);
-        x_rotated = xPower;
-        y_rotated = yPower;
+        double x_rotated = xPower * Math.cos(heading) - yPower * Math.sin(heading);
+        double y_rotated = yPower * Math.sin( heading) + yPower * Math.cos(heading);
 
-        hPower = Range.clip(hPower, -1, 1);
-        x_rotated = Range.clip(x_rotated, -1, 1);
-        y_rotated = Range.clip(y_rotated, -1, 1);
+        hPower = Range.clip(hPower, -0.7, 0.7);
+        x_rotated = Range.clip(x_rotated, -0.7, 0.7);
+        y_rotated = Range.clip(y_rotated, -0.7, 0.7);
 
 
         // SQUID STUFF
@@ -112,7 +112,7 @@ public class PositionCommand extends CommandBase {
         x_rotated = MathUtils.signSqrt(x_rotated);
         y_rotated = MathUtils.signSqrt(y_rotated);*/
 
-        return new Pose(x_rotated, 0, 0);
+        return new Pose(x_rotated, y_rotated, hPower);
     }
 
     @Override

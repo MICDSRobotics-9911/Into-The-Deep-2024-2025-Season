@@ -17,6 +17,9 @@ public class OuttakeSubsystem extends WSubsystem {
         LOW_BASKET,
         SPECIMEN_INTAKE,
         SPECIMEN_OUTTAKE,
+        INCREMENT,
+        DECREMENT,
+        SPECIMEN_SCORING,
         RESET
     }
 
@@ -33,14 +36,17 @@ public class OuttakeSubsystem extends WSubsystem {
     private double pid;
 
     public static double p = 0.033;
-    public static double d = 0.0003;
+    public static double d = 0;
     public boolean usePIDF = true;
 
     public ClawState claw = ClawState.OPEN;
     public SlideState slide = SlideState.RESET;
+    public PivotState arm = PivotState.RESET;
     private double pivotTarget = 0;
     public int slideTarget = 0;
     private int motorTicks = 0;
+    public static int specimenOuttake = 1500;
+    public static int specimenIntake = 500;
 
     public OuttakeSubsystem() {
         updateState(ClawState.OPEN);
@@ -71,6 +77,7 @@ public class OuttakeSubsystem extends WSubsystem {
         double pivotPosition = getPivotStatePosition(state);
         robot.outtakeArmLeft.setPosition(pivotPosition);
         robot.outtakeArmRight.setPosition(pivotPosition);
+        this.arm = state;
     }
 
     @Override
@@ -112,8 +119,15 @@ public class OuttakeSubsystem extends WSubsystem {
             case LOW_BASKET:
                 return 500;
             case SPECIMEN_OUTTAKE:
-                return 1500;
+                return specimenOuttake;
+            case INCREMENT:
+                return slideTarget + 100;
+            case DECREMENT:
+                return slideTarget - 100;
             case SPECIMEN_INTAKE:
+                return specimenIntake;
+            case SPECIMEN_SCORING:
+                return 1500;
             case RESET:
             default:
                 return 0;
@@ -139,6 +153,10 @@ public class OuttakeSubsystem extends WSubsystem {
     public ClawState getClawState() {
         return robot.outtake.claw == ClawState.CLOSED
                 ? ClawState.CLOSED : ClawState.OPEN;
+    }
+
+    public PivotState getArmState() {
+        return robot.outtake.arm;
     }
 
     public SlideState getSlideState() {
