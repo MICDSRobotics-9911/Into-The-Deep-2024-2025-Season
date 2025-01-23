@@ -11,13 +11,15 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.common.commandbased.OuttakeArmCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.OuttakeClawCommand;
-import org.firstinspires.ftc.teamcode.common.commandbased.ScoreSpecimenCommand;
+import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.ScoreSpecimenCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.SlideCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.drivecommands.*;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.teamcode.common.commandbased.togglecommands.OuttakeClawToggleCommand;
 import org.firstinspires.ftc.teamcode.common.hardware.Globals;
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.common.subsystems.OuttakeSubsystem;
@@ -36,10 +38,10 @@ public class BlueSpecimenAuto extends LinearOpMode {
     private double loopTime = 0.0;
     private final ElapsedTime timer = new ElapsedTime();
     private double endTime = 0;
-    public static Pose firstPose = new Pose(5, -31, 0);
-    public static Pose secondPose = new Pose(0, -31, 0);
-    public static Pose thirdPose = new Pose(15, 20, Math.toRadians(180));
-    public static Pose fourthPose = new Pose(20, 25, Math.toRadians(180));
+    public static Pose firstPose = new Pose(25, -31, 0);
+    public static Pose secondPose = new Pose(3, -31, 0);
+    public static Pose thirdPose = new Pose(25, 20, 0);
+    public static Pose fourthPose = new Pose(35, 25, Math.toRadians(180));
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -66,12 +68,16 @@ public class BlueSpecimenAuto extends LinearOpMode {
         CommandScheduler.getInstance().schedule(
                 new SequentialCommandGroup(
                         new PositionCommand(firstPose),
-                        new PositionCommand(secondPose),
+                        new OuttakeArmCommand(OuttakeSubsystem.PivotState.SCORING),
+                        new WaitCommand(1000),
+                        new PositionCommand(secondPose, 0.3),
                         new OuttakeClawCommand(ClawState.CLOSED),
-                        new SlideCommand(OuttakeSubsystem.SlideState.SPECIMEN_OUTTAKE)
-                                .alongWith(new PositionCommand(thirdPose)),
-                        new PositionCommand(fourthPose),
-                        new ScoreSpecimenCommand()
+                        new WaitCommand(1000),
+                        new OuttakeArmCommand(OuttakeSubsystem.PivotState.TRANSFER),
+                        new SlideCommand(OuttakeSubsystem.SlideState.SPECIMEN_OUTTAKE),
+                        new PositionCommand(thirdPose)
+                        //new PositionCommand(fourthPose)
+                        //new ScoreSpecimenCommand()
                 )
         );
 

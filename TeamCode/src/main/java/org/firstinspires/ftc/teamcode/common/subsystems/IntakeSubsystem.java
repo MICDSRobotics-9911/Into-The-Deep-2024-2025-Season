@@ -22,10 +22,12 @@ public class IntakeSubsystem extends WSubsystem {
     public TurretState turret = TurretState.INTAKE;
 
     private double turretPos = 0.3;
+    private double armPos = 0.8;
+    private double linkagePos = 0;
 
     public enum CoaxialState {
         INTAKE,
-        TRANSFER
+        TRANSFER,
     }
 
     public enum TurretState {
@@ -44,7 +46,9 @@ public class IntakeSubsystem extends WSubsystem {
 
     public enum PivotState {
         EXTEND,
-        RETRACT
+        RETRACT,
+        INCREMENT,
+        DECREMENT
     }
 
     public IntakeSubsystem() {
@@ -67,9 +71,9 @@ public class IntakeSubsystem extends WSubsystem {
     }
 
     public void updateState(@NotNull ArmState state) {
-        double armPos = getArmStatePosition(state);
-        robot.intakeArmLeft.setPosition(armPos);
-        robot.intakeArmRight.setPosition(armPos);
+        double position = getArmStatePosition(state);
+        robot.intakeArmLeft.setPosition(position);
+        robot.intakeArmRight.setPosition(position);
         this.arm = state;
     }
 
@@ -88,7 +92,9 @@ public class IntakeSubsystem extends WSubsystem {
 
     @Override
     public void periodic() {
+        armPos = robot.intakeArmLeft.getPosition();
         turretPos = robot.turretClaw.getPosition();
+        linkagePos = robot.linkageServoLeft.getPosition();
     }
 
     @Override
@@ -112,7 +118,7 @@ public class IntakeSubsystem extends WSubsystem {
     private double getCoaxialStatePosition(CoaxialState state) {
         switch (state) {
             case INTAKE:
-                return 0.2;
+                return 0.4;
             case TRANSFER:
                 return 0.9;
             default:
@@ -130,7 +136,7 @@ public class IntakeSubsystem extends WSubsystem {
                 return 0.93;
             case RESET:
             default:
-                return 0.8;
+                return 0.9;
         }
     }
 
@@ -140,6 +146,13 @@ public class IntakeSubsystem extends WSubsystem {
                 return 0;
             case EXTEND:
                 return 0.32;
+            case DECREMENT:
+                return linkagePos - 0.05;
+            case INCREMENT:
+                if (linkagePos + 0.05 >= 0.32)
+                    return 0.32;
+                else
+                    return linkagePos + 0.05;
             default:
                 return 0;
         }
@@ -150,7 +163,7 @@ public class IntakeSubsystem extends WSubsystem {
             case OPEN:
                 return 0.9;
             case CLOSED:
-                return 0.75;
+                return 0.7;
             default:
                 return 0.9;
         }

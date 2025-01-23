@@ -22,6 +22,7 @@ import java.util.Objects;
 public class PositionCommand extends CommandBase {
     private Drivetrain drivetrain;
     public Pose targetPose;
+    private double maxSpeed = 0.7;
 
     public static double xP = 0.15;
     public static double xD = 0.01;
@@ -51,6 +52,16 @@ public class PositionCommand extends CommandBase {
         this.drivetrain = robot.drivetrain;
         this.targetPose = targetPose;
 
+        xController.reset();
+        yController.reset();
+        hController.reset();
+    }
+
+    public PositionCommand(Pose targetPose, double speed) {
+        this.drivetrain = robot.drivetrain;
+        this.targetPose = targetPose;
+
+        maxSpeed = speed;
         xController.reset();
         yController.reset();
         hController.reset();
@@ -108,9 +119,9 @@ public class PositionCommand extends CommandBase {
         double x_rotated = xPower * Math.cos(heading) - yPower * Math.sin(heading);
         double y_rotated = yPower * Math.sin( heading) + yPower * Math.cos(heading);
 
-        hPower = Range.clip(hPower, -0.7, 0.7);
-        x_rotated = Range.clip(x_rotated, -0.7, 0.7);
-        y_rotated = Range.clip(y_rotated, -0.7, 0.7);
+        hPower = Range.clip(hPower, -maxSpeed, maxSpeed);
+        x_rotated = Range.clip(x_rotated, -maxSpeed, maxSpeed);
+        y_rotated = Range.clip(y_rotated, -maxSpeed, maxSpeed);
 
 
         // SQUID STUFF

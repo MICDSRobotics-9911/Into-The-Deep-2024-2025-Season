@@ -23,7 +23,7 @@ public class IntakeTests extends LinearOpMode {
     private CachingServo linkageServoRight;
     private CachingServo intakeCoaxial;
     public static double turretPos = 0.46;
-    public static double coaxialPos = 0.5;
+    public static double coaxialPos = 0.4;
     public static double extensionPos = 0.32;
     public static double retractionPos = 0;
     public static double armPos = 0.8;

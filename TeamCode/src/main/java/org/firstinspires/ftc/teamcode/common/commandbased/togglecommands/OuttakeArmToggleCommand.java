@@ -10,8 +10,8 @@ public class OuttakeArmToggleCommand extends ConditionalCommand {
     public OuttakeArmToggleCommand(RobotHardware robot) {
         super(
                 new OuttakeArmCommand(OuttakeSubsystem.PivotState.SCORING),
-                new OuttakeArmCommand(OuttakeSubsystem.PivotState.INTAKING),
-                () -> (robot.outtake.getArmState() == OuttakeSubsystem.PivotState.INTAKING)
+                new OuttakeArmCommand(OuttakeSubsystem.PivotState.TRANSFER),
+                () -> (robot.outtake.getArmState() == OuttakeSubsystem.PivotState.TRANSFER)
         );
     }
 }

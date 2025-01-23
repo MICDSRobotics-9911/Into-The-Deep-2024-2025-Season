@@ -4,7 +4,6 @@ import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDFController;
 
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
-import org.firstinspires.ftc.teamcode.common.hardware.Sensors;
 import org.firstinspires.ftc.teamcode.common.util.ClawState;
 import org.firstinspires.ftc.teamcode.common.util.wrappers.WSubsystem;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +24,7 @@ public class OuttakeSubsystem extends WSubsystem {
 
     public enum PivotState {
         SCORING,
-        INTAKING,
+        TRANSFER,
         INCREMENT,
         DECREMENT,
         RESET,
@@ -69,6 +68,7 @@ public class OuttakeSubsystem extends WSubsystem {
     }
 
     public void updateState(@NotNull SlideState state) {
+        usePIDF = true;
         int slidePosition = getSlideStatePosition(state);
         setTargetPosition(slidePosition);
         this.slide = state;
@@ -91,7 +91,7 @@ public class OuttakeSubsystem extends WSubsystem {
         pid = controller.calculate(motorTicks, slideTarget);
         if (usePIDF && Math.abs(slideTarget - motorTicks) > tolerance) {
             robot.extensionRight.setPower(pid);
-        } else {
+        } else if (usePIDF) {
             robot.extensionRight.setPower(0);
         }
     }
@@ -137,9 +137,9 @@ public class OuttakeSubsystem extends WSubsystem {
 
     private double getPivotStatePosition(PivotState state) {
         switch (state) {
-            case SCORING:
+            case TRANSFER:
                 return 1;
-            case INTAKING:
+            case SCORING:
                 return 0;
             case INCREMENT:
                 return pivotTarget + 0.1;
@@ -147,7 +147,7 @@ public class OuttakeSubsystem extends WSubsystem {
                 return pivotTarget - 0.1;
             case RESET:
             default:
-                return 0;
+                return 1;
         }
     }
 
