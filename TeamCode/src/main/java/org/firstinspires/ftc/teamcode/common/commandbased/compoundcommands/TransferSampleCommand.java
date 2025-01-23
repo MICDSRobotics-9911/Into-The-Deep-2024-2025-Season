@@ -20,8 +20,8 @@ public class TransferSampleCommand extends SequentialCommandGroup {
                 new LinkageCommand(IntakeSubsystem.PivotState.RETRACT),
                 new IntakeArmCommand(IntakeSubsystem.ArmState.TRANSFER1),
                 new OuttakeArmCommand(OuttakeSubsystem.PivotState.TRANSFER),
-                new CoaxialCommand(IntakeSubsystem.CoaxialState.TRANSFER,
-                        RobotHardware.getInstance()),
+                /*new CoaxialCommand(IntakeSubsystem.CoaxialState.TRANSFER,
+                        RobotHardware.getInstance()),*/
                 new TurretCommand(IntakeSubsystem.TurretState.TRANSFER),
                 new IntakeArmCommand(IntakeSubsystem.ArmState.TRANSFER1),
                 new IntakeArmCommand(IntakeSubsystem.ArmState.TRANSFER2),

@@ -35,6 +35,7 @@ public class OuttakeSubsystem extends WSubsystem {
     private double pid;
 
     public static double p = 0.033;
+    public static double i = 0;
     public static double d = 0;
     public boolean usePIDF = true;
 
@@ -45,7 +46,6 @@ public class OuttakeSubsystem extends WSubsystem {
     public int slideTarget = 0;
     private int motorTicks = 0;
     public static int specimenOuttake = 1500;
-    public static int specimenIntake = 500;
     public static int tolerance = 5;
 
     public OuttakeSubsystem() {
@@ -53,7 +53,7 @@ public class OuttakeSubsystem extends WSubsystem {
         updateState(SlideState.RESET);
         updateState(PivotState.RESET);
         pid = 0;
-        controller = new PIDFController(p, 0, d, 0);
+        controller = new PIDFController(p, i, d, 0);
         controller.reset();
     }
     @Override
@@ -98,6 +98,7 @@ public class OuttakeSubsystem extends WSubsystem {
 
     @Override
     public void reset() {
+
         controller.reset();
     }
 
@@ -125,10 +126,8 @@ public class OuttakeSubsystem extends WSubsystem {
                 return slideTarget + 100;
             case DECREMENT:
                 return slideTarget - 100;
-            case SPECIMEN_INTAKE:
-                return specimenIntake;
             case SPECIMEN_SCORING:
-                return 1500;
+                return specimenOuttake - 600;
             case RESET:
             default:
                 return 0;

@@ -26,6 +26,7 @@ public class OuttakeTests extends LinearOpMode {
     private CachingDcMotorEx extensionLeft;
     public static double slideTarget = 500;
     public static double p = 0.033;
+    public static double i = 0;
     public static double d = 0.0003;
     public static double f = 0;
     private PIDFController controller;
@@ -47,10 +48,9 @@ public class OuttakeTests extends LinearOpMode {
         outtakeClaw = new CachingServo(hardwareMap.get(Servo.class, "outtakeClaw"));
         waitForStart();
         while (opModeIsActive()) {
-            controller.setPIDF(p, 0, d, 0);
-            double power = controller.calculate(extensionRight.getCurrentPosition(), slideTarget) +
-                    f * extensionRight.getCurrentPosition();
-            if (gamepad1.dpad_up) {
+            controller.setPIDF(p, i, d, 0);
+            double power = controller.calculate(extensionRight.getCurrentPosition(), slideTarget);
+            /*if (gamepad1.dpad_up) {
                 extensionRight.setPower(1);
                 extensionLeft.setPower(1);
             } else if (gamepad1.dpad_down) {
@@ -59,9 +59,9 @@ public class OuttakeTests extends LinearOpMode {
             } else {
                 extensionRight.setPower(0);
                 extensionLeft.setPower(0);
-            }
-            /*extensionRight.setPower(power);
-            extensionLeft.setPower(power);*/
+            }*/
+            extensionRight.setPower(power);
+            extensionLeft.setPower(power);
 
             if (gamepad1.left_stick_button) {
                 outtakeClaw.setPosition(0.9);
@@ -85,7 +85,6 @@ public class OuttakeTests extends LinearOpMode {
             telemetry.addData("LeftPower: ", extensionLeft.getPower());
             telemetry.addData("RightPower: ", extensionRight.getPower());
             telemetry.addData("slide pos: ", extensionRight.getCurrentPosition());
-            telemetry.addData("Current Draw: ", extensionRight.getCurrent(CurrentUnit.AMPS) + extensionLeft.getCurrent(CurrentUnit.AMPS));
             telemetry.update();
         }
     }

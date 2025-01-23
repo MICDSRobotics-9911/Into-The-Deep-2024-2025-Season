@@ -18,8 +18,8 @@ public class IntakeSampleCommand extends SequentialCommandGroup {
                 new LinkageCommand(IntakeSubsystem.PivotState.EXTEND),
                 new IntakeArmCommand(IntakeSubsystem.ArmState.INTAKE),
                 new TurretCommand(IntakeSubsystem.TurretState.INTAKE),
-                new IntakeClawCommand(ClawState.OPEN),
-                new CoaxialCommand(IntakeSubsystem.CoaxialState.INTAKE, RobotHardware.getInstance())
+                new IntakeClawCommand(ClawState.OPEN)/*,
+                new CoaxialCommand(IntakeSubsystem.CoaxialState.INTAKE, RobotHardware.getInstance())*/
         );
         Globals.stopScoring();
     }
