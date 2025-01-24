@@ -49,7 +49,8 @@ public class OuttakeTests extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
             controller.setPIDF(p, i, d, 0);
-            double power = controller.calculate(extensionRight.getCurrentPosition(), slideTarget);
+            double power = controller.calculate(extensionRight.getCurrentPosition(), slideTarget) +
+                    f * extensionRight.getCurrentPosition();
             /*if (gamepad1.dpad_up) {
                 extensionRight.setPower(1);
                 extensionLeft.setPower(1);

@@ -38,6 +38,9 @@ public class BlueSpecimenAuto extends LinearOpMode {
     private double loopTime = 0.0;
     private final ElapsedTime timer = new ElapsedTime();
     private double endTime = 0;
+    public static Pose zeroPose = new Pose(25, 20, Math.toRadians(180));
+    public static Pose inBetweenPose = new Pose(25, 20, Math.toRadians(180));
+    public static Pose secondInBetweenPose = new Pose(30, 20, Math.toRadians(180));
     public static Pose firstPose = new Pose(25, -31, 0);
     public static Pose secondPose = new Pose(3, -31, 0);
     public static Pose thirdPose = new Pose(25, 20, 0);
@@ -57,7 +60,7 @@ public class BlueSpecimenAuto extends LinearOpMode {
         robot.setPose(new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.RADIANS, 0));
 
         // for the heading to be 0, have the robot be facing the red submersible side,
-
+        robot.outtakeClaw.setPosition(0.3);
         while (opModeInInit()) {
             telemetry.addLine("ready");
             telemetry.update();
@@ -65,9 +68,16 @@ public class BlueSpecimenAuto extends LinearOpMode {
             dashboard.sendTelemetryPacket(packet);
         }
 
+
         CommandScheduler.getInstance().schedule(
                 new SequentialCommandGroup(
-                        new PositionCommand(firstPose),
+                        new PositionCommand(zeroPose),
+                        new PositionCommand(inBetweenPose),
+                        new SlideCommand(OuttakeSubsystem.SlideState.SPECIMEN_OUTTAKE),
+                        new PositionCommand(secondInBetweenPose, 0.5),
+                        new WaitCommand(1000),
+                        new ScoreSpecimenCommand(),
+                        new PositionCommand(firstPose)/*,
                         new OuttakeArmCommand(OuttakeSubsystem.PivotState.SCORING),
                         new WaitCommand(1000),
                         new PositionCommand(secondPose, 0.3),
@@ -77,7 +87,7 @@ public class BlueSpecimenAuto extends LinearOpMode {
                         new SlideCommand(OuttakeSubsystem.SlideState.SPECIMEN_OUTTAKE),
                         new PositionCommand(thirdPose)
                         //new PositionCommand(fourthPose)
-                        //new ScoreSpecimenCommand()
+                        //new ScoreSpecimenCommand()*/
                 )
         );
 

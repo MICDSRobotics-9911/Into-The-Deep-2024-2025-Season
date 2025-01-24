@@ -107,17 +107,17 @@ public class PositionCommand extends CommandBase {
         double heading = robotPose.getHeading(AngleUnit.RADIANS);
         double x = robotPose.getX(DistanceUnit.INCH);
         double y = robotPose.getY(DistanceUnit.INCH);
-        /*while (targetPose.heading - heading > Math.PI)
+        while (targetPose.heading - heading > Math.PI)
             targetPose.heading -= 2 * Math.PI;
         while (targetPose.heading - heading < -Math.PI)
-            targetPose.heading += 2 * Math.PI;*/
+            targetPose.heading += 2 * Math.PI;
 
         double xPower = xController.calculate(x, targetPose.x);
         double yPower = -yController.calculate(y, targetPose.y);
         double hPower = -hController.calculate(heading, targetPose.heading);
 
         double x_rotated = xPower * Math.cos(heading) - yPower * Math.sin(heading);
-        double y_rotated = yPower * Math.sin( heading) + yPower * Math.cos(heading);
+        double y_rotated = yPower * Math.sin(heading) + yPower * Math.cos(heading);
 
         hPower = Range.clip(hPower, -maxSpeed, maxSpeed);
         x_rotated = Range.clip(x_rotated, -maxSpeed, maxSpeed);
