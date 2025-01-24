@@ -82,10 +82,6 @@ public class SoloTeleOp extends CommandOpMode {
             robot.outtake.usePIDF = false;
             robot.extensionLeft.setPower(-1);
             robot.extensionRight.setPower(-1);
-        } else {
-            robot.outtake.usePIDF = false;
-            robot.extensionLeft.setPower(0);
-            robot.extensionRight.setPower(0);
         }
 
 

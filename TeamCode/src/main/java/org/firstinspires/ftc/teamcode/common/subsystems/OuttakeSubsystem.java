@@ -92,7 +92,7 @@ public class OuttakeSubsystem extends WSubsystem {
         if (usePIDF && Math.abs(slideTarget - motorTicks) > tolerance) {
             robot.extensionRight.setPower(pid);
             robot.extensionLeft.setPower(pid);
-        } else if (usePIDF) {
+        } else {
             robot.extensionRight.setPower(0);
             robot.extensionLeft.setPower(0);
         }
@@ -167,10 +167,6 @@ public class OuttakeSubsystem extends WSubsystem {
 
     public void setTargetPosition(int position) {
         this.slideTarget = position;
-    }
-
-    public double getPID() {
-        return pid;
     }
 
 }
