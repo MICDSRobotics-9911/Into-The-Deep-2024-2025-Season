@@ -26,8 +26,8 @@ import org.firstinspires.ftc.teamcode.common.util.Pose;
 import java.util.Locale;
 
 @Config
-@Autonomous(name="BlueSpecimenAuto")
-public class BlueSpecimenAuto extends LinearOpMode {
+@Autonomous(name="Red")
+public class RedSpecimenAuto extends LinearOpMode {
 
     private final RobotHardware robot = RobotHardware.getInstance();
 

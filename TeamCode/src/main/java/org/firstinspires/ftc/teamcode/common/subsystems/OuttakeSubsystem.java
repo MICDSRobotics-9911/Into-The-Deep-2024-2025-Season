@@ -91,8 +91,10 @@ public class OuttakeSubsystem extends WSubsystem {
         pid = controller.calculate(motorTicks, slideTarget);
         if (usePIDF && Math.abs(slideTarget - motorTicks) > tolerance) {
             robot.extensionRight.setPower(pid);
+            robot.extensionLeft.setPower(pid);
         } else if (usePIDF) {
             robot.extensionRight.setPower(0);
+            robot.extensionLeft.setPower(0);
         }
     }
 
