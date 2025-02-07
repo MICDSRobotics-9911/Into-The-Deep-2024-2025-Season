@@ -6,12 +6,10 @@ import com.arcrobotics.ftclib.command.InstantCommand;
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.common.subsystems.IntakeSubsystem;
 
-public class CoaxialCommand extends ConditionalCommand {
-    public CoaxialCommand(IntakeSubsystem.CoaxialState state, RobotHardware robot) {
+public class CoaxialCommand extends InstantCommand {
+    public CoaxialCommand(IntakeSubsystem.CoaxialState state) {
         super(
-                new InstantCommand(),
-                new InstantCommand(() -> robot.intake.updateState(state)),
-                () -> robot.intakeArmLeft.getPosition() > 0.8
+                () -> RobotHardware.getInstance().intake.updateState(state)
         );
     }
 }

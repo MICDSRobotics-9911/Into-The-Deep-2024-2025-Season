@@ -27,6 +27,7 @@ public class IntakeTests extends LinearOpMode {
     public static double extensionPos = 0.32;
     public static double retractionPos = 0;
     public static double armPos = 0.8;
+    public static double intakeClawPos = 0.9;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -55,7 +56,7 @@ public class IntakeTests extends LinearOpMode {
                 intakeClaw.setPosition(0.9);
             }
             if (gamepad1.dpad_down) {
-                intakeClaw.setPosition(0.75);
+                intakeClaw.setPosition(intakeClawPos);
             }
             telemetry.addData("claw_position: ", intakeClaw.getPosition());
             if (gamepad1.a) {

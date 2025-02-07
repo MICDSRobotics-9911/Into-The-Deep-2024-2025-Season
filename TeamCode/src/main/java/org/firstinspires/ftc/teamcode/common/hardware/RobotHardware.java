@@ -110,9 +110,10 @@ public class RobotHardware {
 
         // EXTENSION
         extensionRight = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionRight"));
-        extensionRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        extensionRight.setDirection(DcMotorSimple.Direction.FORWARD);
         extensionRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extensionLeft = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionLeft"));
+        extensionLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         extensionRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // OUTTAKE

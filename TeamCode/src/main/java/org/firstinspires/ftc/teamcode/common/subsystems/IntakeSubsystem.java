@@ -1,16 +1,28 @@
 package org.firstinspires.ftc.teamcode.common.subsystems;
 
+import com.acmerobotics.dashboard.config.Config;
+
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.common.util.ClawState;
+import org.firstinspires.ftc.teamcode.common.util.MathUtils;
 import org.firstinspires.ftc.teamcode.common.util.wrappers.WSubsystem;
 import org.jetbrains.annotations.NotNull;
-
+@Config
 public class IntakeSubsystem extends WSubsystem {
 
     // for intaking
     // armPos: 0.78
-    // coaxialPos: 0.14
-    // turretClaw: 0.3
+    // coaxialPos: 0.32
+
+    // clawPos:
+
+    // for transfer
+    // armPos: 0.9
+    // coaxialPos: 1
+    // linkagePos: 0
+    // turretPos: 0.48
+
+    // for RESET
 
     private final RobotHardware robot;
 
@@ -24,10 +36,15 @@ public class IntakeSubsystem extends WSubsystem {
     private double turretPos = 0.3;
     private double armPos = 0.8;
     private double linkagePos = 0;
+    public static double RESET = 0.9;
+    private double coaxialPos = 0;
 
     public enum CoaxialState {
+        EXTEND,
         INTAKE,
         TRANSFER,
+        INCREMENT,
+        DECREMENT
     }
 
     public enum TurretState {
@@ -38,9 +55,10 @@ public class IntakeSubsystem extends WSubsystem {
     }
 
     public enum ArmState {
+        EXTEND,
         INTAKE,
-        TRANSFER1,
-        TRANSFER2,
+        SUBMERSIBLE,
+        TRANSFER,
         RESET
     }
 
@@ -57,21 +75,21 @@ public class IntakeSubsystem extends WSubsystem {
     }
 
     public void updateState(@NotNull ClawState state) {
-        double clawPosition = getClawStatePosition(state);
+        double clawPosition = MathUtils.clip(getClawStatePosition(state), 0, 0.24) ;
         robot.intakeClaw.setPosition(clawPosition);
         this.claw = state;
     }
 
 
     public void updateState(@NotNull PivotState state) {
-        double pivotPosition = getPivotStatePosition(state);
+        double pivotPosition = MathUtils.clip(getPivotStatePosition(state), 0, 0.32);
         robot.linkageServoLeft.setPosition(pivotPosition);
         robot.linkageServoRight.setPosition(pivotPosition);
         this.pivotState = state;
     }
 
     public void updateState(@NotNull ArmState state) {
-        double position = getArmStatePosition(state);
+        double position = MathUtils.clip(getArmStatePosition(state), 0.78, 0.9);
         robot.intakeArmLeft.setPosition(position);
         robot.intakeArmRight.setPosition(position);
         this.arm = state;
@@ -95,6 +113,7 @@ public class IntakeSubsystem extends WSubsystem {
         armPos = robot.intakeArmLeft.getPosition();
         turretPos = robot.turretClaw.getPosition();
         linkagePos = robot.linkageServoLeft.getPosition();
+        coaxialPos = robot.intakeCoaxial.getPosition();
     }
 
     @Override
@@ -118,9 +137,13 @@ public class IntakeSubsystem extends WSubsystem {
     private double getCoaxialStatePosition(CoaxialState state) {
         switch (state) {
             case INTAKE:
-                return 0.4;
+                return 0.32;
             case TRANSFER:
-                return 0.9;
+                return 1;
+            case INCREMENT:
+                return coaxialPos + 0.05;
+            case DECREMENT:
+                return coaxialPos - 0.05;
             default:
                 return 1;
         }
@@ -130,13 +153,13 @@ public class IntakeSubsystem extends WSubsystem {
         switch (state) {
             case INTAKE:
                 return 0.78;
-            case TRANSFER1:
-                return 0.7;
-            case TRANSFER2:
-                return 0.93;
+            case SUBMERSIBLE:
+                return 0.82;
+            case TRANSFER:
+                return 0.9;
             case RESET:
             default:
-                return 0.9;
+                return 0.85;
         }
     }
 
@@ -149,10 +172,7 @@ public class IntakeSubsystem extends WSubsystem {
             case DECREMENT:
                 return linkagePos - 0.05;
             case INCREMENT:
-                if (linkagePos + 0.05 >= 0.32)
-                    return 0.32;
-                else
-                    return linkagePos + 0.05;
+                return linkagePos + 0.05;
             default:
                 return 0;
         }
@@ -160,21 +180,20 @@ public class IntakeSubsystem extends WSubsystem {
 
     private double getClawStatePosition(ClawState state) {
         switch (state) {
-            case OPEN:
-                return 0.9;
             case CLOSED:
-                return 0.7;
+                return 0.0;
+            case OPEN:
             default:
-                return 0.9;
+                return 0.24;
         }
     }
 
     private double getTurretStatePosition(TurretState state) {
         switch (state) {
             case INTAKE:
-                return 0.3;
+                return 0.48;
             case TRANSFER:
-                return 0.3;
+                return 0.48;
             case INCREMENT:
                 return turretPos + 0.1;
             case DECREMENT:

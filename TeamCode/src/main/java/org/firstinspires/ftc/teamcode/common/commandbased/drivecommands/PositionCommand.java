@@ -38,7 +38,7 @@ public class PositionCommand extends CommandBase {
     public static PIDFController hController = new PIDFController(hP, 0.0, hD, 0);
 
     public static double ALLOWED_TRANSLATIONAL_ERROR = 3;
-    public static double ALLOWED_HEADING_ERROR = 1;
+    public static double ALLOWED_HEADING_ERROR = 3;
 
     private RobotHardware robot = RobotHardware.getInstance();
 

@@ -8,6 +8,7 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -21,7 +22,7 @@ import org.firstinspires.ftc.teamcode.common.util.Drawing;
 import org.firstinspires.ftc.teamcode.common.util.Pose;
 
 import java.util.Locale;
-
+@Disabled
 @Config
 @Autonomous(name="P2P")
 public class PositionCommandTest extends LinearOpMode {

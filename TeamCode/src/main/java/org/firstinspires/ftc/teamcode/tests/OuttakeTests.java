@@ -24,21 +24,23 @@ public class OuttakeTests extends LinearOpMode {
     private CachingServo outtakeArmRight;
     private CachingDcMotorEx extensionRight;
     private CachingDcMotorEx extensionLeft;
-    public static double slideTarget = 500;
-    public static double p = 0.033;
+    public static double slideTarget = 1000;
+    public static double p = 0.001;
     public static double i = 0;
-    public static double d = 0.0003;
+    public static double d = 0;
     public static double f = 0;
     private PIDFController controller;
+    public static double clawPos = 0.6;
 
 
     @Override
     public void runOpMode() throws InterruptedException {
         controller = new PIDFController(p, 0, d, 0);
         extensionRight = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionRight"));
-        extensionRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        extensionRight.setDirection(DcMotorSimple.Direction.FORWARD);
         extensionRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extensionLeft = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, "extensionLeft"));
+        extensionLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         extensionRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         extensionLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         outtakeArmLeft = new CachingServo(hardwareMap.get(Servo.class, "outtakeArmLeft"));
@@ -55,20 +57,20 @@ public class OuttakeTests extends LinearOpMode {
                 extensionRight.setPower(1);
                 extensionLeft.setPower(1);
             } else if (gamepad1.dpad_down) {
-                extensionRight.setPower(-0.4);
-                extensionLeft.setPower(-0.4);
+                extensionRight.setPower(-1);
+                extensionLeft.setPower(-1);
             } else {
                 extensionRight.setPower(0);
                 extensionLeft.setPower(0);
             }*/
-            extensionRight.setPower(power);
-            extensionLeft.setPower(power);
+            //extensionRight.setPower(power);
+            //extensionLeft.setPower(power);
 
             if (gamepad1.left_stick_button) {
                 outtakeClaw.setPosition(0.9);
             }
             if (gamepad1.right_stick_button) {
-                outtakeClaw.setPosition(0.3);
+                outtakeClaw.setPosition(clawPos);
             }
             telemetry.addData("claw_position: ", outtakeClaw.getPosition());
             if (gamepad1.a) {

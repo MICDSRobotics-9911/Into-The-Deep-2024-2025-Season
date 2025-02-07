@@ -10,17 +10,19 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.common.commandbased.CoaxialCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.IntakeArmCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.TurretCommand;
-import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.IntakeSampleCommand;
-import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.ScoreSpecimenCommand;
+import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.SpecimenPreIntakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.TransferSampleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.togglecommands.IntakeClawToggleCommand;
+import org.firstinspires.ftc.teamcode.common.commandbased.togglecommands.IntakeMacroToggleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.togglecommands.LinkageToggleCommand;
-import org.firstinspires.ftc.teamcode.common.commandbased.OuttakeArmCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.togglecommands.OuttakeClawToggleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.togglecommands.OuttakeArmToggleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.SlideCommand;
+import org.firstinspires.ftc.teamcode.common.commandbased.togglecommands.SampleScoreToggleCommand;
+import org.firstinspires.ftc.teamcode.common.commandbased.togglecommands.SpecimenToggle;
 import org.firstinspires.ftc.teamcode.common.hardware.Globals;
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.common.subsystems.IntakeSubsystem;
@@ -78,10 +80,14 @@ public class SoloTeleOp extends CommandOpMode {
             robot.outtake.usePIDF = false;
             robot.extensionLeft.setPower(1);
             robot.extensionRight.setPower(1);
+            robot.outtake.slideTarget = robot.outtake.getSlidePosition();
         } else if (-gamepad2.left_stick_y < -0.1) {
             robot.outtake.usePIDF = false;
             robot.extensionLeft.setPower(-1);
             robot.extensionRight.setPower(-1);
+            robot.outtake.slideTarget = robot.outtake.getSlidePosition();
+        } else {
+            robot.outtake.usePIDF = true;
         }
 
 
@@ -99,45 +105,45 @@ public class SoloTeleOp extends CommandOpMode {
         telemetry.addData("SlideError: ", robot.outtake.slideTarget -
                 robot.extensionRight.getCurrentPosition());
         telemetry.addData("Ticks: ", robot.extensionRight.getCurrentPosition());
+        telemetry.addData("OuttakeClaw: ", robot.outtake.getClawState());
+        telemetry.addData("IntakeClaw: ", robot.intake.getClawState());
         loopTime = loop;
         telemetry.update();
     }
 
 
     public void initializeButtons() {
-        gamepadEx.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(new IntakeClawToggleCommand(robot));
-        gamepadEx.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenPressed(new OuttakeClawToggleCommand(robot));
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_UP)
-                .whenPressed(new SlideCommand(SlideState.HIGH_BASKET));
+                .whenPressed(new SampleScoreToggleCommand());
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
                 .whenPressed(new SlideCommand(SlideState.RESET));
         gamepadEx.getGamepadButton(GamepadKeys.Button.Y)
-                .whenPressed(new SlideCommand(SlideState.SPECIMEN_OUTTAKE));
-        gamepadEx.getGamepadButton(GamepadKeys.Button.X)
-                .whenPressed(new ScoreSpecimenCommand());
+                .whenPressed(new SpecimenToggle());
+        gamepadEx.getGamepadButton(GamepadKeys.Button.B)
+                .whenPressed(new TransferSampleCommand());
         gamepadEx.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(new IntakeSampleCommand());
-        /*gamepadEx.getGamepadButton(GamepadKeys.Button.B)
-                .whenPressed(new TransferSampleCommand());*/
+                .whenPressed(new IntakeMacroToggleCommand());
+        gamepadEx.getGamepadButton(GamepadKeys.Button.X)
+                .whenPressed(new SpecimenPreIntakeCommand());
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
                 .whenPressed(new OuttakeArmToggleCommand(robot));
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
                 .whenPressed(new LinkageToggleCommand(robot));
-        gamepadEx2.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.INCREMENT));
-        gamepadEx2.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
-                .whenPressed(new OuttakeArmCommand(OuttakeSubsystem.PivotState.DECREMENT));
+        gamepadEx.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                .whenPressed(new TurretCommand(IntakeSubsystem.TurretState.INCREMENT));
+        gamepadEx.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(new TurretCommand(IntakeSubsystem.TurretState.DECREMENT));
         gamepadEx2.getGamepadButton(GamepadKeys.Button.DPAD_UP)
                 .whenPressed(new SlideCommand(SlideState.INCREMENT));
         gamepadEx2.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
                 .whenPressed(new SlideCommand(SlideState.DECREMENT));
         gamepadEx2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(new TurretCommand(IntakeSubsystem.TurretState.INCREMENT));
+                .whenPressed(new IntakeClawToggleCommand(robot));
         gamepadEx2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenPressed(new TurretCommand(IntakeSubsystem.TurretState.DECREMENT));
+                .whenPressed(new OuttakeClawToggleCommand(robot));
         gamepadEx2.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(new TurretCommand(IntakeSubsystem.TurretState.INTAKE));
+        gamepadEx2.getGamepadButton(GamepadKeys.Button.X)
+                .whenPressed(new IntakeArmCommand(IntakeSubsystem.ArmState.RESET));
     }
 }

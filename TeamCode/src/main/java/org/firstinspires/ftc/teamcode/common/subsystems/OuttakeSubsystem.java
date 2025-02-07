@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.controller.PIDFController;
 
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.common.util.ClawState;
+import org.firstinspires.ftc.teamcode.common.util.MathUtils;
 import org.firstinspires.ftc.teamcode.common.util.wrappers.WSubsystem;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,6 +28,7 @@ public class OuttakeSubsystem extends WSubsystem {
         TRANSFER,
         INCREMENT,
         DECREMENT,
+        UP,
         RESET,
     }
 
@@ -34,9 +36,10 @@ public class OuttakeSubsystem extends WSubsystem {
     private PIDFController controller;
     private double pid;
 
-    public static double p = 0.033;
+    public static double p = 0.008;
     public static double i = 0;
     public static double d = 0;
+    public static double f = 0.00002;
     public boolean usePIDF = true;
 
     public ClawState claw = ClawState.OPEN;
@@ -46,23 +49,27 @@ public class OuttakeSubsystem extends WSubsystem {
     public int slideTarget = 0;
     private int motorTicks = 0;
     public static int specimenOuttake = 1500;
-    public static int tolerance = 5;
+    public static int tolerance = 15;
+    public static double RESET = 1;
 
     public OuttakeSubsystem() {
-        updateState(ClawState.OPEN);
+        updateState(ClawState.CLOSED);
         updateState(SlideState.RESET);
         updateState(PivotState.RESET);
         pid = 0;
         controller = new PIDFController(p, i, d, 0);
-        controller.reset();
+        reset();
     }
+
     @Override
     public void periodic() {
+        controller.setPIDF(p, i, d, 0);
         pivotTarget = robot.outtakeArmRight.getPosition();
     }
 
     public void updateState(@NotNull ClawState state) {
         double clawPosition = getClawStatePosition(state);
+
         robot.outtakeClaw.setPosition(clawPosition);
         this.claw = state;
     }
@@ -88,19 +95,22 @@ public class OuttakeSubsystem extends WSubsystem {
 
     @Override
     public void write() {
-        pid = controller.calculate(motorTicks, slideTarget);
-        if (usePIDF && Math.abs(slideTarget - motorTicks) > tolerance) {
+        double slideError = slideTarget - motorTicks;
+        pid = controller.calculate(motorTicks, slideTarget) + f * motorTicks;
+        if (usePIDF && Math.abs(slideError) > tolerance) {
             robot.extensionRight.setPower(pid);
             robot.extensionLeft.setPower(pid);
         } else {
-            robot.extensionRight.setPower(0);
-            robot.extensionLeft.setPower(0);
+            robot.extensionRight.setPower(pid);
+            robot.extensionLeft.setPower(pid);
         }
     }
 
     @Override
     public void reset() {
-
+        updateState(ClawState.CLOSED);
+        updateState(SlideState.RESET);
+        updateState(PivotState.RESET);
         controller.reset();
     }
 
@@ -109,19 +119,19 @@ public class OuttakeSubsystem extends WSubsystem {
             case OPEN:
                 return 0.9;
             case CLOSED:
-                return 0.3;
+                return 0.62;
             default:
-                return 0;
+                return 0.62;
         }
     }
 
     private int getSlideStatePosition(SlideState state) {
-        // 3440 is the top
+        // 2970 is the top
         switch (state) {
             case HIGH_BASKET:
-                return 3000;
+                return 2910;
             case LOW_BASKET:
-                return 500;
+                return 1500;
             case SPECIMEN_OUTTAKE:
                 return specimenOuttake;
             case INCREMENT:
@@ -129,7 +139,7 @@ public class OuttakeSubsystem extends WSubsystem {
             case DECREMENT:
                 return slideTarget - 100;
             case SPECIMEN_SCORING:
-                return specimenOuttake - 600;
+                return specimenOuttake - 300;
             case RESET:
             default:
                 return 0;
@@ -141,14 +151,16 @@ public class OuttakeSubsystem extends WSubsystem {
             case TRANSFER:
                 return 1;
             case SCORING:
-                return 0;
+                return 0.1;
+            case UP:
+                return 0.55;
             case INCREMENT:
                 return pivotTarget + 0.1;
             case DECREMENT:
                 return pivotTarget - 0.1;
             case RESET:
             default:
-                return 1;
+                return RESET;
         }
     }
 
@@ -167,6 +179,10 @@ public class OuttakeSubsystem extends WSubsystem {
 
     public void setTargetPosition(int position) {
         this.slideTarget = position;
+    }
+
+    public int getSlidePosition() {
+        return motorTicks;
     }
 
 }

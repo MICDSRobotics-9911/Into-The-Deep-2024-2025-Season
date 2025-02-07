@@ -14,9 +14,15 @@ public class MathUtils {
     }
 
     public static double signSqrt(double num) {
-        int sign = 1;
-        if (num < 0)
-            sign = -1;
+        int sign = (num < 0) ? -1 : 1;
         return sign * Math.sqrt(num);
+    }
+
+    public static double clip(double value, double min, double max) {
+        if (value < min)
+            return min;
+        if (value > max)
+            return max;
+        return value;
     }
 }
