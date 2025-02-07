@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.common.commandbased.OuttakeArmCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.OuttakeClawCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.SlideCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.ScoreSpecimenCommand;
+import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.SpecimenIntakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.drivecommands.*;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -61,7 +62,6 @@ public class SpecimenAutoPID extends LinearOpMode {
 
         // for the heading to be 0, have the robot be facing the red submersible side,
         while (opModeInInit()) {
-            robot.outtakeClaw.setPosition(0.3);
             telemetry.addLine("ready");
             telemetry.update();
             TelemetryPacket packet = new TelemetryPacket(true);
@@ -71,16 +71,12 @@ public class SpecimenAutoPID extends LinearOpMode {
 
         CommandScheduler.getInstance().schedule(
                 new SequentialCommandGroup(
+                        new SpecimenIntakeCommand(),
                         new PositionCommand(zeroPose),
                         new PositionCommand(inBetweenPose),
-                        new OuttakeArmCommand(OuttakeSubsystem.PivotState.SCORING),
-                        new SlideCommand(OuttakeSubsystem.SlideState.SPECIMEN_OUTTAKE),
-                        new WaitCommand(3000),
-                        new PositionCommand(secondInBetweenPose, 0.5),
-                        new ScoreSpecimenCommand(),
-                        new WaitCommand(700),
-                        new OuttakeClawCommand(ClawState.OPEN),
-                        new PositionCommand(inBetweenfirstPose),
+                        new PositionCommand(secondInBetweenPose, 0.5)
+                        //new ScoreSpecimenCommand(),
+                        /*new PositionCommand(inBetweenfirstPose),
                         new PositionCommand(new Pose(firstPose.x, firstPose.y, Math.toRadians(180))),
                         new PositionCommand(firstPose),
                         new SlideCommand(OuttakeSubsystem.SlideState.SPECIMEN_INTAKE),
@@ -102,7 +98,7 @@ public class SpecimenAutoPID extends LinearOpMode {
                         new WaitCommand(2000),
                         new ScoreSpecimenCommand(),
                         new WaitCommand(3000),
-                        new OuttakeArmCommand(OuttakeSubsystem.PivotState.UP)
+                        new OuttakeArmCommand(OuttakeSubsystem.PivotState.UP)*/
                 )
         );
 

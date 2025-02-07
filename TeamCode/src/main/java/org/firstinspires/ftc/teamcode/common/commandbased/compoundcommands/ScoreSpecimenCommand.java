@@ -14,7 +14,7 @@ public class ScoreSpecimenCommand extends SequentialCommandGroup {
     public ScoreSpecimenCommand() {
         super(
                 new SlideCommand(OuttakeSubsystem.SlideState.SPECIMEN_SCORING),
-                new WaitCommand(500),
+                new WaitCommand(300),
                 new OuttakeClawCommand(ClawState.OPEN)
         );
         Globals.stopIntaking();

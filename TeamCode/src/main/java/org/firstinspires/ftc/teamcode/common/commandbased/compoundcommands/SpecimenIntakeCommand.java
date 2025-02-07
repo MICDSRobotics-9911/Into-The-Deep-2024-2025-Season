@@ -17,7 +17,8 @@ public class SpecimenIntakeCommand extends SequentialCommandGroup {
                 new OuttakeClawCommand(ClawState.CLOSED),
                 new WaitCommand(300),
                 new SlideCommand(OuttakeSubsystem.SlideState.SPECIMEN_OUTTAKE),
-                new IntakeArmCommand(IntakeSubsystem.ArmState.TRANSFER)
+                new WaitCommand(200),
+                new OuttakeArmCommand(OuttakeSubsystem.PivotState.SCORING)
         );
     }
 }

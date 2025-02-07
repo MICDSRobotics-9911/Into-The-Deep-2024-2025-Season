@@ -159,7 +159,7 @@ public class IntakeSubsystem extends WSubsystem {
                 return 0.9;
             case RESET:
             default:
-                return 0.85;
+                return 0.87;
         }
     }
 

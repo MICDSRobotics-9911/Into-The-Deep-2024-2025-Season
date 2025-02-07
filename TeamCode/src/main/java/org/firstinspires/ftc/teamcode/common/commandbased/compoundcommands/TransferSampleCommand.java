@@ -29,7 +29,7 @@ public class TransferSampleCommand extends SequentialCommandGroup {
                 new WaitCommand(300),
                 //new IntakeArmCommand(IntakeSubsystem.ArmState.SUBMERSIBLE),
                 new OuttakeClawCommand(ClawState.CLOSED),
-                new WaitCommand(300),
+                new WaitCommand(200),
                 new IntakeClawCommand(ClawState.CLOSED)
                 //new IntakeArmCommand(IntakeSubsystem.ArmState.RESET)
         );

@@ -97,10 +97,7 @@ public class OuttakeSubsystem extends WSubsystem {
     public void write() {
         double slideError = slideTarget - motorTicks;
         pid = controller.calculate(motorTicks, slideTarget) + f * motorTicks;
-        if (usePIDF && Math.abs(slideError) > tolerance) {
-            robot.extensionRight.setPower(pid);
-            robot.extensionLeft.setPower(pid);
-        } else {
+        if (usePIDF) {
             robot.extensionRight.setPower(pid);
             robot.extensionLeft.setPower(pid);
         }
@@ -129,7 +126,7 @@ public class OuttakeSubsystem extends WSubsystem {
         // 2970 is the top
         switch (state) {
             case HIGH_BASKET:
-                return 2910;
+                return 2920;
             case LOW_BASKET:
                 return 1500;
             case SPECIMEN_OUTTAKE:
@@ -151,9 +148,9 @@ public class OuttakeSubsystem extends WSubsystem {
             case TRANSFER:
                 return 1;
             case SCORING:
-                return 0.1;
+                return 0;
             case UP:
-                return 0.55;
+                return 0.7;
             case INCREMENT:
                 return pivotTarget + 0.1;
             case DECREMENT:
