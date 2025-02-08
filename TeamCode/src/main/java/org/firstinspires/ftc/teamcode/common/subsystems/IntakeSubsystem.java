@@ -44,7 +44,8 @@ public class IntakeSubsystem extends WSubsystem {
         INTAKE,
         TRANSFER,
         INCREMENT,
-        DECREMENT
+        DECREMENT,
+        RESET
     }
 
     public enum TurretState {
@@ -131,7 +132,7 @@ public class IntakeSubsystem extends WSubsystem {
         updateState(ArmState.RESET);
         updateState(PivotState.RETRACT);
         updateState(ClawState.OPEN);
-        updateState(CoaxialState.INTAKE);
+        updateState(CoaxialState.RESET);
     }
 
     private double getCoaxialStatePosition(CoaxialState state) {
@@ -144,8 +145,9 @@ public class IntakeSubsystem extends WSubsystem {
                 return coaxialPos + 0.05;
             case DECREMENT:
                 return coaxialPos - 0.05;
+            case RESET:
             default:
-                return 1;
+                return 0.65;
         }
     }
 
@@ -159,7 +161,7 @@ public class IntakeSubsystem extends WSubsystem {
                 return 0.9;
             case RESET:
             default:
-                return 0.87;
+                return 0.89;
         }
     }
 

@@ -39,7 +39,7 @@ public class OuttakeSubsystem extends WSubsystem {
     public static double p = 0.008;
     public static double i = 0;
     public static double d = 0;
-    public static double f = 0.00002;
+    public static double f = 0.00009;
     public boolean usePIDF = true;
 
     public ClawState claw = ClawState.OPEN;
@@ -48,7 +48,8 @@ public class OuttakeSubsystem extends WSubsystem {
     private double pivotTarget = 0;
     public int slideTarget = 0;
     private int motorTicks = 0;
-    public static int specimenOuttake = 1500;
+    public static int specimenOuttake = 1250     ;
+    public static int highBasket = 2920;
     public static int tolerance = 15;
     public static double RESET = 1;
 
@@ -126,7 +127,7 @@ public class OuttakeSubsystem extends WSubsystem {
         // 2970 is the top
         switch (state) {
             case HIGH_BASKET:
-                return 2920;
+                return highBasket;
             case LOW_BASKET:
                 return 1500;
             case SPECIMEN_OUTTAKE:
@@ -136,8 +137,9 @@ public class OuttakeSubsystem extends WSubsystem {
             case DECREMENT:
                 return slideTarget - 100;
             case SPECIMEN_SCORING:
-                return specimenOuttake - 300;
+                return specimenOuttake - 600;
             case RESET:
+            case SPECIMEN_INTAKE:
             default:
                 return 0;
         }

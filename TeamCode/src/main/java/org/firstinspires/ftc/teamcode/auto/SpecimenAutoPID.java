@@ -14,8 +14,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.common.commandbased.OuttakeArmCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.OuttakeClawCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.SlideCommand;
+import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.IntakeMacro;
 import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.ScoreSpecimenCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.SpecimenIntakeCommand;
+import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.SpecimenPreIntakeCommand;
+import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.SubmersibleCommand;
+import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.TransferSampleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.drivecommands.*;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -38,14 +42,16 @@ public class SpecimenAutoPID extends LinearOpMode {
     private double loopTime = 0.0;
     private final ElapsedTime timer = new ElapsedTime();
     private double endTime = 0;
-    public static Pose zeroPose = new Pose(29.9, 15, Math.toRadians(180));
-    public static Pose inBetweenPose = new Pose(25, 10, Math.toRadians(180));
-    public static Pose secondInBetweenPose = new Pose(29.8, 20, Math.toRadians(180));
-    public static Pose inBetweenfirstPose = new Pose(6, -31, Math.toRadians(180));
-    public static Pose firstPose = new Pose(6, -31, 0);
-    public static Pose secondPose = new Pose(2.3, -31, 0);
-    public static Pose inBetweenSecondPose = new Pose(7, -31, 0);
-    public static Pose thirdPose = new Pose(25, 25, 0);
+    //public static Pose startingPose = new Pose(10, 15, Math.toRadians(90));
+    public static Pose zeroPose = new Pose(29.9, 8, Math.toRadians(180));
+    public static Pose inBetweenPose = new Pose(25, 8, Math.toRadians(180));
+    public static Pose secondInBetweenPose = new Pose(29.8, 8, Math.toRadians(180));
+    public static Pose inBetweenfirstPose = new Pose(18, 6, Math.toRadians(180));
+    public static Pose firstPose = new Pose(4, -45, 0);
+    public static Pose secondPose = new Pose(10, -30, 0);
+    public static Pose inBetweenSecondPose = new Pose(48, -22, 0);
+    public static Pose inBetweenThirdPose = new Pose(48, -30, 0);
+    public static Pose thirdPose = new Pose(10, -38, 0);
     public static Pose fourthPose = new Pose(29.8, 25, Math.toRadians(180));
 
     @Override
@@ -71,12 +77,29 @@ public class SpecimenAutoPID extends LinearOpMode {
 
         CommandScheduler.getInstance().schedule(
                 new SequentialCommandGroup(
+                        //new PositionCommand(startingPose),
                         new SpecimenIntakeCommand(),
                         new PositionCommand(zeroPose),
                         new PositionCommand(inBetweenPose),
-                        new PositionCommand(secondInBetweenPose, 0.5)
-                        //new ScoreSpecimenCommand(),
-                        /*new PositionCommand(inBetweenfirstPose),
+                        new PositionCommand(secondInBetweenPose, 0.5),
+                        new ScoreSpecimenCommand(),
+                        new PositionCommand(inBetweenfirstPose),
+                        new SpecimenPreIntakeCommand(),
+                        new PositionCommand(firstPose),
+                        new SubmersibleCommand(),
+                        new WaitCommand(1000),
+                        new IntakeMacro(),
+                        new WaitCommand(500),
+                        new TransferSampleCommand(),
+                        new OuttakeArmCommand(OuttakeSubsystem.PivotState.SCORING),
+                        new OuttakeClawCommand(ClawState.OPEN)
+                        /*new SpecimenPreIntakeCommand(),
+                        new PositionCommand(inBetweenSecondPose),
+                        new PositionCommand(secondPose),
+                        new PositionCommand(inBetweenThirdPose),
+                        new WaitCommand(2000),
+                        new PositionCommand(thirdPose)*/
+                        /*,
                         new PositionCommand(new Pose(firstPose.x, firstPose.y, Math.toRadians(180))),
                         new PositionCommand(firstPose),
                         new SlideCommand(OuttakeSubsystem.SlideState.SPECIMEN_INTAKE),
