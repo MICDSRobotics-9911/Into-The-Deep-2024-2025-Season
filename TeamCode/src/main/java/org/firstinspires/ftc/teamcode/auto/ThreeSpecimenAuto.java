@@ -13,7 +13,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.common.commandbased.OuttakeArmCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.OuttakeClawCommand;
-import org.firstinspires.ftc.teamcode.common.commandbased.SlideCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.IntakeMacro;
 import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.ResetCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.ScoreSpecimenCommand;
@@ -35,8 +34,8 @@ import org.firstinspires.ftc.teamcode.common.util.Pose;
 import java.util.Locale;
 
 @Config
-@Autonomous(name="SpecimenAutoPID")
-public class SpecimenAutoPID extends LinearOpMode {
+@Autonomous(name="ThreeSpecimenAuto :astonished:")
+public class ThreeSpecimenAuto extends LinearOpMode {
 
     private final RobotHardware robot = RobotHardware.getInstance();
 

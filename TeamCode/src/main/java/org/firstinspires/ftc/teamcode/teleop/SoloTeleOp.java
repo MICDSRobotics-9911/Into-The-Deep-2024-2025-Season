@@ -25,6 +25,7 @@ import org.firstinspires.ftc.teamcode.common.commandbased.togglecommands.Outtake
 import org.firstinspires.ftc.teamcode.common.commandbased.SlideCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.togglecommands.SampleScoreToggleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.togglecommands.SpecimenToggle;
+import org.firstinspires.ftc.teamcode.common.drive.MecanumDrivetrain;
 import org.firstinspires.ftc.teamcode.common.hardware.Globals;
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.common.subsystems.IntakeSubsystem;
@@ -127,7 +128,7 @@ public class SoloTeleOp extends CommandOpMode {
         gamepadEx.getGamepadButton(GamepadKeys.Button.Y)
                 .whenPressed(new SpecimenToggle());
         gamepadEx.getGamepadButton(GamepadKeys.Button.B)
-                .whenPressed(new TransferSampleCommand());
+                .whenPressed(new TransferSampleCommand(SlideState.HIGH_BASKET));
         gamepadEx.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(new IntakeMacroToggleCommand());
         gamepadEx.getGamepadButton(GamepadKeys.Button.X)

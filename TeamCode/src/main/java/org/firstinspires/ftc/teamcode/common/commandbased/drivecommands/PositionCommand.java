@@ -48,6 +48,7 @@ public class PositionCommand extends CommandBase {
     public static double STABLE_MS = 100;
     public static double DEAD_MS = 2500;
 
+
     public PositionCommand(Pose targetPose) {
         this.drivetrain = robot.drivetrain;
         this.targetPose = targetPose;
@@ -65,13 +66,29 @@ public class PositionCommand extends CommandBase {
         xController.reset();
         yController.reset();
         hController.reset();
+        xController.setPIDF(xP, 0, xD, 0);
+        yController.setPIDF(yP, 0, yD, 0);
+        hController.setPIDF(hP, 0, hD, 0);
+    }
+
+    public PositionCommand(Pose targetPose, double speed, double translationalTolerance, double headingTolerance) {
+        this.drivetrain = robot.drivetrain;
+        this.targetPose = targetPose;
+        maxSpeed = speed;
+
+        xController.reset();
+        yController.reset();
+        hController.reset();
+        xController.setPIDF(xP, 0, xD, 0);
+        yController.setPIDF(yP, 0, yD, 0);
+        hController.setPIDF(hP, 0, hD, 0);
+
+        ALLOWED_TRANSLATIONAL_ERROR = translationalTolerance;
+        ALLOWED_HEADING_ERROR = headingTolerance;
     }
 
     @Override
     public void execute() {
-        xController.setPIDF(xP, 0, xD, 0);
-        yController.setPIDF(yP, 0, yD, 0);
-        hController.setPIDF(hP, 0, hD, 0);
         if (timer == null) timer = new ElapsedTime();
         if (stable == null) stable = new ElapsedTime();
 

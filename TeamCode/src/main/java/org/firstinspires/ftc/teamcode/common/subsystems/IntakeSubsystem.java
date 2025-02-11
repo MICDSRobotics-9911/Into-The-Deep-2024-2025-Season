@@ -11,6 +11,8 @@ import org.jetbrains.annotations.NotNull;
 @Config
 public class IntakeSubsystem extends WSubsystem {
 
+    // TODO: Turret Perpendicular
+
     // for intaking
     // armPos: 0.78
     // coaxialPos: 0.32
@@ -39,6 +41,7 @@ public class IntakeSubsystem extends WSubsystem {
     private double linkagePos = 0;
     public static double RESET = 0.9;
     private double coaxialPos = 0;
+    public static double PERPENDICULAR = 0;
 
     public enum CoaxialState {
         EXTEND,
@@ -53,7 +56,8 @@ public class IntakeSubsystem extends WSubsystem {
         INTAKE,
         TRANSFER,
         INCREMENT,
-        DECREMENT
+        DECREMENT,
+        PERPENDICULAR
     }
 
     public enum ArmState {
@@ -162,7 +166,7 @@ public class IntakeSubsystem extends WSubsystem {
             case INTAKE:
                 return 0.78;
             case SUBMERSIBLE:
-                return 0.82;
+                return 0.84;
             case TRANSFER:
                 return 0.9;
             case RESET:
@@ -206,6 +210,8 @@ public class IntakeSubsystem extends WSubsystem {
                 return turretPos + 0.1;
             case DECREMENT:
                 return turretPos - 0.1;
+            case PERPENDICULAR:
+                return PERPENDICULAR;
             default:
                 return 0.3;
         }
