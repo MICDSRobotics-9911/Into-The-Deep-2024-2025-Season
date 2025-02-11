@@ -4,18 +4,21 @@ import static com.qualcomm.robotcore.hardware.Servo.Direction.FORWARD;
 import static com.qualcomm.robotcore.hardware.Servo.Direction.REVERSE;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.ResetCommand;
 import org.firstinspires.ftc.teamcode.common.drive.MecanumDrivetrain;
 import org.firstinspires.ftc.teamcode.common.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.common.subsystems.OuttakeSubsystem;
@@ -73,7 +76,7 @@ public class RobotHardware {
     public HashMap<Sensors.SensorType, Object> values;
 
     private Pose2D robotPose;
-    public CachingServo intakeCoaxial;
+    public ServoImplEx intakeCoaxial;
 
     public static RobotHardware getInstance() {
         if (instance == null) {
@@ -139,7 +142,7 @@ public class RobotHardware {
         intakeArmRight = new CachingServo(hardwareMap.get(Servo.class, "intakeArmRight"));
         intakeArmRight.setDirection(REVERSE);
         intakeArmRight.setDirection(Servo.Direction.REVERSE);
-        intakeCoaxial = new CachingServo(hardwareMap.get(Servo.class, "intakeCoaxial"));
+        intakeCoaxial = (ServoImplEx) hardwareMap.get(Servo.class, "intakeCoaxial");
         intakeCoaxial.setDirection(FORWARD);
         turretClaw = new CachingServo(hardwareMap.get(Servo.class, "turretClaw"));
 

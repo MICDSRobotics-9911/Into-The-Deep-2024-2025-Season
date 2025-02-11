@@ -32,7 +32,7 @@ public class MecanumDrivetrain extends WSubsystem implements Drivetrain {
     }
 
     public double scaleInput(double input) {
-        return (0.5 * Math.tan(1.12 * input));
+        return (input * input * input + input) / 2;
     }
 
     public void set(double forwardSpeed,double strafeSpeed,
@@ -42,7 +42,7 @@ public class MecanumDrivetrain extends WSubsystem implements Drivetrain {
             strafeSpeed = forwardSpeed * Math.sin(-gyroAngle) - strafeSpeed * Math.sin(-gyroAngle);*/
             strafeSpeed = scaleInput(strafeSpeed);
             forwardSpeed = scaleInput(forwardSpeed);
-            //turnSpeed = scaleInput(turnSpeed);
+            turnSpeed = scaleInput(turnSpeed);
             strafeSpeed *= 1.1;
         }
 

@@ -9,31 +9,26 @@ import org.firstinspires.ftc.teamcode.common.commandbased.IntakeClawCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.LinkageCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.OuttakeArmCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.OuttakeClawCommand;
+import org.firstinspires.ftc.teamcode.common.commandbased.SlideCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.TurretCommand;
-import org.firstinspires.ftc.teamcode.common.commandbased.togglecommands.SampleScoreToggleCommand;
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.common.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.common.subsystems.OuttakeSubsystem;
 import org.firstinspires.ftc.teamcode.common.util.ClawState;
 
-public class TransferSampleCommand extends SequentialCommandGroup {
-    public TransferSampleCommand() {
+public class ResetCommand extends SequentialCommandGroup {
+    public ResetCommand() {
         super(
-                new CoaxialCommand(IntakeSubsystem.CoaxialState.TRANSFER),
-                new TurretCommand(IntakeSubsystem.TurretState.TRANSFER),
-                new IntakeArmCommand(IntakeSubsystem.ArmState.SUBMERSIBLE),
-                new LinkageCommand(IntakeSubsystem.PivotState.RETRACT),
-                new OuttakeArmCommand(OuttakeSubsystem.PivotState.TRANSFER),
-                new OuttakeClawCommand(ClawState.OPEN),
-                new WaitCommand(600),
-                new IntakeArmCommand(IntakeSubsystem.ArmState.TRANSFER),
-                new WaitCommand(300),
-                //new IntakeArmCommand(IntakeSubsystem.ArmState.SUBMERSIBLE),
-                new OuttakeClawCommand(ClawState.CLOSED),
-                new WaitCommand(200),
-                new IntakeClawCommand(ClawState.CLOSED),
+                /* sigma sigma boy wrote this code */
                 new IntakeArmCommand(IntakeSubsystem.ArmState.RESET),
-                new SampleScoreToggleCommand()
+                new OuttakeClawCommand(ClawState.CLOSED),
+                new OuttakeArmCommand(OuttakeSubsystem.PivotState.RESET),
+                new SlideCommand(OuttakeSubsystem.SlideState.RESET),
+                new IntakeClawCommand(ClawState.CLOSED),
+                new TurretCommand(IntakeSubsystem.TurretState.INTAKE),
+                new LinkageCommand(IntakeSubsystem.PivotState.RETRACT),
+                new WaitCommand(200),
+                new CoaxialCommand(IntakeSubsystem.CoaxialState.RESET)
         );
     }
 }

@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -13,6 +14,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.common.commandbased.CoaxialCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.IntakeArmCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.TurretCommand;
+import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.ResetCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.SpecimenPreIntakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.TransferSampleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.togglecommands.IntakeClawToggleCommand;
@@ -59,14 +61,19 @@ public class SoloTeleOp extends CommandOpMode {
 
         gamepadEx = new GamepadEx(gamepad1);
         gamepadEx2 = new GamepadEx(gamepad2);
-        initializeButtons();
         robot.init(hardwareMap);
 
         robot.read();
+        CommandScheduler.getInstance().schedule(
+                new ResetCommand()
+        );
         while (opModeInInit()) {
             telemetry.addLine("Robot Initialized.");
             telemetry.update();
+            CommandScheduler.getInstance().run();
         }
+        CommandScheduler.getInstance().reset();
+        initializeButtons();
     }
 
     @Override
@@ -128,7 +135,10 @@ public class SoloTeleOp extends CommandOpMode {
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
                 .whenPressed(new OuttakeArmToggleCommand(robot));
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                .whenPressed(new LinkageToggleCommand(robot));
+                .whenPressed(new SequentialCommandGroup(
+                        new IntakeArmCommand(IntakeSubsystem.ArmState.RESET),
+                        new LinkageToggleCommand(robot)
+                ));
         gamepadEx.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(new TurretCommand(IntakeSubsystem.TurretState.INCREMENT));
         gamepadEx.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)

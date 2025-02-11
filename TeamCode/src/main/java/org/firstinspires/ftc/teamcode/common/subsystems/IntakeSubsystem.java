@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.common.subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.common.util.ClawState;
@@ -72,7 +73,7 @@ public class IntakeSubsystem extends WSubsystem {
 
     public IntakeSubsystem() {
         this.robot = RobotHardware.getInstance();
-        reset();
+        //reset();
     }
 
     public void updateState(@NotNull ClawState state) {
@@ -93,12 +94,15 @@ public class IntakeSubsystem extends WSubsystem {
         double position = MathUtils.clip(getArmStatePosition(state), 0.78, 0.9);
         robot.intakeArmLeft.setPosition(position);
         robot.intakeArmRight.setPosition(position);
+        armPos = position;
         this.arm = state;
     }
 
     public void updateState(@NotNull CoaxialState state) {
         double coaxialPos = getCoaxialStatePosition(state);
-        robot.intakeCoaxial.setPosition(coaxialPos);
+        if (robot.intakeArmLeft.getPosition() < 0.9 && arm != ArmState.TRANSFER) {
+            robot.intakeCoaxial.setPosition(coaxialPos);
+        }
         coaxial = state;
     }
 
@@ -132,6 +136,8 @@ public class IntakeSubsystem extends WSubsystem {
         updateState(ArmState.RESET);
         updateState(PivotState.RETRACT);
         updateState(ClawState.OPEN);
+        //robot.intakeCoaxial.setPwmEnable();
+        new WaitCommand(1000);
         updateState(CoaxialState.RESET);
     }
 

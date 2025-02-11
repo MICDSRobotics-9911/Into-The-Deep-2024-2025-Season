@@ -22,8 +22,9 @@ public class SampleScoreToggleCommand extends ConditionalCommand {
                         new SlideCommand(OuttakeSubsystem.SlideState.RESET)
                 ),
                 new SequentialCommandGroup(
+                        new OuttakeClawCommand(ClawState.CLOSED),
                         new SlideCommand(OuttakeSubsystem.SlideState.HIGH_BASKET),
-                        new OuttakeArmCommand(OuttakeSubsystem.PivotState.SCORING)
+                        new OuttakeArmCommand(OuttakeSubsystem.PivotState.UP)
                 ),
                 () -> RobotHardware.getInstance().outtake.slide == OuttakeSubsystem.SlideState.HIGH_BASKET
         );

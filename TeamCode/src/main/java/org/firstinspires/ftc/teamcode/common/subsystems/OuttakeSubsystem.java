@@ -5,7 +5,6 @@ import com.arcrobotics.ftclib.controller.PIDFController;
 
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.common.util.ClawState;
-import org.firstinspires.ftc.teamcode.common.util.MathUtils;
 import org.firstinspires.ftc.teamcode.common.util.wrappers.WSubsystem;
 import org.jetbrains.annotations.NotNull;
 
@@ -48,18 +47,16 @@ public class OuttakeSubsystem extends WSubsystem {
     private double pivotTarget = 0;
     public int slideTarget = 0;
     private int motorTicks = 0;
-    public static int specimenOuttake = 1250     ;
-    public static int highBasket = 2920;
+    public static int specimenOuttake = 1300;
+    public static int highBasket = 2970;
     public static int tolerance = 15;
     public static double RESET = 1;
 
     public OuttakeSubsystem() {
-        updateState(ClawState.CLOSED);
-        updateState(SlideState.RESET);
-        updateState(PivotState.RESET);
         pid = 0;
         controller = new PIDFController(p, i, d, 0);
-        reset();
+        controller.reset();
+        //reset();
     }
 
     @Override
@@ -137,7 +134,7 @@ public class OuttakeSubsystem extends WSubsystem {
             case DECREMENT:
                 return slideTarget - 100;
             case SPECIMEN_SCORING:
-                return specimenOuttake - 600;
+                return specimenOuttake - 700;
             case RESET:
             case SPECIMEN_INTAKE:
             default:
@@ -152,7 +149,7 @@ public class OuttakeSubsystem extends WSubsystem {
             case SCORING:
                 return 0;
             case UP:
-                return 0.7;
+                return 0.1;
             case INCREMENT:
                 return pivotTarget + 0.1;
             case DECREMENT:

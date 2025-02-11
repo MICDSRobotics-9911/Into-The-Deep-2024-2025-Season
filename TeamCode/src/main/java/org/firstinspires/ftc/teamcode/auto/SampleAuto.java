@@ -25,6 +25,7 @@ import org.firstinspires.ftc.teamcode.common.commandbased.drivecommands.*;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.teamcode.common.commandbased.togglecommands.SampleScoreToggleCommand;
 import org.firstinspires.ftc.teamcode.common.hardware.Globals;
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.common.subsystems.OuttakeSubsystem;
@@ -35,8 +36,8 @@ import org.firstinspires.ftc.teamcode.common.util.Pose;
 import java.util.Locale;
 
 @Config
-@Autonomous(name="SpecimenAutoPID")
-public class SpecimenAutoPID extends LinearOpMode {
+@Autonomous(name="SampleAuto")
+public class SampleAuto extends LinearOpMode {
 
     private final RobotHardware robot = RobotHardware.getInstance();
 
@@ -44,9 +45,9 @@ public class SpecimenAutoPID extends LinearOpMode {
     private final ElapsedTime timer = new ElapsedTime();
     private double endTime = 0;
     //public static Pose startingPose = new Pose(10, 15, Math.toRadians(90));
-    public static Pose zeroPose = new Pose(29, 8, Math.toRadians(180));
+    public static Pose zeroPose = new Pose(-27, 10, Math.toRadians(45));
     public static Pose secondInBetweenPose = new Pose(29.8, 8, Math.toRadians(180));
-    public static Pose inBetweenfirstPose = new Pose(18, 6, 0);
+    public static Pose inBetweenfirstPose = new Pose(-18, 10, Math.toRadians(90));
     public static Pose strafe = new Pose(18, -18, 0);
     public static Pose firstPose = new Pose(52, -22, 0);
     public static Pose firstPush = new Pose(10, -28, 0);
@@ -84,8 +85,15 @@ public class SpecimenAutoPID extends LinearOpMode {
 
         CommandScheduler.getInstance().schedule(
                 new SequentialCommandGroup(
-                        new SpecimenIntakeCommand(),
+                        new SampleScoreToggleCommand(),
+                        new WaitCommand(500),
                         new PositionCommand(zeroPose),
+                        new WaitCommand(300),
+                        new SampleScoreToggleCommand(),
+                        new PositionCommand(inBetweenfirstPose),
+                        new SubmersibleCommand(),
+                        new IntakeMacro()
+                        /*,
                         new PositionCommand(secondInBetweenPose, 0.7),
                         new ScoreSpecimenCommand(),
                         new PositionCommand(inBetweenfirstPose),
@@ -119,6 +127,43 @@ public class SpecimenAutoPID extends LinearOpMode {
                         new PositionCommand(new Pose(zeroPose.x + 0.5, zeroPose.y + 20, zeroPose.heading)),
                         new PositionCommand(new Pose(secondInBetweenPose.x, secondInBetweenPose.y + 20, secondInBetweenPose.heading)),
                         new ScoreSpecimenCommand()
+                        /*,
+                        new PositionCommand(specimenIntake, 0.5),
+                        new SpecimenIntakeCommand(),
+                        new WaitCommand(1000),
+                        new PositionCommand(inBetweenThirdPose),
+                        new PositionCommand(new Pose(zeroPose.x, zeroPose.y + 15, zeroPose.heading)),
+                        new PositionCommand(new Pose(secondInBetweenPose.x, secondInBetweenPose.y + 15, secondInBetweenPose.heading)),
+                        new ScoreSpecimenCommand()
+                        /*new SpecimenPreIntakeCommand(),
+                        new PositionCommand(inBetweenSecondPose),
+                        new PositionCommand(secondPose),
+                        new PositionCommand(inBetweenThirdPose),
+                        new WaitCommand(2000),
+                        new PositionCommand(thirdPose)*/
+                        /*,
+                        new PositionCommand(new Pose(firstPose.x, firstPose.y, Math.toRadians(180))),
+                        new PositionCommand(firstPose),
+                        new SlideCommand(OuttakeSubsystem.SlideState.SPECIMEN_INTAKE),
+                        new WaitCommand(1000),
+                        new PositionCommand(secondPose, 0.3),
+                        new OuttakeClawCommand(ClawState.CLOSED),
+                        new WaitCommand(1000),
+                        new SlideCommand(OuttakeSubsystem.SlideState.SPECIMEN_OUTTAKE),
+                        new PositionCommand(new Pose(10, 20, 0)),
+                        new PositionCommand(inBetweenPose),
+                        //new ManualSlideCommand(2000),
+
+                        //new WaitCommand(4000),
+                        new PositionCommand(new Pose(secondInBetweenPose.x,
+                                secondInBetweenPose.y - 10, secondInBetweenPose.heading), 0.5),
+                        //new SlideCommand(OuttakeSubsystem.SlideState.SPECIMEN_SCORING),
+                        //new WaitCommand(700),
+                        //new OuttakeClawCommand(ClawState.OPEN)\
+                        new WaitCommand(2000),
+                        new ScoreSpecimenCommand(),
+                        new WaitCommand(3000),
+                        new OuttakeArmCommand(OuttakeSubsystem.PivotState.UP)*/
                 )
         );
 
@@ -130,6 +175,12 @@ public class SpecimenAutoPID extends LinearOpMode {
             robot.read();
             robot.periodic();
             robot.write();
+            /*telemetry.addData("xError: ", robot.getPose().getX(DistanceUnit.INCH) -
+                    testPose.x);
+            telemetry.addData("yError: ", robot.getPose().getY(DistanceUnit.INCH) -
+                    testPose.y);
+            telemetry.addData("hError: ", robot.getPose().
+                    getHeading(AngleUnit.DEGREES) - Math.toDegrees(testPose.heading));*/
             Pose2D pos = robot.odo.getPosition();
             String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}",
                     pos.getX(DistanceUnit.INCH), pos.getY(DistanceUnit.INCH),
