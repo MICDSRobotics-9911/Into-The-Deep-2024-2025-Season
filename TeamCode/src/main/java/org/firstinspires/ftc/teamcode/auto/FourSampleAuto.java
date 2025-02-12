@@ -52,6 +52,7 @@ public class FourSampleAuto extends LinearOpMode {
         CommandScheduler.getInstance().reset();
         FtcDashboard dashboard = FtcDashboard.getInstance();
         Globals.IS_AUTO = true;
+        Globals.threeSpec = true;
 
 
         telemetry = new MultipleTelemetry(dashboard.getTelemetry(), telemetry);

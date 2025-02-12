@@ -8,6 +8,7 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -139,8 +140,9 @@ public class SoloTeleOp extends CommandOpMode {
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
                 .whenPressed(new ConditionalCommand(
                         new IntakeArmCommand(IntakeSubsystem.ArmState.RESET),
-                        new IntakeClawToggleCommand(robot),
-                        () -> robot.intake.arm != IntakeSubsystem.ArmState.RESET
+                        new LinkageToggleCommand(robot),
+                        () -> robot.intake.arm != IntakeSubsystem.ArmState.RESET &&
+                                robot.intake.arm != IntakeSubsystem.ArmState.SUBMERSIBLE
                 ));
         gamepadEx.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(new TurretCommand(IntakeSubsystem.TurretState.DECREMENT));

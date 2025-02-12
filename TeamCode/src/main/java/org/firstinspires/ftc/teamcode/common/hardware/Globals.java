@@ -12,6 +12,7 @@ public class Globals {
 
     public static boolean IS_SCORING = false;
     public static boolean IS_INTAKING = false;
+    public static boolean threeSpec = false;
 
     public static void startScoring() {
         IS_SCORING = true;

@@ -50,7 +50,6 @@ public class FourSpecimenAuto extends LinearOpMode {
     public static Pose inBetweenSecondPose = new Pose(-52, 30, Math.toRadians(180));
     public static Pose specimenIntake = new Pose(-3, 38, Math.toRadians(180));
     public static Pose inBetweenThirdPose = new Pose(-15, 4, 0);
-    public static double degrees = 225;
     public static Pose thirdPose = new Pose(-3, -30, Math.toRadians(180));
     public static Pose fourthPose = new Pose(-3, 30, Math.toRadians(180));
 
@@ -64,7 +63,7 @@ public class FourSpecimenAuto extends LinearOpMode {
 
         robot.init(hardwareMap);
 
-        robot.setPose(new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.RADIANS, Math.toRadians(180)));
+        robot.setPose(new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.RADIANS, 0));
 
         // for the heading to be 0, have the robot be facing the red submersible side,
         CommandScheduler.getInstance().schedule(
@@ -88,31 +87,31 @@ public class FourSpecimenAuto extends LinearOpMode {
                         //new PositionCommand(inBetweenfirstPose, 0.9,10, 20),
                         new SpecimenPreIntakeCommand(),
                         new PositionCommand(strafe,0.9, 10, 10),
-                        new PositionCommand(firstPose, 0.9, 10, 3),
-                        new PositionCommand(firstPush, 0.9, 6, 6),
-                        new PositionCommand(inBetweenSecondPose),
-                        new PositionCommand(secondPose),
+                        new PositionCommand(firstPose, 0.9, 10, 10),
+                        new PositionCommand(firstPush, 0.9, 6, 3),
+                        new PositionCommand(inBetweenSecondPose, 0.9, 10, 10),
+                        new PositionCommand(secondPose, 0.9),
                         new PositionCommand(specimenIntake, 0.7),
                         new SpecimenIntakeCommand(),
                         new PositionCommand(inBetweenThirdPose, 0.9, 10, 10),
-                        new PositionCommand(new Pose(zeroPose.x + 0.3, zeroPose.y + 7, zeroPose.heading)),
-                        new PositionCommand(new Pose(secondInBetweenPose.x, secondInBetweenPose.y + 7, secondInBetweenPose.heading), 0.5, 1, 1),
+                        new PositionCommand(new Pose(zeroPose.x + 0.3, zeroPose.y + 7, zeroPose.heading), 0.9, 6, 6),
+                        new PositionCommand(new Pose(secondInBetweenPose.x, secondInBetweenPose.y + 7, secondInBetweenPose.heading), 0.5, 2, 3),
                         new ScoreSpecimenCommand(),
                         new PositionCommand(thirdPose, 0.9, 10, 10),
                         new SpecimenPreIntakeCommand(),
                         new PositionCommand(thirdPose, 0.7),
                         new SpecimenIntakeCommand(),
                         new PositionCommand(inBetweenThirdPose, 0.9, 10, 10),
-                        new PositionCommand(new Pose(zeroPose.x + 0.4, zeroPose.y + 15, zeroPose.heading)),
-                        new PositionCommand(new Pose(secondInBetweenPose.x, secondInBetweenPose.y + 15, secondInBetweenPose.heading), 0.5, 1, 1),
+                        new PositionCommand(new Pose(zeroPose.x + 0.4, zeroPose.y + 15, zeroPose.heading), 0.9, 6, 6),
+                        new PositionCommand(new Pose(secondInBetweenPose.x, secondInBetweenPose.y + 15, secondInBetweenPose.heading), 0.5, 2, 3),
                         new ScoreSpecimenCommand(),
                         new PositionCommand(fourthPose, 0.9, 10, 10),
                         new SpecimenPreIntakeCommand(),
                         new PositionCommand(fourthPose, 0.7),
                         new SpecimenIntakeCommand(),
                         new PositionCommand(inBetweenThirdPose, 0.9, 10, 10),
-                        new PositionCommand(new Pose(zeroPose.x + 0.5, zeroPose.y + 20, zeroPose.heading)),
-                        new PositionCommand(new Pose(secondInBetweenPose.x, secondInBetweenPose.y + 20, secondInBetweenPose.heading), 0.5, 1, 1),
+                        new PositionCommand(new Pose(zeroPose.x + 0.5, zeroPose.y + 20, zeroPose.heading), 0.9, 6, 6),
+                        new PositionCommand(new Pose(secondInBetweenPose.x, secondInBetweenPose.y + 20, secondInBetweenPose.heading), 0.5, 2, 3),
                         new ScoreSpecimenCommand()
                 )
         );

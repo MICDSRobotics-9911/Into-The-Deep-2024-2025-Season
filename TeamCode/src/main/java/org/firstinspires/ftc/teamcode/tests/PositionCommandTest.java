@@ -64,7 +64,7 @@ public class PositionCommandTest extends LinearOpMode {
         while (opModeIsActive() && !isStopRequested()) {
             CommandScheduler.getInstance().schedule(
                     new SequentialCommandGroup(
-                            new PositionCommand(testPose),
+                            new PositionCommand(testPose, 0.5),
                             new PositionCommand(new Pose())
                     )
             );

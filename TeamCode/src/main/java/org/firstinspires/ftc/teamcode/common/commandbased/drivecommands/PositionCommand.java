@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.common.drive.Drivetrain;
+import org.firstinspires.ftc.teamcode.common.hardware.Globals;
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.common.hardware.Sensors;
 import org.firstinspires.ftc.teamcode.common.util.MathUtils;
@@ -136,12 +137,15 @@ public class PositionCommand extends CommandBase {
         double x_rotated = xPower * Math.cos(heading) - yPower * Math.sin(heading);
         double y_rotated = yPower * Math.sin(heading) + yPower * Math.cos(heading);
 
-        /*hPower *= maxSpeed;
-        x_rotated *= maxSpeed;
-        y_rotated *= maxSpeed;*/
-        hPower = Range.clip(hPower, -maxSpeed, maxSpeed);
-        x_rotated = Range.clip(x_rotated, -maxSpeed, maxSpeed);
-        y_rotated = Range.clip(y_rotated, -maxSpeed, maxSpeed);
+        if (Globals.threeSpec) {
+            hPower = Range.clip(hPower, -maxSpeed, maxSpeed);
+            x_rotated = Range.clip(x_rotated, -maxSpeed, maxSpeed);
+            y_rotated = Range.clip(y_rotated, -maxSpeed, maxSpeed);
+        } else {
+            hPower *= maxSpeed;
+            x_rotated *= maxSpeed;
+            y_rotated *= maxSpeed;
+        }
 
 
         // SQUID STUFF

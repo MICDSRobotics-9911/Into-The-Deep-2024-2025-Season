@@ -15,10 +15,10 @@ public class SubmersibleCommand extends SequentialCommandGroup {
     public SubmersibleCommand() {
         super(
                 new IntakeArmCommand(IntakeSubsystem.ArmState.SUBMERSIBLE),
-                new IntakeClawCommand(ClawState.CLOSED),
                 new LinkageCommand(IntakeSubsystem.PivotState.EXTEND),
                 new WaitCommand(200),
-                new CoaxialCommand(IntakeSubsystem.CoaxialState.INTAKE)
+                new CoaxialCommand(IntakeSubsystem.CoaxialState.INTAKE),
+                new IntakeClawCommand(ClawState.CLOSED)
         );
     }
 }

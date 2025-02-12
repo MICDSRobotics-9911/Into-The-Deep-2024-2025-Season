@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands;
 
+import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.common.commandbased.OuttakeArmCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.OuttakeClawCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.SlideCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.TurretCommand;
+import org.firstinspires.ftc.teamcode.common.hardware.Globals;
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.common.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.common.subsystems.OuttakeSubsystem;
@@ -26,6 +28,11 @@ public class ResetCommand extends SequentialCommandGroup {
                 new SlideCommand(OuttakeSubsystem.SlideState.RESET),
                 new IntakeClawCommand(ClawState.CLOSED),
                 new TurretCommand(IntakeSubsystem.TurretState.INTAKE),
+                new ConditionalCommand(
+                        new LinkageCommand(IntakeSubsystem.PivotState.RETRACT),
+                        new LinkageCommand(IntakeSubsystem.PivotState.EXTEND),
+                        () -> Globals.IS_AUTO
+                ),
                 new LinkageCommand(IntakeSubsystem.PivotState.RETRACT),
                 new WaitCommand(200),
                 new CoaxialCommand(IntakeSubsystem.CoaxialState.RESET)
