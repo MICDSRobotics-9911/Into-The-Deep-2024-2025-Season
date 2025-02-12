@@ -31,7 +31,7 @@ import org.firstinspires.ftc.teamcode.common.util.Pose;
 import java.util.Locale;
 
 @Config
-@Autonomous(name="FourSampleAuto")
+@Autonomous(name="FourSampleAuto\uD83D\uDE20")
 public class FourSampleAuto extends LinearOpMode {
 
     private final RobotHardware robot = RobotHardware.getInstance();
@@ -80,26 +80,26 @@ public class FourSampleAuto extends LinearOpMode {
                         new PositionCommand(zeroPose),
                         new WaitCommand(200),
                         new SampleScoreToggleCommand(),
-                        new PositionCommand(inBetweenfirstPose),
+                        new PositionCommand(inBetweenfirstPose, 0.5, 0.5, 0.5),
                         new SubmersibleCommand(),
-                        new WaitCommand(1000),
+                        new WaitCommand(700),
                         new IntakeMacro(),
-                        new WaitCommand(500),
+                        new WaitCommand(400),
                         new TransferSampleCommand(OuttakeSubsystem.SlideState.HIGH_BASKET),
-                        new WaitCommand(1800),
+                        new WaitCommand(1000),
                         new PositionCommand(zeroPose),
                         new SampleScoreToggleCommand(),
-                        new PositionCommand(firstPose),
+                        new PositionCommand(firstPose, 0.5, 0.5, 0.5),
                         new SubmersibleCommand(),
                         new WaitCommand(1000),
                         new IntakeMacro(),
                         new WaitCommand(1000),
                         new TransferSampleCommand(OuttakeSubsystem.SlideState.HIGH_BASKET),
-                        new WaitCommand(1800),
+                        new WaitCommand(1000),
                         new PositionCommand(thirdPose),
                         new SampleScoreToggleCommand(),
-                        new PositionCommand(inBetweenSecondPose),
-                        new PositionCommand(secondPose),
+                        new PositionCommand(inBetweenSecondPose, 0.9, 10, 10),
+                        new PositionCommand(secondPose, 0.5, 0.5, 0.5),
                         new SubmersibleCommand(),
                         new TurretCommand(IntakeSubsystem.TurretState.PERPENDICULAR)/*,
                         new IntakeMacro(),

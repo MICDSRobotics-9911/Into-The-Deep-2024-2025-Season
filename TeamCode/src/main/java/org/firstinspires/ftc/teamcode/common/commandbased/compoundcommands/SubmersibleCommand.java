@@ -18,7 +18,6 @@ public class SubmersibleCommand extends SequentialCommandGroup {
                 new IntakeClawCommand(ClawState.CLOSED),
                 new LinkageCommand(IntakeSubsystem.PivotState.EXTEND),
                 new WaitCommand(200),
-                new TurretCommand(IntakeSubsystem.TurretState.INTAKE),
                 new CoaxialCommand(IntakeSubsystem.CoaxialState.INTAKE)
         );
     }

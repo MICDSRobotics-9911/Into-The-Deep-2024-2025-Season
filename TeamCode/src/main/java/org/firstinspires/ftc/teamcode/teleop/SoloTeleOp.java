@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -134,16 +135,17 @@ public class SoloTeleOp extends CommandOpMode {
         gamepadEx.getGamepadButton(GamepadKeys.Button.X)
                 .whenPressed(new SpecimenPreIntakeCommand());
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
-                .whenPressed(new OuttakeArmToggleCommand(robot));
+                .whenPressed(new LinkageToggleCommand(robot));
         gamepadEx.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                .whenPressed(new SequentialCommandGroup(
+                .whenPressed(new ConditionalCommand(
                         new IntakeArmCommand(IntakeSubsystem.ArmState.RESET),
-                        new LinkageToggleCommand(robot)
+                        new IntakeClawToggleCommand(robot),
+                        () -> robot.intake.arm != IntakeSubsystem.ArmState.RESET
                 ));
         gamepadEx.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(new TurretCommand(IntakeSubsystem.TurretState.INCREMENT));
-        gamepadEx.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(new TurretCommand(IntakeSubsystem.TurretState.DECREMENT));
+        gamepadEx.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(new TurretCommand(IntakeSubsystem.TurretState.INCREMENT));
         gamepadEx2.getGamepadButton(GamepadKeys.Button.DPAD_UP)
                 .whenPressed(new SlideCommand(SlideState.INCREMENT));
         gamepadEx2.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
