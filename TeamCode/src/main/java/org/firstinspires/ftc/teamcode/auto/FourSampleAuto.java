@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.common.commandbased.TurretCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.IntakeMacro;
 import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.ResetCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.SubmersibleCommand;
@@ -22,6 +23,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.common.commandbased.togglecommands.SampleScoreToggleCommand;
 import org.firstinspires.ftc.teamcode.common.hardware.Globals;
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
+import org.firstinspires.ftc.teamcode.common.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.common.subsystems.OuttakeSubsystem;
 import org.firstinspires.ftc.teamcode.common.util.Drawing;
 import org.firstinspires.ftc.teamcode.common.util.Pose;
@@ -38,16 +40,19 @@ public class FourSampleAuto extends LinearOpMode {
     private final ElapsedTime timer = new ElapsedTime();
     private double endTime = 0;
     //public static Pose startingPose = new Pose(10, 15, Math.toRadians(90));
-    public static Pose zeroPose = new Pose(-27, 10, Math.toRadians(45));
-    public static Pose inBetweenfirstPose = new Pose(-18, 10, Math.toRadians(90));
-    public static Pose firstPose = new Pose(-23, 10, Math.toRadians(90));
-    public static Pose secondPose = new Pose(-10, 20, Math.toRadians(180));
+    public static Pose zeroPose = new Pose(-25, 9, Math.toRadians(45));
+    public static Pose inBetweenfirstPose = new Pose(-18, 9, Math.toRadians(90));
+    public static Pose firstPose = new Pose(-27.8, 9.3, Math.toRadians(90));
+    public static Pose inBetweenSecondPose = new Pose(0, 10, Math.toRadians(45));
+    public static Pose secondPose = new Pose(-11, 34.5, Math.toRadians(180));
+    public static Pose thirdPose = new Pose(-23, 9, Math.toRadians(45));
 
     @Override
     public void runOpMode() throws InterruptedException {
         CommandScheduler.getInstance().reset();
         FtcDashboard dashboard = FtcDashboard.getInstance();
         Globals.IS_AUTO = true;
+
 
         telemetry = new MultipleTelemetry(dashboard.getTelemetry(), telemetry);
 
@@ -77,19 +82,26 @@ public class FourSampleAuto extends LinearOpMode {
                         new SampleScoreToggleCommand(),
                         new PositionCommand(inBetweenfirstPose),
                         new SubmersibleCommand(),
-                        new IntakeMacro()/*,
+                        new WaitCommand(1000),
+                        new IntakeMacro(),
+                        new WaitCommand(500),
                         new TransferSampleCommand(OuttakeSubsystem.SlideState.HIGH_BASKET),
-                        new WaitCommand(200),
+                        new WaitCommand(1800),
                         new PositionCommand(zeroPose),
                         new SampleScoreToggleCommand(),
                         new PositionCommand(firstPose),
                         new SubmersibleCommand(),
+                        new WaitCommand(1000),
                         new IntakeMacro(),
+                        new WaitCommand(1000),
                         new TransferSampleCommand(OuttakeSubsystem.SlideState.HIGH_BASKET),
+                        new WaitCommand(1800),
+                        new PositionCommand(thirdPose),
                         new SampleScoreToggleCommand(),
+                        new PositionCommand(inBetweenSecondPose),
                         new PositionCommand(secondPose),
                         new SubmersibleCommand(),
-                        new TurretCommand(IntakeSubsystem.TurretState.PERPENDICULAR),
+                        new TurretCommand(IntakeSubsystem.TurretState.PERPENDICULAR)/*,
                         new IntakeMacro(),
                         new TransferSampleCommand(OuttakeSubsystem.SlideState.HIGH_BASKET),
                         new WaitCommand(200),

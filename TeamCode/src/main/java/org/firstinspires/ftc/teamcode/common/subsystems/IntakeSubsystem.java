@@ -41,7 +41,9 @@ public class IntakeSubsystem extends WSubsystem {
     private double linkagePos = 0;
     public static double RESET = 0.9;
     private double coaxialPos = 0;
-    public static double PERPENDICULAR = 0;
+    public static double PERPENDICULAR = 0.15;
+    public static double TRANSFER = 0.02;
+    public static double intakeArm = 0.79;
 
     public enum CoaxialState {
         EXTEND,
@@ -72,7 +74,8 @@ public class IntakeSubsystem extends WSubsystem {
         EXTEND,
         RETRACT,
         INCREMENT,
-        DECREMENT
+        DECREMENT,
+        TRANSFER
     }
 
     public IntakeSubsystem() {
@@ -164,9 +167,9 @@ public class IntakeSubsystem extends WSubsystem {
     private double getArmStatePosition(ArmState state) {
         switch (state) {
             case INTAKE:
-                return 0.78;
+                return intakeArm;
             case SUBMERSIBLE:
-                return 0.84;
+                return 0.83;
             case TRANSFER:
                 return 0.9;
             case RESET:
@@ -185,6 +188,8 @@ public class IntakeSubsystem extends WSubsystem {
                 return linkagePos - 0.05;
             case INCREMENT:
                 return linkagePos + 0.05;
+            case TRANSFER:
+                return TRANSFER;
             default:
                 return 0;
         }

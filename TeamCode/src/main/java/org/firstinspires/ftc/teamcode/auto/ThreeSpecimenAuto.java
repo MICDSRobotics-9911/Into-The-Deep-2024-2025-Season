@@ -34,7 +34,7 @@ import org.firstinspires.ftc.teamcode.common.util.Pose;
 import java.util.Locale;
 
 @Config
-@Autonomous(name="ThreeSpecimenAuto :astonished:")
+@Autonomous(name="ThreeSpecimenAuto")
 public class ThreeSpecimenAuto extends LinearOpMode {
 
     private final RobotHardware robot = RobotHardware.getInstance();

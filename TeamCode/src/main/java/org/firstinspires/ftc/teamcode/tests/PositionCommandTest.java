@@ -31,6 +31,7 @@ public class PositionCommandTest extends LinearOpMode {
     private double loopTime = 0.0;
     private final ElapsedTime timer = new ElapsedTime();
     private double endTime = 0;
+    public static double degrees;
     public static Pose testPose = new Pose(15, 15, Math.toRadians(90));
     private Pose otherPose;
 
