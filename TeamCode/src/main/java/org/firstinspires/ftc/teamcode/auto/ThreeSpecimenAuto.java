@@ -6,28 +6,20 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.common.commandbased.OuttakeArmCommand;
-import org.firstinspires.ftc.teamcode.common.commandbased.OuttakeClawCommand;
-import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.IntakeMacro;
 import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.ResetCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.ScoreSpecimenCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.SpecimenIntakeCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.SpecimenPreIntakeCommand;
-import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.SubmersibleCommand;
-import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.TransferSampleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.drivecommands.*;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.common.hardware.Globals;
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
-import org.firstinspires.ftc.teamcode.common.subsystems.OuttakeSubsystem;
-import org.firstinspires.ftc.teamcode.common.util.ClawState;
 import org.firstinspires.ftc.teamcode.common.util.Drawing;
 import org.firstinspires.ftc.teamcode.common.util.Pose;
 
@@ -61,7 +53,7 @@ public class ThreeSpecimenAuto extends LinearOpMode {
         CommandScheduler.getInstance().reset();
         FtcDashboard dashboard = FtcDashboard.getInstance();
         Globals.IS_AUTO = true;
-        Globals.threeSpec = true;
+        Globals.normalized = false;
 
         telemetry = new MultipleTelemetry(dashboard.getTelemetry(), telemetry);
 

@@ -11,15 +11,15 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.common.commandbased.TurretCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.IntakeMacro;
 import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.ResetCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.SubmersibleCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.TransferSampleCommand;
-import org.firstinspires.ftc.teamcode.common.commandbased.drivecommands.*;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.teamcode.common.commandbased.drivecommands.PositionCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.togglecommands.SampleScoreToggleCommand;
 import org.firstinspires.ftc.teamcode.common.hardware.Globals;
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
@@ -31,8 +31,8 @@ import org.firstinspires.ftc.teamcode.common.util.Pose;
 import java.util.Locale;
 
 @Config
-@Autonomous(name="FourSampleAuto\uD83D\uDE20")
-public class FourSampleAuto extends LinearOpMode {
+@Autonomous(name="FourSampleAutoNormalized\uD83D\uDE20")
+public class FourSampleAutoNormalized extends LinearOpMode {
 
     private final RobotHardware robot = RobotHardware.getInstance();
 
@@ -52,7 +52,7 @@ public class FourSampleAuto extends LinearOpMode {
         CommandScheduler.getInstance().reset();
         FtcDashboard dashboard = FtcDashboard.getInstance();
         Globals.IS_AUTO = true;
-        Globals.normalized = false;
+        Globals.normalized = true;
 
 
         telemetry = new MultipleTelemetry(dashboard.getTelemetry(), telemetry);

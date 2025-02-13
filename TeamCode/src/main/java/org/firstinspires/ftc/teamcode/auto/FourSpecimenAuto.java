@@ -58,6 +58,7 @@ public class FourSpecimenAuto extends LinearOpMode {
         CommandScheduler.getInstance().reset();
         FtcDashboard dashboard = FtcDashboard.getInstance();
         Globals.IS_AUTO = true;
+        Globals.normalized = true;
 
         telemetry = new MultipleTelemetry(dashboard.getTelemetry(), telemetry);
 
