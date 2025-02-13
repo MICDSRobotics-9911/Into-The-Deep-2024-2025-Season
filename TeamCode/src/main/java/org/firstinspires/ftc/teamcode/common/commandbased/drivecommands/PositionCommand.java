@@ -131,16 +131,18 @@ public class PositionCommand extends CommandBase {
         double hPower = -hController.calculate(heading, targetPose.heading);
 
         double x_rotated = xPower * Math.cos(heading) - yPower * Math.sin(heading);
-        double y_rotated = yPower * Math.sin(heading) + yPower * Math.cos(heading);
+        double y_rotated = xPower * Math.sin(heading) + yPower * Math.cos(heading);
+
+        double maxPower = Math.max(1.0, Math.max(Math.abs(x_rotated), Math.max(Math.abs(y_rotated), Math.abs(hPower))));
 
         if (!Globals.normalized) {
             hPower = Range.clip(hPower, -maxSpeed, maxSpeed);
             x_rotated = Range.clip(x_rotated, -maxSpeed, maxSpeed);
             y_rotated = Range.clip(y_rotated, -maxSpeed, maxSpeed);
         } else {
-            hPower *= maxSpeed;
-            x_rotated *= maxSpeed;
-            y_rotated *= maxSpeed;
+            x_rotated = (x_rotated / maxPower) * maxSpeed;
+            y_rotated = (y_rotated / maxPower) * maxSpeed;
+            hPower = (hPower / maxPower) * maxSpeed;
         }
 
 
