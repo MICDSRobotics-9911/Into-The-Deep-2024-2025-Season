@@ -27,7 +27,7 @@ public class ResetCommand extends SequentialCommandGroup {
                 new OuttakeArmCommand(OuttakeSubsystem.PivotState.RESET),
                 new SlideCommand(OuttakeSubsystem.SlideState.RESET),
                 new IntakeClawCommand(ClawState.CLOSED),
-                new TurretCommand(IntakeSubsystem.TurretState.INTAKE),
+                new TurretCommand(IntakeSubsystem.TurretState.PERPENDICULAR),
                 new ConditionalCommand(
                         new LinkageCommand(IntakeSubsystem.PivotState.RETRACT),
                         new LinkageCommand(IntakeSubsystem.PivotState.EXTEND),

@@ -46,14 +46,14 @@ public class ThreeSpecimenAuto extends LinearOpMode {
     public static Pose specimenIntake = new Pose(3, -38, 0);
     public static Pose inBetweenThirdPose = new Pose(15, -4, 0);
     public static Pose thirdPose = new Pose(10, -38, 0);
-    public static Pose fourthPose = new Pose(29.8, 25, Math.toRadians(180));
+    public static Pose fourthPose = new Pose(1.5, -38, Math.toRadians(180));
 
     @Override
     public void runOpMode() throws InterruptedException {
         CommandScheduler.getInstance().reset();
         FtcDashboard dashboard = FtcDashboard.getInstance();
         Globals.IS_AUTO = true;
-        Globals.normalized = false;
+        Globals.threeSpec = true;
 
         telemetry = new MultipleTelemetry(dashboard.getTelemetry(), telemetry);
 
@@ -78,7 +78,7 @@ public class ThreeSpecimenAuto extends LinearOpMode {
                 new SequentialCommandGroup(
                         new SpecimenIntakeCommand(),
                         new PositionCommand(zeroPose),
-                        new PositionCommand(secondInBetweenPose, 0.7),
+                        new PositionCommand(secondInBetweenPose, 0.3),
                         new ScoreSpecimenCommand(),
                         new PositionCommand(inBetweenfirstPose),
                         new SpecimenPreIntakeCommand(),
@@ -87,29 +87,29 @@ public class ThreeSpecimenAuto extends LinearOpMode {
                         new PositionCommand(firstPush),
                         new PositionCommand(inBetweenSecondPose),
                         new PositionCommand(secondPose),
-                        new PositionCommand(specimenIntake, 0.7),
+                        new PositionCommand(specimenIntake, 0.3),
                         new SpecimenIntakeCommand(),
                         new PositionCommand(inBetweenThirdPose),
                         new PositionCommand(new Pose(zeroPose.x + 0.3, zeroPose.y + 7, zeroPose.heading)),
-                        new PositionCommand(new Pose(secondInBetweenPose.x, secondInBetweenPose.y + 7, secondInBetweenPose.heading), 0.5),
+                        new PositionCommand(new Pose(secondInBetweenPose.x, secondInBetweenPose.y + 7, secondInBetweenPose.heading), 0.3),
                         new ScoreSpecimenCommand(),
                         new PositionCommand(inBetweenfirstPose),
                         new SpecimenPreIntakeCommand(),
                         new PositionCommand(thirdPose),
-                        new PositionCommand(specimenIntake, 0.7),
+                        new PositionCommand(specimenIntake, 0.3),
                         new SpecimenIntakeCommand(),
                         new PositionCommand(inBetweenThirdPose),
                         new PositionCommand(new Pose(zeroPose.x + 0.4, zeroPose.y + 15, zeroPose.heading)),
-                        new PositionCommand(new Pose(secondInBetweenPose.x, secondInBetweenPose.y + 15, secondInBetweenPose.heading)),
+                        new PositionCommand(new Pose(secondInBetweenPose.x, secondInBetweenPose.y + 15, secondInBetweenPose.heading), 0.3),
                         new ScoreSpecimenCommand(),
                         new PositionCommand(inBetweenfirstPose),
                         new SpecimenPreIntakeCommand(),
                         new PositionCommand(thirdPose),
-                        new PositionCommand(specimenIntake, 0.7),
+                        new PositionCommand(fourthPose, 0.2),
                         new SpecimenIntakeCommand(),
                         new PositionCommand(inBetweenThirdPose),
-                        new PositionCommand(new Pose(zeroPose.x + 0.5, zeroPose.y + 20, zeroPose.heading)),
-                        new PositionCommand(new Pose(secondInBetweenPose.x, secondInBetweenPose.y + 20, secondInBetweenPose.heading)),
+                        new PositionCommand(new Pose(zeroPose.x + 0.2, zeroPose.y + 20, zeroPose.heading)),
+                        new PositionCommand(new Pose(secondInBetweenPose.x, secondInBetweenPose.y + 20, secondInBetweenPose.heading), 0.3),
                         new ScoreSpecimenCommand()
                 )
         );

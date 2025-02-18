@@ -40,23 +40,23 @@ public class FourSampleAutoNormalized extends LinearOpMode {
     private final ElapsedTime timer = new ElapsedTime();
     private double endTime = 0;
     //public static Pose startingPose = new Pose(10, 15, Math.toRadians(90));
-    public static Pose zeroPose = new Pose(-25, 9, Math.toRadians(45));
-    public static Pose inBetweenfirstPose = new Pose(-18, 9, Math.toRadians(90));
-    public static Pose firstPose = new Pose(-27.8, 9.3, Math.toRadians(90));
+    public static Pose zeroPose = new Pose(-24, 9.5, Math.toRadians(45));
+    public static Pose inBetweenfirstPose = new Pose(-16.5, 9.8, Math.toRadians(90));
+    public static Pose firstPose = new Pose(-27, 9.7, Math.toRadians(90));
     public static Pose inBetweenSecondPose = new Pose(0, 10, Math.toRadians(45));
-    public static Pose secondPose = new Pose(-11, 34.5, Math.toRadians(180));
-    public static Pose thirdPose = new Pose(-23, 9, Math.toRadians(45));
+    public static Pose secondPose = new Pose(-10.5, 36, Math.toRadians(180));
+    public static Pose thirdPose = new Pose(-26, 7, Math.toRadians(45));
 
     @Override
     public void runOpMode() throws InterruptedException {
         CommandScheduler.getInstance().reset();
         FtcDashboard dashboard = FtcDashboard.getInstance();
         Globals.IS_AUTO = true;
-        Globals.normalized = true;
+        Globals.threeSpec = false;
 
 
         telemetry = new MultipleTelemetry(dashboard.getTelemetry(), telemetry);
-
+        Globals.RESET_ENCODER = true;
         robot.init(hardwareMap);
 
         robot.setPose(new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.RADIANS, Math.toRadians(180)));
@@ -78,35 +78,44 @@ public class FourSampleAutoNormalized extends LinearOpMode {
                 new SequentialCommandGroup(
                         new SampleScoreToggleCommand(),
                         new WaitCommand(500),
-                        new PositionCommand(zeroPose),
-                        new WaitCommand(200),
+                        new PositionCommand(zeroPose, 0.5),
                         new SampleScoreToggleCommand(),
-                        new PositionCommand(inBetweenfirstPose, 0.5, 0.5, 0.5),
+                        new TurretCommand(IntakeSubsystem.TurretState.INTAKE),
                         new SubmersibleCommand(),
-                        new WaitCommand(700),
+                        new PositionCommand(inBetweenfirstPose, 0.5, 0.5, 0.5),
+                        new WaitCommand(300),
                         new IntakeMacro(),
                         new WaitCommand(400),
                         new TransferSampleCommand(OuttakeSubsystem.SlideState.HIGH_BASKET),
-                        new WaitCommand(1000),
+                        new SampleScoreToggleCommand(),
+                        new WaitCommand(1200),
                         new PositionCommand(zeroPose),
                         new SampleScoreToggleCommand(),
-                        new PositionCommand(firstPose, 0.5, 0.5, 0.5),
+                        new TurretCommand(IntakeSubsystem.TurretState.INTAKE),
                         new SubmersibleCommand(),
-                        new WaitCommand(1000),
+                        new PositionCommand(firstPose, 0.5, 0.5, 0.5),
+                        new WaitCommand(300),
                         new IntakeMacro(),
-                        new WaitCommand(1000),
+                        new WaitCommand(400),
+                        // TODO: REMOVE WAIT BELOW
                         new TransferSampleCommand(OuttakeSubsystem.SlideState.HIGH_BASKET),
-                        new WaitCommand(1000),
+                        new SampleScoreToggleCommand(),
+                        new WaitCommand(1200),
                         new PositionCommand(thirdPose),
                         new SampleScoreToggleCommand(),
-                        new PositionCommand(inBetweenSecondPose, 0.9, 10, 10),
+                        //new PositionCommand(inBetweenSecondPose, 0.9, 10, 10),
                         new PositionCommand(secondPose, 0.5, 0.5, 0.5),
                         new SubmersibleCommand(),
-                        new TurretCommand(IntakeSubsystem.TurretState.PERPENDICULAR)/*,
+                        new TurretCommand(IntakeSubsystem.TurretState.PERPENDICULAR),
+                        new WaitCommand(600),
                         new IntakeMacro(),
+                        new WaitCommand(5000),
+                        new WaitCommand(400),
                         new TransferSampleCommand(OuttakeSubsystem.SlideState.HIGH_BASKET),
-                        new WaitCommand(200),
-                        new PositionCommand(zeroPose)*/
+                        new SampleScoreToggleCommand(),
+                        new WaitCommand(1200),
+                        new PositionCommand(zeroPose),
+                        new SampleScoreToggleCommand()
                 )
         );
 
@@ -118,12 +127,6 @@ public class FourSampleAutoNormalized extends LinearOpMode {
             robot.read();
             robot.periodic();
             robot.write();
-            /*telemetry.addData("xError: ", robot.getPose().getX(DistanceUnit.INCH) -
-                    testPose.x);
-            telemetry.addData("yError: ", robot.getPose().getY(DistanceUnit.INCH) -
-                    testPose.y);
-            telemetry.addData("hError: ", robot.getPose().
-                    getHeading(AngleUnit.DEGREES) - Math.toDegrees(testPose.heading));*/
             Pose2D pos = robot.odo.getPosition();
             String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}",
                     pos.getX(DistanceUnit.INCH), pos.getY(DistanceUnit.INCH),
@@ -133,6 +136,8 @@ public class FourSampleAutoNormalized extends LinearOpMode {
             telemetry.update();
             dashboard.sendTelemetryPacket(Drawing.drawRobot(robot.odo.getPosition()));
         }
+
+        Globals.RESET_ENCODER = false;
 
         robot.kill();
 

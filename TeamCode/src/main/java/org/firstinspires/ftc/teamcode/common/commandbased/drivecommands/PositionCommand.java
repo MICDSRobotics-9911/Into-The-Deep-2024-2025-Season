@@ -19,23 +19,24 @@ import org.firstinspires.ftc.teamcode.common.util.Pose;
 public class PositionCommand extends CommandBase {
     private Drivetrain drivetrain;
     public Pose targetPose;
-    private double maxSpeed = 0.9;
+    private double maxSpeed = 0.5;
 
-    public static double xP = 0.15;
+
+    public static double xP = 0.7;
     public static double xD = 0.01;
 
-    public static double yP = 0.15;
+    public static double yP = 0.7;
     public static double yD = 0.01;
 
-    public static double hP = 2.5;
-    public static double hD = 0.01;
+    public static double hP = 3.5;
+    public static double hD = 0.1;
 
     public static PIDFController xController = new PIDFController(xP, 0.0, xD, 0.0);
     public static PIDFController yController = new PIDFController(yP, 0.0, yD, 0);
     public static PIDFController hController = new PIDFController(hP, 0.0, hD, 0);
 
-    public static double ALLOWED_TRANSLATIONAL_ERROR = 3;
-    public static double ALLOWED_HEADING_ERROR = 3;
+    public double ALLOWED_TRANSLATIONAL_ERROR = 5;
+    public double ALLOWED_HEADING_ERROR = 5;
 
     private RobotHardware robot = RobotHardware.getInstance();
 
@@ -43,13 +44,29 @@ public class PositionCommand extends CommandBase {
     private ElapsedTime stable;
 
     public static double STABLE_MS = 100;
-    public static double DEAD_MS = 2500;
+    public static double DEAD_MS = 5000;
 
 
     public PositionCommand(Pose targetPose) {
         this.drivetrain = robot.drivetrain;
         this.targetPose = targetPose;
-
+        if (Globals.threeSpec) {
+            maxSpeed = 0.7;
+        } else if (maxSpeed == 0.5) {
+            xP = 0.5;
+            xD = 0;
+            yP = 0.5;
+            yD = 0;
+            hP = 3.5;
+            hD = 0.1;
+        } else if (maxSpeed == 0.3) {
+            xP = 0.1;
+            xD = 0.01;
+            yP = 0.1;
+            yD = 0.01;
+            hP = 4;
+            hD = 0.1;
+        }
         xController.reset();
         yController.reset();
         hController.reset();
@@ -58,6 +75,24 @@ public class PositionCommand extends CommandBase {
     public PositionCommand(Pose targetPose, double speed) {
         this.drivetrain = robot.drivetrain;
         this.targetPose = targetPose;
+        if (maxSpeed == 0.7) {
+            yP = 0.065;
+            yD = 0.01;
+        } else if (maxSpeed == 0.5) {
+            xP = 0.5;
+            xD = 0;
+            yP = 0.5;
+            yD = 0;
+            hP = 3.5;
+            hD = 0.1;
+        } else if (maxSpeed == 0.3) {
+            xP = 0.1;
+            xD = 0.01;
+            yP = 0.1;
+            yD = 0.01;
+            hP = 4;
+            hD = 0.1;
+        }
 
         maxSpeed = speed;
         xController.reset();
@@ -72,20 +107,36 @@ public class PositionCommand extends CommandBase {
         this.drivetrain = robot.drivetrain;
         this.targetPose = targetPose;
         maxSpeed = speed;
-
+        if (maxSpeed == 0.7) {
+            yP = 0.065;
+            yD = 0.01;
+        } else if (maxSpeed == 0.5) {
+            xP = 0.4;
+            xD = 0;
+            yP = 0.4;
+            yD = 0;
+            hP = 3.5;
+            hD = 0.1;
+        } else if (maxSpeed == 0.3) {
+            xP = 0.8;
+            xD = 0.01;
+            yP = 0.8;
+            yD = 0.01;
+            hP = 4;
+            hD = 0.1;
+        }
         xController.reset();
         yController.reset();
         hController.reset();
-        xController.setPIDF(xP, 0, xD, 0);
-        yController.setPIDF(yP, 0, yD, 0);
-        hController.setPIDF(hP, 0, hD, 0);
-
         ALLOWED_TRANSLATIONAL_ERROR = translationalTolerance;
         ALLOWED_HEADING_ERROR = headingTolerance;
     }
 
     @Override
     public void execute() {
+        xController.setPIDF(xP, 0, xD, 0);
+        yController.setPIDF(yP, 0, yD, 0);
+        hController.setPIDF(hP, 0, hD, 0);
         if (timer == null) timer = new ElapsedTime();
         if (stable == null) stable = new ElapsedTime();
 
@@ -102,7 +153,9 @@ public class PositionCommand extends CommandBase {
             stable.reset();
         }
 
-        return timer.milliseconds() > DEAD_MS || stable.milliseconds() > STABLE_MS;
+        System.out.println(robot.getPose());
+
+        return /*timer.milliseconds() > DEAD_MS ||*/ stable.milliseconds() > STABLE_MS;
     }
 
     double xThreshold = ALLOWED_TRANSLATIONAL_ERROR;
@@ -130,12 +183,16 @@ public class PositionCommand extends CommandBase {
         double yPower = -yController.calculate(y, targetPose.y);
         double hPower = -hController.calculate(heading, targetPose.heading);
 
+
         double x_rotated = xPower * Math.cos(heading) - yPower * Math.sin(heading);
         double y_rotated = xPower * Math.sin(heading) + yPower * Math.cos(heading);
+        if (Globals.threeSpec) {
+            y_rotated = yPower * Math.sin(heading) + yPower * Math.cos(heading);
+        }
 
         double maxPower = Math.max(1.0, Math.max(Math.abs(x_rotated), Math.max(Math.abs(y_rotated), Math.abs(hPower))));
 
-        if (!Globals.normalized) {
+        if (Globals.threeSpec) {
             hPower = Range.clip(hPower, -maxSpeed, maxSpeed);
             x_rotated = Range.clip(x_rotated, -maxSpeed, maxSpeed);
             y_rotated = Range.clip(y_rotated, -maxSpeed, maxSpeed);

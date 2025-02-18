@@ -12,7 +12,9 @@ public class Globals {
 
     public static boolean IS_SCORING = false;
     public static boolean IS_INTAKING = false;
-    public static boolean normalized = false;
+    public static boolean threeSpec = false;
+    public static boolean IS_TRANSFER = false;
+    public static boolean RESET_ENCODER = true;
 
     public static void startScoring() {
         IS_SCORING = true;
@@ -37,5 +39,13 @@ public class Globals {
     public static void retract() {
         IS_SCORING = false;
         IS_INTAKING = false;
+    }
+
+    public static void startTransferring() {
+        IS_TRANSFER = true;
+    }
+
+    public static void stopTransferring() {
+        IS_TRANSFER = false;
     }
 }

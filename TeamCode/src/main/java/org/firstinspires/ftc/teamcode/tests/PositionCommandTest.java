@@ -6,12 +6,11 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.common.commandbased.compoundcommands.ResetCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.drivecommands.*;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -33,6 +32,7 @@ public class PositionCommandTest extends LinearOpMode {
     private double endTime = 0;
     public static double degrees;
     public static Pose testPose = new Pose(15, 15, Math.toRadians(90));
+    public static double speed = 0.3;
     private Pose otherPose;
 
     @Override
@@ -41,6 +41,7 @@ public class PositionCommandTest extends LinearOpMode {
         FtcDashboard dashboard = FtcDashboard.getInstance();
         telemetry = dashboard.getTelemetry();
         Globals.IS_AUTO = true;
+        Globals.threeSpec = false   ;
 
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
 
@@ -55,16 +56,19 @@ public class PositionCommandTest extends LinearOpMode {
             telemetry.update();
             TelemetryPacket packet = new TelemetryPacket(true);
             dashboard.sendTelemetryPacket(packet);
+            CommandScheduler.getInstance().schedule(
+                    new ResetCommand()
+            );
         }
 
 
 
         waitForStart();
-
+        CommandScheduler.getInstance().reset();
         while (opModeIsActive() && !isStopRequested()) {
             CommandScheduler.getInstance().schedule(
                     new SequentialCommandGroup(
-                            new PositionCommand(testPose, 0.5),
+                            new PositionCommand(testPose, speed, 0.5, 0.5),
                             new PositionCommand(new Pose())
                     )
             );

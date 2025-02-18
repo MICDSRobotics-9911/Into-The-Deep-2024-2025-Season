@@ -40,10 +40,13 @@ public class IntakeSubsystem extends WSubsystem {
     private double armPos = 0.8;
     private double linkagePos = 0;
     public static double RESET = 0.9;
-    private double coaxialPos = 0;
+    public double coaxialPos = 0;
     public static double PERPENDICULAR = 0.15;
     public static double TRANSFER = 0.02;
     public static double intakeArm = 0.79;
+    public double coaxialIntake = 0.32;
+    public double coaxialTransfer = 1;
+    public double coaxialReset = 0.7;
 
     public enum CoaxialState {
         EXTEND,
@@ -67,6 +70,8 @@ public class IntakeSubsystem extends WSubsystem {
         INTAKE,
         SUBMERSIBLE,
         TRANSFER,
+        INCREMENT,
+        DECREMENT,
         RESET
     }
 
@@ -151,16 +156,16 @@ public class IntakeSubsystem extends WSubsystem {
     private double getCoaxialStatePosition(CoaxialState state) {
         switch (state) {
             case INTAKE:
-                return 0.32;
+                return coaxialIntake;
             case TRANSFER:
-                return 1;
+                return coaxialTransfer;
             case INCREMENT:
                 return coaxialPos + 0.05;
             case DECREMENT:
                 return coaxialPos - 0.05;
             case RESET:
             default:
-                return 0.65;
+                return coaxialReset;
         }
     }
 
@@ -172,6 +177,10 @@ public class IntakeSubsystem extends WSubsystem {
                 return 0.83;
             case TRANSFER:
                 return 0.9;
+            case INCREMENT:
+                return armPos + 0.03;
+            case DECREMENT:
+                return armPos - 0.03;
             case RESET:
             default:
                 return 0.89;
@@ -201,7 +210,7 @@ public class IntakeSubsystem extends WSubsystem {
                 return 0.0;
             case OPEN:
             default:
-                return 0.24;
+                return 0.26;
         }
     }
 
@@ -229,5 +238,11 @@ public class IntakeSubsystem extends WSubsystem {
     public PivotState getPivotState() {
         return robot.intake.pivotState == PivotState.RETRACT
                 ? PivotState.RETRACT : PivotState.EXTEND;
+    }
+
+    public void setCoaxialOffset(double intakeCoaxialPos) {
+        double offset = coaxialIntake - intakeCoaxialPos;
+        coaxialIntake = intakeCoaxialPos;
+        coaxialReset += offset;
     }
 }

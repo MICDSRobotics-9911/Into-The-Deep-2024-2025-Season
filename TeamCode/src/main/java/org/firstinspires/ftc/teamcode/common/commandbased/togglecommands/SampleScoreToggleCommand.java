@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.common.commandbased.togglecommands;
 
 import com.arcrobotics.ftclib.command.ConditionalCommand;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.common.commandbased.OuttakeArmCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.OuttakeClawCommand;
 import org.firstinspires.ftc.teamcode.common.commandbased.SlideCommand;
+import org.firstinspires.ftc.teamcode.common.hardware.Globals;
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.common.subsystems.OuttakeSubsystem;
 import org.firstinspires.ftc.teamcode.common.util.ClawState;
@@ -19,12 +21,14 @@ public class SampleScoreToggleCommand extends ConditionalCommand {
                         new WaitCommand(200),
                         new OuttakeArmCommand(OuttakeSubsystem.PivotState.TRANSFER),
                         new WaitCommand(300),
-                        new SlideCommand(OuttakeSubsystem.SlideState.RESET)
+                        new SlideCommand(OuttakeSubsystem.SlideState.RESET),
+                        new InstantCommand(Globals::stopTransferring)
                 ),
                 new SequentialCommandGroup(
                         new OuttakeClawCommand(ClawState.CLOSED),
                         new SlideCommand(OuttakeSubsystem.SlideState.HIGH_BASKET),
-                        new OuttakeArmCommand(OuttakeSubsystem.PivotState.UP)
+                        new OuttakeArmCommand(OuttakeSubsystem.PivotState.UP),
+                        new InstantCommand(Globals::stopTransferring)
                 ),
                 () -> RobotHardware.getInstance().outtake.slide == OuttakeSubsystem.SlideState.HIGH_BASKET
         );
